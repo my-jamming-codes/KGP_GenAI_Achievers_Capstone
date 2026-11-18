@@ -1,0 +1,1626 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Notifications | Official Website of Reserve Bank of India </title>
+    <meta name="description" content="Notifications - Reserve Bank of India" />
+    <meta name="keyword" content="RBI Notifications" />
+
+    <meta name="author " content="Reserve Bank of India" />
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="/js/libs/modernizr-2.5.3.min.js"></script>
+
+</head>
+<body onload="SetTreeStyles()">
+    <form method="post" action="./NotificationUser.aspx?Id=12764&amp;Mode=0" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTkyNjU3NzAzN2RkQgmRo0318k5Gfq5w5ECYQ/xrQnCXX1ezt/NyS1ZhOjA=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="B1534F13" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAz0n+dkB8EzeBIbNmzUJUV2lK+XrsQEVyjeDxQ0A4GYXFBwzdjZXczwplb2HKGyLlrNyH2BRDHW7ZJm+s8yUnNgi6wX7g7V+51d5y/uZ409MaU74zTCJ05u4w6h9ODXzwxkOnLtYme9ze2BdjTwJgskP6t93AkC4GhUEhJREhdaXBugERoe+4YdP6+Dm7i9UwLINzYr5zRLekLCkqLwgivbfcX9ZaEV78oETjPwNTvjRyaLpyghhgB3dOM81YQT2c/gumm1K6hTqwRBA59047MMjBc6ytv97yCmsAnJv+j67A==" />
+</div>
+        <input type="hidden" name="hdnYear" id="hdnYear" />
+        <input type="hidden" name="hdnMonth" id="hdnMonth" value="0" />
+        
+<link href="/JQuery/css/jquery-ui-1.8.18.custom2.css" rel="stylesheet" type="text/css" />
+<link href="/includes/print.css" rel="stylesheet" media="print" type="text/css" />
+
+<link href="/Styles/960.css?v=1.0" rel="stylesheet" type="text/css" />
+<link href="/Includes1/rbi.css?v=5.0" rel="Stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/libs/jquery.min.js"></script>
+<script type="text/javascript" src="/JQuery/ui/jquery.ui.revampRBI.js"></script>
+<script type="text/javascript" src="/js/ImgSaveDisable.js"></script>
+
+<script type="text/javascript">
+  
+//Redirect to mobile site start
+    function detectmob() {
+        if (screen.width <= 599 || screen.Height <= 975) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if (detectmob()) {
+       window.location.href = "https://m.rbi.org.in" + window.location.pathname;
+		
+       
+    }
+
+	//Redirect to mobile site End
+    $(document).ready(function () {
+        Search();
+	SearchLastUpdateDate(); //Fetch Last Date Page
+    });
+
+
+
+  // Fetch Last Date Page
+
+    function SearchLastUpdateDate() {
+        var strFilterComments = new RegExp("^[a-zA-Z0-9 =_:.&?'%,()-–]+$");
+	var url=window.location.href;
+	if(url.indexOf("WSSViewDetail.aspx")>0 || url.indexOf("PublicationReportDetails.aspx")>0)
+	{
+		url=url.substring(url,url.indexOf("?"));
+	}
+        var param = { keyWord1: url.slice(url.lastIndexOf('/') + 1) };
+	param.keyWord1=param.keyWord1.replaceAll("%20"," ");
+	if(param.keyWord1.indexOf("#")>0)
+	{
+		param.keyWord1=param.keyWord1.substring(param.keyWord1,param.keyWord1.indexOf("#"));
+	}
+        if (!strFilterComments.test(param.keyWord1)) {            
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "/Home.aspx/GetLastUpdateDate_new",
+                data: JSON.stringify(param),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataFilter: function (data) { return data; },
+                success: function (data) {
+                    if (data.d.length > 0) {
+                        $('#lblGetLastUpdateDate').text(data.d);
+                    }
+                    else {
+                        response([{ label: "No results found", value: ""}]);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+
+        }
+    }
+    // Fetch Last Date Page
+
+
+
+    function Search() {
+        highlightTextAutocomplete();
+        $(".autoSuggest").autocomplete({
+
+
+            source: function (request, response) {
+                var param = { keyWord: document.getElementById('txtSearch').value };
+
+                $.ajax({
+                    url: "/Home.aspx/GetKeywords",
+                    data: JSON.stringify(param),
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataFilter: function (data) { return data; },
+                    success: function (data) {
+
+                        if (data.d.length > 0) {
+                            response($.map(data.d, function (item) {
+                                return {
+                                    value: RemoveSpecialChars(item)
+
+                                }
+                            }))
+                        }
+                        else {
+                            response([{ label: "No results found", value: ""}]);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
+            },
+
+            
+            minLength: 3
+
+        });
+    }
+
+    function highlightTextAutocomplete() {
+
+        var oldFn = $.ui.autocomplete.prototype._renderItem;
+
+        $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+
+            var t = String(item.value).replace(
+                new RegExp(this.term, "gi"),
+                "<span class='ui-state-highlight'>$&</span>");
+            if (item.value != "") {
+                return $("<li class='borderAutocomplete'></li>")
+                  .data("item.autocomplete", item)
+                  .append("<a role='link'>" + t + "</a>")
+                  .appendTo(ul);
+            }
+
+            else {
+                return $("<li></li>")
+                  .data("item.autocomplete", item)
+                  .append("")
+                  .appendTo(ul);
+            }
+        };
+    }
+
+
+    function RemoveSpecialChars(inputText) {
+        var filteredString = inputText.replace(/[\*\^\'\!\@\$\.\#\(\)\-\?\<\>\;\"\&\+\{\}\:]/g, '');
+        
+        return filteredString;
+    }
+    
+
+    function LoadSearchData(id, key) {
+        if (id == "txtSearch") {
+            if (key == 13) {
+                validateSearchText();
+                return false;
+            }
+        }
+        else validateSearchText();
+        return true;
+    }
+    function validateSearchText() {
+        if (validation()) {
+            var strloc = new String(document.location.href.toString());
+            if (strloc.indexOf("SearchResults.aspx") == -1) {//             
+                window.open("/scripts/SearchResults.aspx?search=" + document.getElementById("txtSearch").value,"_self");
+            }
+            else window.open("/scripts/SearchResults.aspx?search=" + document.getElementById("txtSearch").value,"_self");
+        }
+    }
+    function validation() {
+        strSearch = trim(document.getElementById('txtSearch').value);
+        if (strSearch == "") { alert('Please enter the search text'); return false; }
+        else {
+           
+            var strFilterChars = new RegExp("^[0-9a-zA-Z ]*$");
+            if (!strFilterChars.test(strSearch)) { alert("Please remove special characters from search text"); return false; }
+        }
+        return true;
+    }
+    function trim(value) {
+        value = value.replace(/^\s+/, '');
+        value = value.replace(/\s+$/, '');
+        return value;
+    }
+
+</script>
+
+    <style type="text/css">
+    .blink_msm1 
+{
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 3s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blinker;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+.blink_NewWebsite {
+        animation:blinker 1.5s linear 3;
+        color:blue;
+        font-size:1.5em;
+        margin-bottom:0px;
+        }
+    @keyframes blinker
+    {
+        50%{
+            opacity:0;
+        }
+    }
+
+.sr-only {
+position: absolute;
+left: -9999px;
+}
+</style>
+<div class="top_setting">
+    <div class="container_12">
+        <div class="grid_5 top_settings">
+            <a href="#mainsection">Skip to main content </a>
+        </div>
+        <div id="UsrFontCntr_tblThemes" style="float: right" class="grid_4 prefix_3 top_settings">
+            <ul style="margin:0px; padding:0px;">
+               <li class="fonts"> 
+                <a id="UsrFontCntr_LinkBtnSpace" role="button" title="Increase Letter Spacing" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnSpace&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/letspace.png" alt="Increase Letter Spacing" />
+                                <span id="UsrFontCntr_spanBtnSpace" class="sr-only">Not Pressed</span></a>                                
+            </li>
+
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontIncrease" role="button" title="Increase Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontIncrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-increase.gif" alt="Increase Font Size" />
+                    
+                </a>
+            </li>
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontRegular" role="button" title="Regular Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontRegular&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-reset.gif" alt="Regular Font Size" />
+                    
+                </a>
+            </li>
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontDecrease" role="button" title="Decrease Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontDecrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-decrease.gif" alt="Decrease Font Size" />
+                    
+                </a>
+            </li></ul>
+		<ul style="margin:0px;padding:0px;">
+            <li class="black">
+                <a id="UsrFontCntr_LinkBtnAccessibilty" role="button" title="Apply Dark Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/dark-theme.gif" alt="Apply Dark Theme" />
+                    
+                </a>
+            </li>
+            <li class="white">
+                <a id="UsrFontCntr_LinkBtnUndoAccessibilty" role="button" title="Apply Normal Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnUndoAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/bright-theme.gif" alt="Apply Normal Theme" />
+                     
+                </a>
+            </li>
+            <li class="white">
+            <a id="UsrFontCntr_LinkBtnGreyScale" role="button" title="Apply Grey Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnGreyScale&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/graytheme.gif" alt="Apply Grey Theme" />
+                                
+                                </a></li>
+
+            </ul>
+		<div>
+		     <a href="#" onclick="javascript:window.print();" id="A1" title="Print This Page" style="text-decoration:none;" >
+                <img src="/images/print-icon.png" alt="Print this page" class="print" />
+		</a></div>
+            <div style="float: right">
+                <label style="margin-right: 6px;">
+                    Change Language</label>
+			
+			<a href="#" onclick="SetLink();" class="link1" title="Change language to Hindi">हिंदी</a>
+			</div>
+                   
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+   
+</div>
+<div class="container_12">
+    <div class="grid_4" role="banner">
+        <div class="logo">
+            <a href="/home.aspx" >
+                <img src="/images/rbi-company-logo.jpg" alt="Logo of Official website of Reserve Bank of India" /></a></div>
+    </div>
+    <div class="grid_5" align="right" role="search" style="float: right">
+        <label for="searchbox" class="search_label">
+            Search the Website</label>
+        <input name="UsrFontCntr$txtSearch" type="text" maxlength="103" id="txtSearch" class="search_box autoSuggest" title="Search the Website" aria-label="Search the Website" onkeydown="return LoadSearchData(&#39;txtSearch&#39;,event.keyCode);" placeHolder="Search" />
+        <button id="btnSearch" onclick="return LoadSearchData('btnSearch',event.keyCode);"
+            type="button" class="search_button">
+            Search</button>
+    </div>
+	<div class="grid_2" align="CENTER" role="" style="float: right">
+        <div class="logo" >
+           
+            <img src="../images/BBBP_Logo_4.png" alt="Beti Bachao Beti Padhao Logo" style="width:47%;">
+        </div>
+    	</div>
+    <div class="clearfix">
+    </div>
+</div>
+<!--  NAVIGATION START-->
+<nav role="navigation" aria-label="Main">
+       <div class="menu"><div class="centermenu">
+<ul class="menu">
+  <li><a href="https://rbi.org.in/home.aspx">Home</a></li>
+<li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-Sub1">About Us ▼</a>
+ <ul class="submenu1" id="Ab-Sub1" >
+	 <li><a href="/scripts/AboutUsDisplay.aspx">About Us</a></li>
+     <li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-org">Organisation & Functions <span aria-hidden="true">▶</span></a>
+		 <ul class="submenu1" id="Ab-org">             
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=OrganizationStructure.htm">Organisation Structure</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=Depts.htm">Departments</a></li>
+            <li><a href="Regionaloffices.aspx">Offices</a></li>
+			<li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-tra">Training Establishment <span aria-hidden="true">▶</span></a>                
+				<ul class="submenu1" id="Ab-tra">
+                    <li ><a href="https://cab.rbi.org.in" target="_blank" id="CBOverview">College of Agricultural Banking</a></li>
+                    <li ><a href="/scripts/rbsc.aspx" id="CBNotifications">Reserve Bank Staff College</a></li>
+					<li ><a href="https://cos.rbi.org.in/" id="CBSupervisors">College of Supervisors</a></li>
+                </ul>
+            </li>
+            <li><a href="/scripts/OccasionalPublications.aspx?head=RBI%27s%20Functions%20and%20Working">RBI's Functions and Working</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=PastGovernors.htm">Governors</a></li>
+			<li><a href="/scripts/AboutUsDisplay.aspx?pg=deputygovernors.htm">Deputy Governors</a></li>
+			<li><a href="/scripts/AboutUsDisplay.aspx?pg=ExecutiveDirectors.htm">Executive Directors</a></li>
+        </ul>		
+	 </li>
+<li><a href="AboutUsDisplay.aspx?pg=MediaKit.htm">Media Kit</a></li>
+	 <li><a href="CommunicationPolicy.aspx">Communication Policy of RBI</a></li>
+	
+     <li>
+        <a href="#" aria-expanded="false" role="button" aria-controls="Ab-soi">Sources of Information <span aria-hidden="true">▶</span></a>
+        <ul class="submenu1" id="Ab-soi">
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#AP">Annual Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#HP">Half-yearly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#QP">Quarterly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#MP">Monthly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#WP">Weekly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#OP">Occasional Publications</a></li>
+            <li><a href="/scripts/SDDSview.aspx">SDDS</a></li>
+            <li><a href="/scripts/BS_NSDPDisplay.aspx">NSDP</a></li>
+            <li><a href="/scripts/Statistics.aspx">Data Releases</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#PS">Publications available on Subscription</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#GI">General Information</a></li>	  
+        </ul>
+     </li>  
+	 <li><a href="/scripts/Project1.aspx">RBI History</a></li>
+	 <li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-mus">Museum <span aria-hidden="true">▶</span></a>
+		<ul class="submenu1" id="Ab-mus">
+			<li><a href="https://therbimuseum.rbi.org.in/">The RBI Museum</a></li>
+			<li><a href="/scripts/ic_museum.aspx">RBI Monetary Museum</a></li>
+         </ul>
+	 </li>
+</ul>
+</li>
+  <li>
+    <a href="#" aria-expanded="false" role="button" aria-controls="No-Sub1">Notifications ▼</a>
+    <ul class="submenu1" id="No-Sub1">
+      <li><a href="/scripts/NotificationUser.aspx">Notifications </a></li>
+             <li><a href="/scripts/BS_ViewMasterDirections.aspx">Master Directions </a></li>
+             <li><a href="/scripts/BS_ViewMasterCirculardetails.aspx">Master Circulars </a></li> 
+	     <li><a href="/scripts/Fs_AmendmentDirections.aspx">Amendment Directions </a></li> 
+	     <li><a href="#" aria-expanded="false" role="button" aria-controls="No-draft">Draft Notifications/Guidelines <span aria-hidden="true">▶</span></a>
+		<ul class="submenu1" id="No-draft">
+			<li><a href="/scripts/DraftNotificationsGuildelines.aspx">Draft Notifications/Guidelines</a></li>
+			<li><a href="/scripts/BS_ViewREwiseDraftDirections.aspx">Draft Directions (RE-wise)</a></li> 
+         	</ul>
+	     </li>
+
+            
+             <li><a href="/scripts/BS_CircularIndexDisplay.aspx">Index To RBI Circulars </a></li> 
+             <li><a href="/scripts/BS_ViewListofstandalonecirculars.aspx">Standalone Circulars </a></li>
+             <li><a href="/scripts/NotificationUserWithdrawnCircular.aspx">Circulars Withdrawn </a></li>
+
+      
+    </ul>
+  </li>
+
+  <li><a href="/scripts/BS_PressReleaseDisplay.aspx">Press Releases</a></li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Sp-Sub1">Speeches & Media Interactions ▼</a>
+	<ul class="submenu1" id="Sp-Sub1">
+	  <li><a href="/scripts/BS_ViewSpeeches.aspx">Speeches</a></li>
+      <li><a href="/scripts/BS_ViewInterviews.aspx">Media Interactions</a></li>
+      <li><a href="/scripts/Lectures.aspx">Memorial Lectures</a></li>
+      <li><a href="/scripts/BS_ViewPodcast.aspx">Podcasts</a></li>
+	</ul>
+  </li>
+  <li><a href="#"  aria-expanded="false" role="button" aria-controls="Pu-Sub1">Publications ▼</a>
+		<ul class="submenu1" id="Pu-Sub1">
+			<li><a href="/scripts/Publications.aspx?publication=Biennial">Biennial</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Annual">Annual</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=HalfYearly">Half-Yearly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Quarterly">Quarterly</a></li>
+		    <li><a href="/scripts/Publications.aspx?publication=Bimonthly">Bi-monthly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Monthly">Monthly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Weekly">Weekly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Occasional">Occasional</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Reports">Reports</a></li>
+		    <li><a href="/scripts/OccasionalPublications.aspx?head=Working Papers">Working Papers</a></li>
+		</ul>
+	</li>				  
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Le-Sub1">Legal Framework ▼</a>
+	<ul class="submenu1" id="Le-Sub1">
+	   <li><a href="/scripts/Act.aspx">Act </a></li>
+       <li><a href="/scripts/Rules.aspx">Rules </a></li>
+       <li><a href="/scripts/Regulations.aspx">Regulations </a></li> 
+       <li class="last"><a href="/scripts/Schemes.aspx">Schemes </a></li>
+	   </ul>
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Re-Sub1">Research ▼</a>
+		<ul class="submenu1" id="Re-Sub1">
+			<li><a href="/Scripts/ExternalResearchSchemes.aspx">External Research Schemes</a></li>
+			<li><a href="/Scripts/OccasionalPapers.aspx">RBI Occasional Papers</a></li>
+			<li><a href="/Scripts/OccasionalPublications.aspx?head=Working%20Papers">Working Papers</a></li>
+			<li><a href="/Scripts/BS_ViewBulletin.aspx">RBI Bulletin</a></li>
+			<li><a href="/Scripts/Project1.aspx">History</a></li>
+			<li><a href="/Scripts/Occas_DRG_Studies.aspx">DRG Studies</a></li>
+			<li><a href="/Scripts/KLEMS.aspx">KLEMS</a></li>
+			<li class="last"><a href="/Scripts/StateStatisticsFinances.aspx">State Statistics and Finances</a></li>
+        </ul>
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="St-Sub1">Statistics ▼</a>
+		<ul class="submenu1" id="St-Sub1">
+		  <li><a href="/scripts/Statistics.aspx">Data Releases</a></li>
+          <li><a href="https://data.rbi.org.in" target="_blank">Database on Indian Economy</a></li>
+          <li><a href="/scripts/FS_PDS.aspx">Public Debt Statistics</a></li>
+		</ul> 
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="St-Sub1">Regulatory Reporting ▼</a>
+		<ul class="submenu1">
+			<li><a href="/scripts/BS_Listofallreturns.aspx">List of Returns</a></li>
+			<li><a href="/scripts/DataDefinition.aspx">Data Definition</a></li>
+			<li><a href="/scripts/ValidationRules.aspx">Validation rules/ Taxonomy</a></li>
+			<li><a href="/scripts/ReportingPlaform.aspx">List of RBI Reporting Portals</a></li>
+			<li class="last"><a href="/scripts/ReportingFAQ.aspx">FAQs of RBI Reporting Portals</a></li>
+		</ul>
+   </li>
+</ul>
+</div></div>
+</nav>
+<div class="container_12" >
+    <section>
+        <div class="grid_12" >
+            <div id="dialogAlert" title="" tabindex="-1"  style="text-align: center; display: none;">
+                <p id="AM_Message" tabindex="-1" style="color: #444; font-size: 15px; margin: 20px 0; min-height: 40px;"></p>
+            </div>
+        </div>
+    </section>
+</div>
+<!--  NAVIGATION END-->
+<!--HEADER END-->
+<input type="submit" name="UsrFontCntr$btn" value="" id="btn" style="visibility: hidden; height: 0px; width: 0px;" />
+
+<script type="text/javascript">
+    function SetLink() {
+        //a.href = "https://www.rbi.org.in/hindi/Home.aspx";
+        var txt="This will lead you to Hindi (हिन्दी) language website. Are you sure you want to switch to this language?"
+        if(window.confirm(txt)==true){
+            //document.cookie = 'preferLang' + '=;secure; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
+            window.location.replace("https://www.rbi.org.in/hindi/");
+        }
+        else return false;
+        
+    }
+
+
+
+
+	const allMenuItems = document.querySelectorAll("nav ul li");
+	
+	allMenuItems.forEach(item => {
+		item.addEventListener("focusin", (event) => {	
+			const MenuText =event.target.textContent;
+			const allMenuItems1 = document.querySelectorAll(".hasSubmenu");
+			allMenuItems1.forEach(item1 => {
+				if (MenuText === 'Press Releases')
+				{	
+					
+					item1.classList.remove('focused');
+					rollback(item1)
+					item1.classList.remove('open');
+				}
+			});
+			
+		});
+	});
+
+
+const menuItems = document.querySelectorAll(".hasSubmenu");
+menuItems.forEach(item => {
+	item.addEventListener("mouseenter", (event) => {
+		item.className="hasSubmenu open focused"
+		expandThis(item);
+	});
+	item.addEventListener("mouseleave", (event) => {		
+		rollback(item)
+		item.className="hasSubmenu"
+	});
+	item.addEventListener("focusin", (event) => {		
+		const allMenuItems = document.querySelectorAll("nav ul li");
+		allMenuItems.forEach(item1 => {
+			item1.classList.remove('focused');
+			if(item!==item1)
+			rollback(item1)
+			item1.classList.remove('open');	
+		});							
+		item.classList.add('focused');
+	});
+	item.addEventListener("focusout", (event) => {
+		
+		if(!item.className.includes('focused')){
+		
+		rollback(item)
+		item.className="hasSubmenu"
+		}
+		item.classList.remove('focused');
+		item.classList.remove('open');
+	});
+
+    item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+		if(item.className.includes("hasSubmenu open")){
+			rollback(item)
+			item.className="hasSubmenu"
+		}
+		else{
+          	item.className="hasSubmenu open focused"
+		var ele=item.querySelectorAll("a")[0];
+		
+		expandThis(item);	
+		}
+				
+        }
+	
+    });
+	
+});
+function expandThis(menu){
+ var $targetul = $(menu).children("ul:eq(0)")
+				    if ($targetul.queue().length <= 1) 
+				        if (this.istopheader)
+					$targetul.css({ left: $(this).children('a').eq(0).position().left, top: $mainmenu.position().top + this._dimensions.h - 2 })
+				            
+				    if (document.all && !window.XMLHttpRequest) 
+				        $mainmenu.find('ul').css({ overflow: (this.istopheader) ? 'hidden' : 'visible' })
+					
+					
+				    $targetul.dequeue().stop(true, true).slideDown(droplinemenu.animateduration.over)
+}
+const menuItemsf = document.querySelectorAll("nav .midmenu ul li");
+
+menuItemsf.forEach(item => {
+    item.addEventListener("keydown", (event) => {
+	
+	if(item.className.includes("last") ){
+		 if (pressedKeys['shift'] && event.key === "Tab"){}else{
+		var lastItem = document.getElementsByClassName('hasSubmenu open');
+		rollback(lastItem[0])
+		lastItem[0].className="hasSubmenu";
+		}
+	}
+	
+	});
+	
+	});
+	
+
+function rollback(menu){
+ var $targetul = $(menu).children("ul:eq(0)")
+$targetul.dequeue().stop(true, true).slideUp(droplinemenu.animateduration.out);
+}
+ 
+
+function setLetterSpace(val) {
+    
+	
+    if (false) {
+                    document.body.setAttribute("style", "letter-spacing:1px; line-height:20px; word-spacing:2px;");
+       
+    }
+    else {
+                    document.body.removeAttribute("style");
+    }
+    return false;
+
+    
+    }
+   
+
+// Toggle submenu
+    document.querySelectorAll('.menu li > a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const submenu = this.nextElementSibling;
+
+            if (submenu && submenu.classList.contains('submenu1')) {linkMessage();
+                e.preventDefault();
+                e.stopPropagation();
+
+                const parentLi = this.parentElement;
+
+                // Close sibling menus ONLY (not entire menu)
+                closeSiblings(parentLi);   
+ 
+
+               
+ 
+                const isExpanded=link.getAttribute('aria-expanded') ==='true';
+                link.setAttribute('aria-expanded',!isExpanded);
+                submenu.hidden=isExpanded;
+                
+                submenu.setAttribute('aria-hidden', isExpanded);
+                setTimeout(()=>{
+                    // Toggle current submenu
+                    submenu.classList.toggle('show', !isExpanded);
+            },50);
+
+        }
+        });
+    });
+
+    //  Close only sibling menus (important fix)
+    function closeSiblings(currentLi) {
+        const siblings = currentLi.parentElement.children;
+
+        Array.from(siblings).forEach(li => {
+            if (li !== currentLi) {
+            const submenus = li.querySelectorAll('.submenu1');
+        submenus.forEach(menu => menu.classList.remove('show'));
+    }
+    });
+    }
+
+    //  Click outside → close all
+    document.addEventListener('click', function () {
+		
+        document.querySelectorAll('.menu li > a').forEach(menu => {
+		if(menu.hasAttribute('aria-expanded')){
+            menu.setAttribute('aria-expanded','false');
+	}
+	
+    });
+
+    document.querySelectorAll('.submenu1').forEach(menu => {
+        menu.setAttribute('aria-hidden','true');
+    menu.classList.remove('show');
+	
+
+    });
+    });
+
+    //  Prevent closing when clicking inside menu
+    document.querySelector('.menu').addEventListener('click', function (e) {linkMessage();
+        e.stopPropagation();
+    });
+
+
+    //  Keyboard support
+    document.querySelectorAll('.menu li > a').forEach(link => {
+        link.addEventListener('keydown', function (e) {
+            const submenu = this.nextElementSibling;
+
+            if ((e.key === 'Enter' || e.key === ' ') && submenu) {
+                e.preventDefault();
+
+                const parentLi = this.parentElement;
+                closeSiblings(parentLi);
+
+
+                const isExpanded=link.getAttribute('aria-expanded') ==='true';
+                link.setAttribute('aria-expanded',!isExpanded);
+                submenu.hidden=isExpanded;
+                submenu.setAttribute('aria-hidden', isExpanded);
+                setTimeout(()=>{
+                    // Toggle current submenu
+                    submenu.classList.toggle('show', !isExpanded);
+            },50);
+
+
+           
+        }
+
+          if (e.key === 'Escape') {
+        document.querySelectorAll('.submenu').forEach(menu => {
+            menu.classList.remove('show');
+    });
+    this.blur();
+    }
+    });
+    });
+    // When focusing main menu items → close other submenus
+    document.querySelectorAll('.menu > li > a').forEach(item => {
+        item.addEventListener('focus', function() {
+
+            document.querySelectorAll('.submenu1').forEach(menu => {
+                
+                if (menu !== this.nextElementSibling) {
+              
+
+            document.querySelectorAll('.menu li > a').forEach(menu => {
+                if(menu.hasAttribute('aria-expanded'))
+                menu.setAttribute('aria-expanded','false');
+		
+            document.querySelectorAll('.submenu1').forEach(menu => {
+                menu.setAttribute('aria-hidden','true');
+            
+            menu.classList.remove('show');
+            
+
+
+        });
+
+	
+    });
+
+    }
+    });
+
+    });
+    });
+
+    //  Close submenu when focus leaves it (TAB navigation)
+    document.querySelectorAll('.menu li').forEach(li => {
+        li.addEventListener('focusout', function (e) {
+            // Check if focus is still inside this <li>
+            if (!li.contains(e.relatedTarget)) {
+                const submenu = li.querySelector('.submenu1');
+                if (submenu) {
+                    submenu.classList.remove('show');
+                    if(li.querySelector('a').hasAttribute('aria-expanded'))
+                        li.querySelector('a').setAttribute('aria-expanded','false');
+	
+
+                    submenu.setAttribute('aria-hidden','true');
+                }
+            }
+        });
+    });
+</script>
+        <div>
+            <div role="main" class="container_12">
+                <a id="mainsection" name="mainsection"></a>
+
+                <nav aria-label="Breadcrumb" class="grid_12 breadcrumbs">
+                    <ul>
+                        <li><a href="../Home.aspx">Home</a></li>
+                        <span id="lblNav"><li><a href="NotificationUser.aspx">Notifications</a></li></span>
+                    </ul>
+
+                </nav>
+                <div class="clear">
+                </div>
+                
+                <div id="pnlDetails" class="grid_11 omega right_blue_border">
+	
+                    <div>
+                        <div id="NotificationUser" class="text1">
+
+
+                            <h1 class="page_title">Notifications</h1>
+                            <div id="example-min">
+                                <div id="doublescroll">
+                                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        
+                                        <table class="tablebg" width="100%"><tr><td class="tableheader"><a id='APDF_125MD0601257105ED8375BB487AAA4C45F3B88AD0C5' target="_blank" href="https://rbidocs.rbi.org.in/rdocs/notification/PDFs/125MD0601257105ED8375BB487AAA4C45F3B88AD0C5.PDF" aria-labelledby='APDF_125MD0601257105ED8375BB487AAA4C45F3B88AD0C5 SPDF_125MD0601257105ED8375BB487AAA4C45F3B88AD0C5'>
+   <img alt='PDF - Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025' style='padding: 8px;' src="../Images/pdf.gif" border="0" align="absmiddle"></a> (<span id='SPDF_125MD0601257105ED8375BB487AAA4C45F3B88AD0C5' aria-hidden="true">2379 kb</span>)</td></tr><tr><td align="center" class="tableheader"><b>Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025</b></td></tr><tr class="tablecontent2"><td><table width="100%" border="0" align="center" class="td" style="background: url(https://www.rbi.org.in/scripts/images/Withdrawn04122025.jpg);background-repeat: no-repeat;background-position: top;"> <tr>    <td><p>RBI/DoR/2024-25/125<br>      DoR.FIN.REC.No.55/20.16.056/2024-25</p>      <p align="right">January 06, 2025</p>      <p>All Commercial Banks including Small Finance Banks, Local Area Banks and Regional Rural Banks and excluding Payment Banks<br>All Primary (Urban) Co-operative Banks/ State Co-operative Banks/ Central Co-operative Banks<br>All India Financial Institutions (Exim Bank, NABARD, NHB, SIDBI and NaBFID)<br>All Non-Banking Financial Companies including Housing Finance Companies<br>All Asset Reconstruction Companies<br>All Credit Information Companies</p>    <p>Dear Sir/ Madam,</p>    <p class="head">Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025</p>    <p>The Reserve Bank of India (RBI) has, from time to time, issued several instructions / directives to its regulated entities (REs) on credit information reporting.</p>    <p>2. The <a href="#MD1" class="links">enclosed</a> Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025 consolidates the instructions issued to REs on reporting of the credit information.</p>    <p>3. These Directions are issued by RBI in exercise of the powers conferred under Section 11 of the Credit Information Companies (Regulation) Act, 2005.</p>    <p>Yours faithfully,</p>    <p>(J. P. Sharma)<br>    Chief General Manager</p>    <p>Encl: Reserve Bank of India (Credit Information Reporting) Directions, 2025</p><hr>    <table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">      <tr>        <td align="center" class="head"><a id="MD1"></a>Table of Contents</td>      </tr>      <tr>        <td class="head"><a href="#CH1" class="links">CHAPTER - I: PRELIMINARY</a></td>      </tr>      <tr>        <td><a href="#1" class="links">1 Short Title and Commencement</a></td>      </tr>      <tr>        <td><a href="#2" class="links">2 Applicability</a></td>      </tr>      <tr>        <td><a href="#3" class="links">3 Definitions</a></td>      </tr>      <tr>        <td class="head"><a href="#CH2" class="links">CHAPTER - II: MEMBERSHIP</a></td>      </tr>      <tr>        <td><a href="#4" class="links">4 Membership of the CICs</a></td>      </tr>      <tr>        <td class="head"><a href="#CH3" class="links">CHAPTER - III: CREDIT INFORMATION REPORTING AND DISSEMINATION</a></td>      </tr>      <tr>        <td><a href="#5" class="links">5 Data Formats for reporting of Credit Information</a></td>      </tr>      <tr>        <td><a href="#6" class="links">6 Submission of Data by CIs</a></td>      </tr>      <tr>        <td><a href="#7" class="links">7 Data Validation by CICs and Rectification of Rejected Data</a></td>      </tr>      <tr>        <td><a href="#8" class="links">8 Data Quality Index</a></td>      </tr>      <tr>        <td><a href="#9" class="links">9 Credit Information dissemination by CICs</a></td>      </tr>      <tr>        <td><a href="#10" class="links">10 Correction of Credit Information Report</a></td>      </tr>      <tr>        <td><a href="#11" class="links">11 Use of credit information reports in credit appraisal</a></td>      </tr>      <tr>        <td><a href="#12" class="links">12 Display of information by CIs</a></td>      </tr>      <tr>        <td><a href="#13" class="links">13 Applicability of other instructions issued by Department of Regulation</a></td>      </tr>      <tr>        <td class="head"><a href="#CH4" class="links">CHAPTER - IV: TECHNICAL WORKING GROUP</a></td>      </tr>      <tr>        <td><a href="#14" class="links">14 Instructions on Technical Working Group</a></td>      </tr>      <tr>        <td><a href="#15" class="links">15 Standing Sub-Group of TWG</a></td>      </tr>      <tr>        <td class="head"><a href="#CH5" class="links">CHAPTER - V: CUSTOMER SERVICE AND GRIEVANCE REDRESSAL</a></td>      </tr>      <tr>        <td><a href="#16" class="links">16 Strengthening of customer service rendered by CICs and CIs</a></td>      </tr>      <tr>        <td><a href="#17" class="links">17 Framework for compensation to customers for delayed updation/ rectification of credit information</a></td>      </tr>      <tr>        <td><a href="#18" class="links">18 Miscellaneous Instructions</a></td>      </tr>      <tr>        <td><a href="#19" class="links">19 Reserve Bank- Integrated Ombudsman Scheme, 2021</a></td>      </tr>      <tr>        <td><a href="#20" class="links">20 Appointment of Internal Ombudsman</a></td>      </tr>      <tr>        <td class="head"><a href="#CH6" class="links">CHAPTER - VI: BEST PRACTICES FOR CIs AND CICs</a></td>      </tr>      <tr>        <td><a href="#21" class="links">21 Best Practices for CIs</a></td>      </tr>      <tr>        <td><a href="#22" class="links">22 Best Practices for CICs</a></td>      </tr>      <tr>        <td class="head"><a href="#CH7" class="links">CHAPTER - VII: REPEAL PROVISIONS AND INTERPRETATIONS</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN1.pdf" target="_blank" class="links">Annex - I: List of the CICs registered with the RBI</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN2.pdf" target="_blank" class="links">Annex- II: Eligibility criteria for entities to be categorised as SU under clause (j) of Regulation 3 of CIC Regulations</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN3.pdf" target="_blank" class="links">Annex- III: Operational guidelines to be observed by CICs while entering into a membership agreement with entities eligible to become SU under clause (j) of Regulation 3 of CIC Regulations</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN4.pdf" target="_blank" class="links">Annex - IV: Uniform Credit Reporting Format</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN5.pdf" target="_blank" class="links">Annex - V: Guidelines for reporting of Credit Information in the UCRF</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN6.pdf" target="_blank" class="links">Annex - VI: Credit information reporting regarding members of the SHGs</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN7.pdf" target="_blank" class="links">Annex - VII: Provisions of the credit information reporting mechanism subsequent to cancellation of licence or Certificate of Registration</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN8.pdf" target="_blank" class="links">Annex - VIII: Consumer Data Quality Index</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN9.pdf" target="_blank" class="links">Annex - IX: Commercial Data Quality Index</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN10.pdf" target="_blank" class="links">Annex - X: Microfinance Data Quality Index</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN11.pdf" target="_blank" class="links">Annex - XI: Information on secured assets possessed under the SARFAESI Act, 2002</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN12.pdf" target="_blank" class="links">Annex - XII: Disclosure by CICs</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN13.pdf" target="_blank" class="links">Annex - XIII: Illustrative examples for apportionment of Compensation amount</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN14.pdf" target="_blank" class="links">Annex - XIV: Best Practices for CIs</a></td>      </tr>      <tr>        <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN15.pdf" target="_blank" class="links">Annex - XV: Best Practices for CICs</a></td>      </tr>      <tr>        <td><a href="#ANXVI" class="links">Annex - XVI: List of Circulars repealed with the issuance of Master Direction</a></td>      </tr>    </table>    <p align="center" class="head">Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025</p>    <p>In exercise of the powers conferred by Section 11 of the Credit Information Companies (Regulations) Act, 2005 (hereinafter referred to as CICRA), the Reserve Bank of India (hereinafter referred to as ‘the RBI’) being satisfied that it is necessary and expedient in the public interest to do so, hereby issues the Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025, hereinafter specified.</p>    <p class="head" align="center">Objective</p>    <p>These directions aim to establish a standardised framework for reporting and dissemination of credit information; safeguard the confidentiality and security of sensitive credit data; provide mechanisms for consumers to access their credit information and grievance redressal on matters related to credit information reporting.</p>    <p class="head" align="center"><a id="CH1"></a>CHAPTER – I: PRELIMINARY</p>    <p class="head"><a id="1"></a>1. Short Title and Commencement</p>    <p>(1) These Directions shall be called the Master Direction – Reserve Bank of India (Credit Information Reporting) Directions, 2025.</p>    <p>(2) These Directions shall come into force with immediate effect, unless otherwise specified.</p>    <p class="head"><a id="2"></a>2. Applicability</p>    <p>The provisions of these Directions shall be applicable to credit institutions (CIs) and credit information companies (CICs) as defined in these Directions.</p>    <p class="head"><a id="3"></a>3. Definitions</p>    <p>(1) For the purpose of these directions, unless the context otherwise requires:</p>    <p>(a) “<span class="head">Company</span>” means a company defined under section 3 of the Companies Act, 1956 or corresponding section under the Companies Act, 2013.</p>    <p>(b) <span class="head">“Credit Information Companies (CICs)”</span> means companies that have been granted a certificate of registration under section 5 of the CICRA. The CICs registered with RBI under Section 5 of the CICRA are listed in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN1.pdf" target="_blank" class="links">Annex I</a>.</p>    <p>(c) <span class="head">“Credit Institutions (CIs)”</span> means the following institutions:</p>    <p>(i) Banks -</p>    <ol type="A">      <li>        <p>All Commercial Banks (including Small Finance Banks, Local Area Banks and Rural Banks, and excluding Payment Banks) </p>      </li>      <li>        <p>All Primary (Urban) Co-operative Banks, State Co-operative Banks and Central Co-operative Banks </p>      </li>    </ol>    <p>(ii) All India Financial Institutions (AIFIs) regulated by the Reserve Bank, viz.,</p>    <ol type="A">      <li>        <p>Export Import Bank of India (EXIM Bank)</p>      </li>      <li>        <p>National Bank for Agriculture and Rural Development (NABARD)</p>      </li>      <li>        <p>National Housing Bank (NHB)</p>      </li>      <li>        <p>Small Industries Development Bank of India (SIDBI) and </p>      </li>      <li>        <p>National Bank for Financing Infrastructure and Development (NaBFID) </p>      </li>    </ol>    <p>(iii) All Non-Banking Financial Companies<sup><sup data-toggle="tooltip" title="Except those which are purely into investment activities without any customer interface."><a href="#F1" class="links">1</a></sup></sup> (including Housing Finance Companies) </p>    <p>(iv) All Asset Reconstruction Companies (ARCs)</p>    <p>(d) <span class="head">“Specified User (SU)”</span> shall have the same meaning assigned to it under clause (l) of section 2 of CICRA and those notified under regulation 3 of the Credit Information Companies Regulations, 2006 (as amended from time to time).</p>    <p>(2) Words or expressions used in these Directions and not defined herein, but defined in CICRA, 2005, the Credit Information Companies Rules, 2006 (hereinafter referred to as “CIC Rules”) and the Credit Information Companies Regulations, 2006, (hereinafter referred to as “CIC Regulations”), shall have the same meanings as assigned to them in these Statute/ Rules/ Regulations. Any other words or expressions used and not defined in these directions or aforesaid Statute/ Rules/ Regulations and defined in Reserve Bank of India Act, 1934 or Banking Regulation Act, 1949 or the Companies Act, 2013 shall have the same meanings as assigned to them in these Acts.</p>    <p class="head" align="center"><a id="CH2"></a>CHAPTER - II: MEMBERSHIP</p>    <p class="head"><a id="4"></a>4. Membership of the CICs</p>    <p>(1) All CIs shall become members of all the CICs registered with the RBI.</p>    <p>(2) One-time membership fee charged by the CICs from the CIs to become their members shall not exceed ₹10,000/- each.</p>    <p>(3) The annual fees charged by the CICs from the CIs shall not exceed ₹5,000/- each.</p>    <p>(4) While entering into a membership agreement with entities eligible to become Specified Users (SUs) under clause (j) of Regulation 3 of the CIC Regulations<sup data-toggle="tooltip" title="Credit Information Companies (Amendment) Regulations, 2021, published in the Gazette of India vide notification CG-DL-E-30112021-231472 dated November 29, 2021, expanded the definition of ‘Specified Users’ under Regulation 3 of CIC Regulations, 2006 to include “an entity engaged in the processing of information, for the support or benefit of credit institutions, and satisfying the criteria laid down by the Reserve Bank from time to time.”"><a href="#F2" class="links">2</a></sup> (as amended from time to time), CICs shall ensure the following:</p>    <ol type="a">      <li>        <p>CICs shall adhere to the guidelines on the eligibility criteria for entities to be categorized as SU under clause (j) of Regulation 3 of the CIC Regulations issued vide <a href="https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=53055" target="_blank" class="links">press release dated January 05, 2022</a> as mentioned at <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN2.pdf" target="_blank" class="links">Annex II</a>.</p>      </li>      <li>        <p>CICs shall put in place an appropriate due diligence and control mechanism while giving membership, and also share credit information with entities that are eligible to become SU under the aforesaid clause.</p>      </li>      <li>        <p>A broad set of operational guidelines to be observed by CICs while entering into a membership agreement with entities eligible to become SU under the aforesaid clause is mentioned at <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN3.pdf" target="_blank" class="links">Annex III</a>.</p>      </li>      <li>        <p>      CICs should monitor the compliance of the entities categorized as SU under the aforesaid clause to the eligibility criteria and other operational guidelines issued by RBI on an annual basis. CICs shall obtain an undertaking on a quarterly basis from these entities stating that they are complying with the eligibility criteria and other operational guidelines issued by RBI on the matter. </p>      </li>    </ol>    <p class="head" align="center"><a id="CH3"></a>CHAPTER - III: CREDIT INFORMATION REPORTING AND DISSEMINATION</p>    <p class="head"><a id="5"></a>5. <strong>Data Formats for reporting of Credit Information</strong></p>    <p>The reporting of credit information by CIs to the CICs, shall be undertaken in standardised data formats as prescribed in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN4.pdf" target="_blank" class="links">Annex IV</a>. These standardised data formats would be a non-proprietary reporting format and shall be known as “Uniform Credit Reporting Format” (UCRF) as denoted below:</p>    <p><span class="head"><strong>Form 1:</strong></span> Uniform Credit Reporting Format (Consumer) – for consumer segment.</p>    <p><span class="head">Form 2:</span> Uniform Credit Reporting Format (Commercial) – for commercial segment</p>    <p><span class="head">Form 3:</span> Uniform Credit Reporting Format (MFI) – for microfinance segment.</p>    <p class="head"><a id="6"></a>6. Submission of Data by CIs</p>    <p class="head">(1) Reporting of Credit Information by CIs</p>    <p>(a) CIs shall submit data on credit information of its borrowers (including historical data) to all CICs.</p>    <p>(b) CICs and CIs shall keep the credit information collected/ maintained by them, updated regularly on a fortnightly basis (i.e., as on 15th and last day of the respective month) or at shorter intervals as mutually agreed upon between the CI and CIC. The fortnightly submission of credit information by CIs to CICs shall be ensured within seven (7) calendar days of the relevant reporting fortnight. CICs shall provide a list of CIs which are not adhering to the fortnightly data submission timelines to Department of Supervision, Reserve Bank of India, Central Office at half yearly intervals (as on March 31 and September 30 each year) for information and monitoring purposes.</p>    <p>(c) CIs shall ensure that the records submitted to CICs are updated regularly and that no instances of repayment, including that of the last instalment, are left unreported.</p>    <p>(d) The CICRA provides statutory backing for sharing of credit information by CIs with CICs subject to conditions stipulated therein. Therefore, with CICRA coming into force, the "consent clause" has become redundant and hence consent of the borrower prescribed vide Annexure-I and II of the circular DBOD.No.DL.BC.29/20.16.002/2002-03 dated October 1, 2002 need not be insisted upon by banks.</p>    <p>(e) While reporting the credit information in the UCRF, among others, the guidelines mentioned in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN5.pdf" target="_blank" class="links">Annex V</a> shall be adhered to by CIs.</p>    <p class="head">(2) Credit information reporting in respect of Self Help Group (SHG) members</p>    <p>(a) CIs financing SHGs shall report the SHG member level data to CICs in the Uniform Credit Reporting Format (MFI) as mentioned in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN4.pdf" target="_blank" class="links">Annex IV</a><strong>.</strong> </p>    <p>(b) The structure of the credit information in respect of SHG members to be collected and reported by CIs to CICs is mentioned at <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN6.pdf" target="_blank" class="links">Annex VI</a>. </p>    <p class="head">(3) Credit Information Reporting Mechanism subsequent to cancellation of licence or Certificate of Registration</p>    <p>(a) In case of cancellation of Certification of Registration (CoR)/ licence of a CI by RBI, either through voluntary submission or supervisory action, CICs shall insert a suitable disclaimer in the records of the CI’s borrowers to reflect non-updatability of the record due to closure of the CI in their CIR.</p>    <p>(b) In order to address the challenges in updating credit information of borrowers of CI whose Certification of Registration (CoR)/ licence has been cancelled, CICs and CIs shall implement, before April 10, 2025, a credit information reporting mechanism subsequent to cancellation of licence/ CoR of banks/ NBFCs as given in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN7.pdf" target="_blank" class="links">Annex VII</a>.</p>    <p class="head"><a id="7"></a>7. Data Validation by CICs and Rectification of Rejected Data</p>    <p>(1) The CICs shall share with the CIs, the logic and validation processes involved in data acceptance, so that instances of data rejection are minimised. The reasons for rejection shall be parameterised by the CICs and circulated among the concerned CIs.</p>    <p>(2) Rejection reports issued by CICs shall be simple and understandable so that they can be used for fixing reporting and data level issues by the CIs.</p>    <p>(3) CIs shall rectify the rejected data and upload the same with the CICs within seven days of receipt of such rejection report.</p>    <p>(4) CICs shall undertake periodic exercises/checks, at least once in a quarter, to identify identifier inconsistencies in its database and share the findings of such identifier inconsistencies with the respective CIs for confirming the accuracy of the same. The list of CIs who do not respond in timely manner (say within a month) to such data cleansing exercises shall be sent to Department of Supervision, Central Office at half yearly intervals (as on March 31 and September 30) for information.</p>    <p><span class="head">Explanation</span>: CICs shall not share the data received from CIs under CICRA for ascertaining identifier inconsistencies with its respective nodal authorities and also not make changes to its database without obtaining confirmation from the respective CIs.</p>    <p class="head"><a id="8"></a>8. Data Quality Index</p>    <p>(1) CICs shall prepare and provide Data Quality Index (DQI) for Consumer, Commercial and Microfinance segments as given in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN8.pdf" target="_blank" class="links">Annex VIII</a>, <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN9.pdf" target="_blank" class="links">IX</a> and <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN10.pdf" target="_blank" class="links">X</a>, respectively, for assessing the quality of data submissions by CIs to CICs and improving the same over a period of time.</p>    <p>(2) CICs shall provide DQIs for the three reporting segments (Consumer, Commercial and Microfinance) in the form of numeric scores on a monthly basis to all member CIs.</p>    <p>(3) DQI score for the Consumer segment shall be provided at CI level as an average of demographic and trade data scores and such DQI score shall be computed as an average of file level DQI scores of that CI.</p>    <p>(4) DQI scores for Commercial and Microfinance segments shall also be provided at CI and file level. The DQI scores for Commercial and Microfinance segments at CI level shall be computed as weighted average of file level DQI scores of Commercial and Microfinance segments, respectively, of that CI.</p>    <p>(5) CICs shall compute industry level DQIs for each of the three reporting segments as weighted average of the CI level DQI in their respective category (e.g. Public-Sector Banks, Private Sector Banks, Foreign Banks, Co-operative Banks, RRBs, NBFCs etc.) on monthly basis. Further, a half yearly Industry Benchmark shall be calculated as a rolling average of preceding six months Industry level DQI score of the respective category of CIs.</p>    <p>(6) CICs shall provide reasons for decline in score to each CI, if its (a) CI level score has declined over the previous month or (b) CI level score is lower than the half yearly industry benchmark.</p>    <p>(7) CICs shall provide monthly data of CI level DQI and industry level DQI of all segments to Department of Supervision, Reserve Bank of India, Central Office at half yearly intervals as on September 30 and March 31 each year, for information and monitoring purposes.</p>    <p>(8) CIs are advised to undertake half yearly review of the DQI for all segments to improve the quality of the data being submitted to CICs. A report consisting of issues identified and corrective steps taken shall be placed before its top management by each CI for review within two months from the end of that half-year.</p>    <p class="head"><a id="9"></a>9. Credit Information dissemination by CICs</p>    <p class="head">(1) Credit Information Report (CIR)</p>    <p>(a) It is not considered necessary to standardise the format of the CIR as some differentiation is essential for promoting competition in the market. However, CICs shall standardise the CIR terminology and also have some mandatory key fields. This would facilitate comparison between CIRs received from two or more CICs, by the users.</p>    <p>(b) CICs shall provide a single credit information report (CIR) for one borrower, even if the firm/ person has more than one address, by utilising a unique identification number such as PAN number, Voter ID number, Passport number, Driving License number, etc., provided by the CI.</p>    <p>(c) CICs shall capture details of co-borrowers and guarantors, wherever applicable, in the CIR. This would facilitate deciding on the extent of exposure a CI can consider on an entity. The CIR shall give details of the loans availed by the customers in their capacity as borrower/co-borrower/guarantor.</p>    <p>(d) In the case of multiple borrowings by the same customer, involving both current and closed accounts, the CICs shall provide information on various accounts in the order of live accounts, closed accounts and overall position of NPA status/ wilful default/ suit filed, with limits and liabilities for each account.</p>    <p>(e) CIR shall provide appropriate disclosures, if any information contained therein has been disputed and the matter has not been satisfactorily resolved. If the customer so desires, his/ her comment could also be added to the CIR. Certain fields pertaining to consumer disputes viz. dispute code, dispute description, dispute date and consumer comments on disputes (as listed in Annex 5 of the Aditya Puri Committee Report<sup data-toggle="tooltip" title="The Report of the Committee can be accessed through the link: https://rbi.org.in/scripts/PublicationReportDetails.aspx?UrlPage=&ID=763"><a href="#F3" class="links">3</a></sup>) may be included in the CIR.</p>    <p>(f) Information relating to loans declined previously to customers shall not be reported by CICs, as such information could be prejudicial to the interests of the customer as rejection in one CI could be used as a ground for rejection of the same by another CI.</p>    <p>(g) In addition to the existing CIR, the CICs may provide a comprehensive credit information report (CCIR) incorporating the credit information in respect of a borrower available in all the modules, i.e., the consumer, commercial and MFI, as an additional option for usage by CIs. This would provide the CIs with an option to consume either the CIR or the CCIR, based on their respective credit appraisal requirements.</p>    <p>(h) To facilitate the understanding and interpretation of credit scores in an easy and consistent manner, the credit scores shall be calibrated from 300 to 900 by all CICs, so that they have a common classification of credit scores.</p>    <p>(i) The CICs shall provide access in an electronic format, upon request and after due authentication of the requester, to one free full credit report (FFCR) including credit score, once, at any time, during a year (January – December), to individuals whose credit score is available with them. FFCR shall show the latest position of the CIs exposure to the individual as per the records available with the CICs. The contents of the FFCR shall be the same as appearing in the most detailed version of the reports of the individual provided to CIs, including the credit score. CICs shall prominently display the link for accessing the FFCR on their website (on the homepage itself) so that individuals are able to access their FFCR conveniently. The CICs shall have a Board approved policy on making available the FFCR.</p>    <p>(j) The enquiry module of CICs for generation of CIRs shall have appropriate sub-fields (with not more than 5-7 options each) for the SUs to choose from while selecting the purpose of enquiry. Further, one of the sub-fields in the enquiry module of CICs shall be invariably designated as ‘Business Loan - Director Search - soft enquiry - score unaffected’. CICs shall conduct awareness programmes to sensitize SUs on the importance of choosing correct enquiry parameters and its implications.</p>    <p class="head">(2) Sharing of credit information with third party entities based on consent of individuals</p>    <p>It is observed that the CICs are sharing credit information based on consent of an individual, with entities which are not SUs, by entering into an agreement with such entities. Given the sensitivity and possible misuse while sharing such credit information, the CICs shall put in place a suitable mechanism for the purpose.</p>    <p>(a) CICs shall put in place a robust due diligence and control mechanism while sharing credit information of an individual based on his/her consent with entities which are not specified users, by entering into agreement with such entities. This shall involve an evaluation of all the available information about the entity, including but not limited to the following:</p>    <ol type="i">      <li>        <p>The general character of management should not be prejudicial to public interest.</p>      </li>      <li>        <p>Business reputation, ownership structure, compliance/ governance standards, grievance redressal mechanism and outstanding litigation.</p>      </li>      <li>        <p>Financial soundness and ability to service commitments even under adverse conditions.</p>      </li>      <li>        <p>Necessary technological, entrepreneurial and managerial resources to support the proposed activity of the customers over the contracted period. </p>      </li>      <li>        <p>      Information security and internal control, audit coverage, monitoring and reporting environment and business continuity management. </p>      </li>    </ol>    <p>(b) CICs while sharing credit information of an individual with an entity based on consent shall ensure from the entity that:</p>    <ol type="i">      <li>        <p>The entity, in its capacity as an authorized representative of the individual, shall use the CIR solely for the limited end use as agreed between them and shall not use or sell or resell or pass on information to any other person or engage itself in obtaining CIR other than for the consented purpose. "Individual Consent" means the prior written consent of the individual by any documented means, stored as an electronic or physical record verifiable from time to time and permanent in nature.</p>      </li>      <li>        <p>The credit information shared by CICs with these entities is stored only for a limited time period of six months, or till such time the credit information is required to be retained to satisfy the purpose for which it was intended, or the individual withdraws his/her consent to store such credit information, whichever is earlier and thereafter, the stored credit information shall be deleted. If the purpose for which such credit information so obtained by the entities is not fulfilled, then these entities would be required to seek a fresh consent from the concerned individual for retaining credit information beyond a period of six months as stated above. The Information System auditor appointed for the purpose shall examine compliance to the above.</p>      </li>      <li>        <p>There is no unauthorized use by any other third party including but not limited to any of its group companies, subsidiaries, affiliates or associates in violation of the provisions of CICRA, 2005 and other applicable laws.</p>      </li>      <li>        <p>Such information is shared with its employees or agents on a ‘need to know basis’ only, while ensuring that such employees or agents with access to the said information are subjected to obligation of confidentiality. </p>      </li>      <li>        <p>The credit information received is duly protected both online and offline against any unauthorized access or use, to ensure the confidentiality and security of all transactions except for disclosures made as agreed to between the entity and the individual.</p>      </li>      <li>        <p>      The credit information received shall be processed and stored in India and not transferred outside India. </p>      </li>    </ol>    <p>(c) With respect to Information System (IS) Audit –</p>    <ol type="i">      <li>        <p>The CICs shall incorporate a clause in their agreement that a CISA certified auditor appointed by the entity would conduct IS audit of the entities with whom CICs have entered into agreement for sharing of credit information based on consent of the individual and the IS audit reports in this regard shall be submitted to CICs. Such audit shall be undertaken annually or even earlier, if warranted.</p>      </li>      <li>        <p>The scope of IS audit or appointed IS auditor would be to ensure that the entities are adhering to Section 19, 20 and 22 of CICRA, 2005 and Rules 18(b), 23, 28 and 29 of the CIC Rules, 2006 and are using the credit information for the permitted purposes. </p>      </li>      <li>        <p>      The IS audit reports and the review undertaken by the Board of the CIC shall be shared with the supervisory team of RBI. </p>      </li>    </ol>    <p>(d) CICs while entering into an agreement with these entities may incorporate appropriate provisions in the contract/ agreement for enforcement of these guidelines. Violation of any clause of the agreement by the entities or any adverse observations of the IS auditor against the entities would warrant CICs to initiate stringent action which may include, <em>inter alia</em>, termination of the agreement.</p>    <p class="head"><a id="10"></a>10. Correction of Credit Information Report</p>    <p>(1) CIs and CICs shall abide by the time periods stipulated under CICRA and the Rules and Regulations framed thereunder in respect of updation, alteration of credit information, resolving disputes, etc. Procedure prescribed under Rules 20, 21, 25 and 26 of the CIC Rules, 2006 in this regard shall be adhered to. Deviations from stipulated time limits shall be monitored and commented upon in the periodical reports/reviews put up to the Board/ Committee of Board on customer service.</p>    <p>(2) The CIs as well as the CICs shall have arrangements in place to receive customer requests for rectification of data in CIRs. In order to maintain high data quality, all erroneous data shall be corrected at the source by the CI that originally submitted the data. The CIC shall not change borrower data unless the CI submitting the data has rectified it at the source to obviate the risk of updated data being overwritten by erroneous data in the next submission cycle by the CI.</p>    <p>(3) The CICs shall provide a special ‘view’ / ‘read only’ access to the member CIs to view account level updates in their database through a front-end interface to enable CIs to confirm or upload account updates/ correction requests and also in speedy resolving of discrepancies in CIRs. The CICs shall operationalise a full-fledged online data correction mechanism, in the interest of customer service.</p>    <p>(4) In case any correction is carried out in the CIR, the CICs shall provide a free copy of the corrected report to whom the report had been issued during the previous six months. However, the cost of the CIR may be borne by the members of CICs, if they are responsible for the inaccurate data.</p>    <p class="head"><a id="11"></a>11. Use of credit information reports in credit appraisal</p>    <p>(1) The CIs shall include in their loan policies/ credit appraisal processes, suitable provisions for obtaining CIRs from one or more CICs so that the credit decisions are based on credit information available in the system.</p>    <p>(2) CICs should regularly hold workshops for CIs, in association with Indian Banks Association (IBA) or Micro Finance Institutions Network (MFIN)/ Sa-Dhan, as the case may be, for creating awareness about use of CIRs in credit appraisal and in better screening of loan applicants.</p>    <p class="head"><a id="12"></a>12. Display of information by CIs<sup data-toggle="tooltip" title="Frequently asked questions (FAQs) on this aspect are available on the following link: https://rbi.org.in/Scripts/FAQView.aspx?Id=163 "><a href="#F4" class="links">4</a></sup></p>    <p>CIs, which are secured creditors as per the Securitisation and Reconstruction of Financial Assets and Enforcement of Security Interest (SARFAESI) Act, 2002, shall display, on their website, information in respect of the borrowers whose secured assets have been taken into possession by the CIs under the SARFAESI Act, 2002 as per the format given in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN11.pdf" target="_blank" class="links">Annex XI</a>. The list consisting of this information shall be updated on monthly basis.</p>    <p class="head"><a id="13"></a>13. Applicability of other instructions issued by Department of Regulation</p>    <p>CIs and CICs shall ensure compliance with the applicable instructions on credit information reporting, as prescribed in the following Directions/ Circulars:</p>    <p>(1) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12300" target="_blank" class="links">Master Direction – Credit Card and Debit Card – Issuance and Conduct Directions, 2022 dated April 21, 2022</a>, as amended from time to time.</p>    <p>(2) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12534" target="_blank" class="links">Master Direction – Classification, Valuation and Operation of Investment Portfolio of Commercial Banks, Directions, 2023, dated September 12, 2023</a>, as amended from time to time.</p>    <p>(3) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10567" target="_blank" class="links">Master Direction – Standalone Primary Dealers (Reserve Bank) Directions, 2016, dated August 23, 2016</a>, as amended from time to time.</p>    <p>(4) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12538" target="_blank" class="links">Master Direction – Reserve Bank of India (Prudential Regulations on Basel III Capital Framework, Exposure norms, Significant Investments, Classification, Valuation and Operation of Investment Portfolio Norms for All India Financial Institutions) Directions, 2023, dated September 21, 2023</a>, as amended from time to time.</p>    <p>(5) <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12382&Mode=0" target="_blank" class="links">Guidelines on Digital Lending dated September 02, 2022</a>, as amended from time to time.</p>    <p>(6) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12550" target="_blank" class="links">Master Direction – Reserve Bank of India (Non-Banking Financial Company– Scale Based Regulation) Directions, 2023 dated October 19, 2023</a> as amended from time to time. </p>    <p>(7) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12166" target="_blank" class="links">Master Direction – Reserve Bank of India (Transfer of Loan Exposures) Directions, 2021 dated September 24, 2021</a>, as amended from time to time. </p>    <p>(8) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10425" target="_blank" class="links">Master Direction - Reserve Bank of India (Financial Services provided by Banks) Directions, 2016 dated May 26, 2016</a>, as amended from time to time. </p>    <p>(9) <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11137" target="_blank" class="links">Master Direction – Non-Banking Financial Company – Peer to Peer Lending Platform (Reserve Bank) Directions, 2017 dated October 04, 2017</a>, as amended from time to time. </p>    <p class="head" align="center"><a id="CH4"></a>CHAPTER – IV: TECHNICAL WORKING GROUP</p>    <p class="head"><a id="14"></a>14. Instructions on Technical Working Group</p>    <p>(1) In order to institutionalize a continuing mechanism for reviewing and making changes where necessary in the data formats, a Technical Working Group (TWG) shall be formed. The TWG shall carry out the following functions:</p>    <p>(a) Review the data reporting formats, at least once a year, and make recommendations, if any, to the Reserve Bank in this regard. </p>    <p>(b) Frame rules on data fields for all data reporting formats, viz., consumer, commercial, micro finance (MFI) segments. The data formats after finalisation by the Group will be submitted to RBI for approval.</p>    <p>(c) Any other matter relating to collection and dissemination of credit information as the Reserve Bank may assign from time to time. </p>    <p>(2) The TWG shall comprise of representatives from Public Sector Banks, Private Sector Banks, Foreign Banks, Primary (Urban) Cooperative Banks (UCBs), Regional Rural Banks (RRBs), All India Notified Financial Institutions (AIFIs), Non-Banking Financial Companies (NBFCs), Housing Finance Companies (HFCs), Asset Reconstruction Companies (ARCs) India Banks’ Association (IBA), Micro Finance Institutions Network (MFIN), Sa-Dhan and CICs.</p>    <p>(3) Meetings of the TWG shall be held at least once in a calendar year. The four CICs shall act as convenor of the TWG by rotation (for each calendar year), in alphabetical order of the name.</p>    <p class="head"><a id="15"></a>15. Standing Sub-Group of TWG</p>    <p>(1) A Standing Sub-Group of TWG shall be constituted to function as an advisory and collaborative body to offer expert insights and make recommendations on technical aspects of credit information reporting. Its purpose would be to support in-depth discussions regarding challenges encountered by CIs and CICs in relation to credit information reporting. This includes necessary modifications, including changes in the IT systems, that may be required in the data reporting formats. The Sub-Group shall work to support the broader TWG to ensure a holistic approach to strengthening the credit information reporting ecosystem.</p>    <p>(2) The Sub-Group of TWG would consist of representatives from Public-Sector Banks, Private Sector Banks, Foreign Banks, Small Finance Banks, Regional Rural Banks, Urban Cooperative Banks, Non-Banking Financial Companies, Asset Reconstruction Companies, Self-Regulating Organizations (SROs), viz., MFIN and Sa-Dhan, and all CICs.</p>    <p>(3) Members of the Sub-Group shall be selected by the convenor with prior approval of the Reserve Bank. To enhance the overall expertise and effectiveness of the discussions, members of the Sub-Group shall nominate subject matter experts to its meetings.</p>    <p>(4) The Sub-Group of TWG shall meet at least on a half yearly basis to discuss credit information reporting issues and seek potential resolutions.</p>    <p>(5) To ensure effective coordination, the CIC that assumes the role of TWG convenor for a specific year shall also act as convenor of the Sub-Group in that particular calendar year.</p>    <p>(6) To ensure proper preparation and informed discussions, the convenor shall send the meeting agenda and notes at least fifteen (15) days before the scheduled meeting. Additionally, if members desire to introduce a new issue or item for discussion, they should send a note outlining the points of discussion and proposed solutions to the convenor.</p>    <p>(7) Action points emanating from discussions of the Sub-Group shall contain specific timelines required for their implementation by CICs and CIs.</p>    <p>(8) Recommendations of the Sub-Group of TWG shall be forwarded to the Department of Regulation, Central Office, Reserve Bank of India for perusal. If required, RBI may seek TWG’s opinion on these recommendations.</p>    <p class="head" align="center"><a id="CH5"></a>CHAPTER - V: CUSTOMER SERVICE AND GRIEVANCE REDRESSAL</p>    <p class="head"><a id="16"></a>16. Strengthening of customer service rendered by CICs and CIs</p>    <p>In order to strengthen and improve the efficacy of the grievance redress mechanism and customer service provided by the CIs and CICs, the following measures shall be put in place by CIs and CICs.</p>    <p class="head">(1) Intimation of access to CIR and updation of credit information with CICs</p>    <p>(a) CICs shall send alerts through SMS/ email to customers when their CIR is accessed by the SUs, wherever mobile number/ email ID details of the customers are available. The alerts shall be sent by CICs only when the CIR enquiry reflects in the CIR of the customer.</p>    <p>(b) CIs shall send alerts through SMS/ email to customers while submitting information to CICs regarding default/ days past due (DPD) in existing credit facilities, wherever the mobile number/email ID details are available. </p>    <p>(c) To enable sending of alerts through SMS/ email, the Uniform Credit Reporting Format for reporting credit information by CIs to CICs has been modified as detailed in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN12.pdf" target="_blank" class="links">Annex XII</a> (Item 1). </p>    <p>      (d) CIs are advised to organize special awareness campaigns to sensitize their customers about benefits of submission of their mobile numbers/ email IDs. </p>    <p class="head">(2) Setting up of Nodal points/ officials by CIs</p>    <p>(a) CIs shall have a dedicated nodal point/ official of contact for CICs for redress of customer grievances. Details of the nodal point/ official along with email ID and telephone/ mobile number shall be furnished by CIs to CICs.</p>    <p>      (b) CIs shall inform CICs of any changes in the nodal points/ official within five (5) calendar days of such a change. </p>    <p class="head">(3) Reasons for rejection of requests for data correction by CIs</p>    <p>(a) CIs shall inform the customers the reasons for the rejection of their request for data correction, if any, to enable such customers to better understand the issues in the CIR.</p>    <p>(b) A list of reasons for rejection of requests shall be circulated by CICs to all CIs. CIs shall use the same while communicating the rejections of the request for data correction made by customers/ CICs during the grievance redress process.</p>    <p class="head">(4) Root Cause Analysis of the Complaints by CIs</p>    <p>(a) CIs shall undertake Root Cause Analysis (RCA) of the customer grievances at least on a half yearly basis. CIs shall also use, among others, information on data rejected by the CICs and DQI provided by CICs as sources of information for carrying out RCA.</p>    <p>(b) Analysis of the RCA shall be reviewed by the Top Management of CIs, at least, on an annual basis.</p>    <p class="head">(5) Periodic review of match logic algorithm by CICs</p>    <p>(a) CICs shall have a board-approved policy for undertaking periodic review (at least on a half-yearly basis) of the ‘Search & Match’ logic algorithm implemented by them to provide CIR of a borrower.</p>    <p>(b) CICs shall have a system of conducting Root Cause Analysis (RCA) of complaints. RCA of the complaints being undertaken by CICs shall be used to identify issues in the existing ‘Search & Match’ logic algorithm.</p>    <p>(c) Results of the RCA and subsequent changes in the search and match logic shall be placed before the Board of Directors of the CIC for review.</p>    <p class="head">(6) Ingestion of credit information data by CICs</p>    <p>(a) CICs shall ingest credit information data received from the CIs as per its data acceptance rules, into their databases within five (5) calendar days of its receipt from the CIs.</p>    <p>(b) In case of data rejection, CICs shall communicate to the concerned CI, regarding rejection of the data with reasons, within seven (7) calendar days of receipt of the data.</p>    <p class="head">(7) Disclosure of complaints on credit information reporting by CICs</p>    <p>CICs shall disclose on their websites, details of complaints registered against them and CIs as per the format given in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN12.pdf" target="_blank" class="links">Annex XII</a> (Table 1 and 2).</p>    <p class="head"><a id="17"></a>17. Framework for compensation to customers for delayed updation/ rectification of credit information</p>    <p>CICs and CIs are directed to implement the following compensation mechanism for delayed updation/ rectification of credit information:</p>    <p>(1) Complainants shall be entitled to a compensation of ₹100 per calendar day in case their complaint is not resolved within a period of thirty (30) calendar days from the date of the initial filing of the complaint by the complainant with a CI/ CIC.</p>    <p class="head">Explanation:</p>    <p>(a) Section 21 (3) of CICRA, 2005 provides that a complainant may request a CIC or CI to update the credit information by making an appropriate correction, addition or otherwise, and on such request the CI or CIC shall take steps to update the credit information within thirty (30) days after being requested to do so.</p>    <p>(b) Rule 20 (3) (c) of CIC Rules, 2006 provides that the CI shall forward the corrected particulars of the credit information to the CIC or complainant within a period of twenty-one (21) days from the date when the CI was informed of the inaccuracy in the credit information.</p>    <p>(c) The combined reading of Section 21(3) of CICRA, 2005 and Rule 20 (3) (c) of CIC Rules, 2006 provide the CI and the CIC, collectively, an overall limit of thirty (30) days to resolve/ dispose of the complaint. In effect, this would mean that a CI would get twenty-one (21) days and CICs would effectively get the remainder of nine (9) days for complete resolution of the complaint.</p>    <p>(2) A CI shall pay compensation to the complainant if the CI has failed to send updated credit information to the CICs by making an appropriate correction or addition or otherwise within twenty-one (21) calendar days of being informed by the complainant or a CIC.</p>    <p>(3) A CIC shall pay compensation to the complainant if the CIC has failed to resolve the complaint within thirty (30) calendar days of being informed by the complainant or a CI, despite the CI having furnished the updated credit information to the CIC within twenty-one (21) calendar days of being informed by the complainant or the CIC.</p>    <p>(4) The complainant shall be advised by the CI/ CIC of the action taken on the complaint in all cases, including the cases where the complaint has been rejected. In cases of rejection, the reasons for rejection shall also be provided by CI and CIC.</p>    <p>(5) Compensation to be provided by the CICs/ CIs to the complainant (for delayed resolution beyond thirty (30) calendar days of filing the complaint) shall be apportioned among the CIs/ CICs concerned proportionately. Illustrative examples of the same are given in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN13.pdf" target="_blank" class="links">Annex XIII</a>.</p>    <p>(6) Where the grievance/ complaint involves inaccurate credit information provided by more than one CI, the complaint shall be registered by the complainant with the concerned CIC. The CIC shall coordinate with all the CIs concerned and furnish the complainant with a comprehensive resolution of the grievance.</p>    <p>(7) Where the complaint has been received and registered by a CIC and there has been a delay in the resolution of the complaint, the CIC shall inform the concerned CI(s) and the complainant after the final resolution, regarding total delay (in calendar days) and the amount of compensation to be paid by the CI(s) and/ or CIC.</p>    <p> (8) Where the complaint has been received and registered by a CI and there has been a delay in the resolution of the complaint, the CI shall inform the concerned CIC(s) and the complainant after the final resolution, regarding total delay (in calendar days) and the amount of compensation to be paid by the CI and/ or CIC(s).</p>    <p> (9) The date of the resolution of the grievance shall be the date when the rectified CIR has been sent by the CIC or CI to the postal address or email ID provided by the complainant.</p>    <p>(10) The CICs/ CIs shall make appropriate provision in their complaint submission format (both online and offline) for enabling the complainant to submit the contact details, email ID, and bank account details/ Unified Payment Interface (UPI) ID for crediting the compensation amount. The onus of providing accurate details will lie with the complainant and the CIs/ CICs will not be held responsible for any incorrect information provided by the complainant.</p>    <p>(11) The compensation amount shall be credited to the bank account of the complainant within five (5) working days of the resolution of the complaint.</p>    <p>(12) The complainant can approach RBI Ombudsman, under the Reserve Bank - Integrated Ombudsman Scheme, 2021, in case of wrongful denial of compensation by CIs or CICs.</p>    <p>(13) In case of wrongful denial of compensation by CIs which are yet to be covered under the Reserve Bank - Integrated Ombudsman Scheme, 2021, the complainant can approach Consumer Education and Protection Cell (CEPC) functioning from Regional Offices (ROs) of Reserve Bank of India.</p>    <p>(14) The compensation framework shall not be applicable in the following cases:</p>    <p>(a) disputes for which remedy has been provided under Section 18 of CICRA, 2005. The Section 18 of CICRA, 2005 provides that for disputes arising amongst, CICs, CIs, borrowers, and clients on matters relating to the business of credit information and for which no remedy has been provided under CICRA, 2005, such disputes shall be settled by conciliation or arbitration as provided in the Arbitration and Conciliation Act, 1996.</p>    <p>(b) complaints/ references relating to (i) internal administration, (ii) human resources, (iii) pay and emoluments of staff, and (iv) references in the nature of suggestions and commercial decisions of the CIC/CI.</p>    <p>(c) complaints pertaining to disputes/ grievances regarding the computation of the credit score/ credit score model.</p>    <p>(d) complaints that have been decided by or are already pending in other fora such as Consumer Disputes Redressal Commission, Courts, Tribunals, etc.</p>    <p class="head"><a id="18"></a>18. Miscellaneous Instructions</p>    <p>CICs shall share with the complainant, if he/she desires, the details of action taken with respect to their complaint, the relevant correspondences/follow-up done with the CIs and the reply received from CIs. This would not only help in tracking of complaint by the complainant but also go a long way in making the grievance redressal mechanism more robust.</p>    <p class="head"><a id="19"></a>19. Reserve Bank- Integrated Ombudsman Scheme, 2021</p>    <p>CICs and CIs covered under the <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12371&Mode=0" target="_blank" class="links">Reserve Bank – Integrated Ombudsman Scheme, 2021 (RBIOS, 2021)</a> shall comply with the directions provided under the said Scheme.</p>    <p class="head"><a id="20"></a>20. Appointment of Internal Ombudsman</p>    <p>CIC and CIs covered under the Internal Ombudsman framework shall adhere to the instructions issued vide <a href="https://rbi.org.in/scripts/FS_Notification.aspx?Id=12586&fn=2745&Mode=0" target="_blank" class="links">Master Direction – Reserve Bank of India (Internal Ombudsman) Directions, 2023 dated December 29, 2023</a> (as amended from time to time).</p>    <p class="head" align="center"><a id="CH6"></a>CHAPTER – VI: BEST PRACTICES FOR CIs AND CICs</p>    <p class="head"><a id="21"></a>21. Best Practices for CIs</p>    <p>(1) CIs (other than ARCs) shall take into account the best practices as detailed in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN14.pdf" target="_blank" class="links">Annex XIV</a>, while formulating or reviewing their policies and procedures under the CICRA with the approval of their Board of Directors.</p>    <p>(2) ARCs shall adhere to the instructions best practices issued vide <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12740&Mode=0" target="_blank" class="links">circular on Submission of information to Credit Information Companies (CICs) by ARCs dated October 10, 2024</a>, as amended from time to time.</p>    <p class="head"><a id="22"></a>22. Best Practices for CICs</p>    <p>CICs shall take into account the best practices as detailed in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/125MD060125_ANN15.pdf" target="_blank" class="links">Annex XV</a> and put in place a system for consumer complaint redressal with the approval of their Board of Directors. Such policy shall be displayed on their websites.</p>    <p class="head" align="center"><a id="CH7"></a>CHAPTER – VII: REPEAL PROVISIONS AND INTERPRETATIONS</p>    <p>23. With these Directions coming into force, instructions / guidelines contained in the circulars mentioned in <a href="#ANXVI" class="links">Annex XVI</a>, issued by the Reserve Bank stand repealed.</p>    <p>24. All approvals / acknowledgements given under the above circulars shall be deemed as given under these directions.</p>    <p>25. All the repealed circulars are deemed to have been in force prior to the coming into effect of these directions.</p>    <p>26. For the purpose of giving effect to the provisions of these Directions, the RBI may, if it considers necessary, issue clarifications in respect of any matter covered herein and the interpretation of any provision of these directions given by the RBI shall be final and binding on all the parties concerned. Violation of these directions shall invite penal action under the provisions of CICRA, 2005. Further, these provisions shall be in addition to, and not in derogation of the provisions of any other laws, rules, regulations or directions, for the time being in force.</p>    <hr>    <p class="head" align="center"><a name="ANXVI" id="CH16"></a>Annex - XVI: List of Circulars repealed with the issuance of Master Direction</p>    <table width="95%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">      <tr align="center" class="head">        <td width="5%" align="center">Sr No</td>        <td width="31%">Circular No.</td>        <td width="10%" align="center">Date</td>        <td width="54%">Subject</td>      </tr>      <tr>        <td align="center" valign="top">1</td>        <td valign="top">DBOD.No.DL.11590/20.16.034/2007-08</td>        <td align="center" valign="top">27.02.2008</td>        <td valign="top">Credit Information Companies (Regulation) (Removal of Difficulties) Order, 2008</td>      </tr>      <tr>        <td align="center" valign="top">2</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5050&Mode=0" target="_blank" class="links">DBOD.No.DL.BC.138/20.16.042/2008-09</a></td>        <td align="center" valign="top">24.06.2009</td>        <td valign="top">Access to own credit Report</td>      </tr>      <tr>        <td align="center" valign="top">3</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5320&Mode=0" target="_blank" class="links">RPCD.CO.RRB.No.32/03.05.33/2009-10</a></td>        <td align="center" valign="top">20.10.2009</td>        <td valign="top">Credit Information Companies (Regulation) (Removal of Difficulties) Order, 2008 </td>      </tr>      <tr>        <td align="center" valign="top">4</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5392&Mode=0" target="_blank" class="links">RPCD.CO.RF.BC.No.44/07.40.06/2009-10</a></td>        <td align="center" valign="top">01.12.2009</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 </td>      </tr>      <tr>        <td align="center" valign="top">5</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5400&Mode=0" target="_blank" class="links">UBD.BPD(PCB).Cir No.25/09.11.200/2009-10</a></td>        <td align="center" valign="top">03.12.2009</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 </td>      </tr>      <tr>        <td align="center" valign="top">6</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5531&Mode=0" target="_blank" class="links">DBOD.No.DL.15214/20.16.042/2009-10</a></td>        <td align="center" valign="top">04.03.2010</td>        <td valign="top">Grant of 'Certificate of Registration' - for Commencing Business of Credit Information - Experian Credit Information Company of India Private Ltd</td>      </tr>      <tr>        <td align="center" valign="top">7</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5540&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.62/03.05.33/2009-10</a></td>        <td align="center" valign="top">23.03.2010</td>        <td valign="top">Grant of 'Certificate of Registration' - For commencing Business of Credit Information - Experian Credit Information Company of India<u> </u>Private Ltd.</td>      </tr>      <tr>        <td align="center" valign="top">8</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5560&Mode=0" target="_blank" class="links">DBOD.No.DL.BC.83/20.16.042/2009-10</a></td>        <td align="center" valign="top">31.03.2010</td>        <td valign="top">Grant of 'Certificate of Registration' - For Commencing Business of Credit Information - Equifax Credit Information Services Private Ltd.</td>      </tr>      <tr>        <td align="center" valign="top">9</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5598&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.70/03.05.33/2009-10</a></td>        <td align="center" valign="top">19.04.2010</td>        <td valign="top">Grant of 'Certificate of Registration' for Commencing Business of Credit Information - Equifax Credit Information Services Private Ltd.</td>      </tr>      <tr>        <td align="center" valign="top">10</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5639&Mode=0" target="_blank" class="links">UBD.CO.BPD.Cir.No. 60/09.11.200/2009-10</a></td>        <td align="center" valign="top">29.04.2010</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 – List of Credit Information Companies </td>      </tr>      <tr>        <td align="center" valign="top">11</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5930&Mode=0" target="_blank" class="links">UBD.CO.BPD.Cir.No. 6/09.11.200/2010-11</a></td>        <td align="center" valign="top">09.08.2010</td>        <td valign="top">Submission of data to Credit Information Companies </td>      </tr>      <tr>        <td align="center" valign="top">12</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=5979&Mode=0" target="_blank" class="links">RPCD.CO.RF.BC.No.17/07.40.06/2010-11</a></td>        <td align="center" valign="top">06.09.2010</td>        <td valign="top">Submission of Data to Credit Information Companies </td>      </tr>      <tr>        <td align="center" valign="top">13</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6124&Mode=0" target="_blank" class="links">DBOD.No.CID.BC.64/20.16.042/2010-11</a></td>        <td align="center" valign="top">01.12.2010</td>        <td valign="top">Grant of 'Certificate of Registration' - For Commencing Business of Credit Information - High Mark Credit Information Services Private Limited</td>      </tr>      <tr>        <td align="center" valign="top">14</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6134&Mode=0" target="_blank" class="links">RPCD.CO.RCB.BC.No.33/07.40.06/2010-11</a></td>        <td align="center" valign="top">07.12.2010</td>        <td valign="top">Submission of Data to Credit Information Companies</td>      </tr>      <tr>        <td align="center" valign="top">15</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6137&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.36/03.05.33/2010-11</a></td>        <td align="center" valign="top">08.12.2010</td>        <td valign="top">Grant of 'Certificate of Registration' - For commencing Business of Credit Information - High Mark Credit Information Services Private Limited</td>      </tr>      <tr>        <td align="center" valign="top">16</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6162&Mode=0" target="_blank" class="links">UBD.BPD.(PCB).Cir.No.30/09.11.200/2010-11</a></td>        <td align="center" valign="top">22.12.2010</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 - Grant of 'Certificate of Registration' for Commencing Business of Credit Information - High Mark Credit Information Services Private Limited</td>      </tr>      <tr>        <td align="center" valign="top">17</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6168&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.41/03.05.33/2010-11</a></td>        <td align="center" valign="top">24.12.2010</td>        <td valign="top">Submission of Data to Credit Information Companies - Format of Data to be submitted by Credit Institutions </td>      </tr>      <tr>        <td align="center" valign="top">18</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=6195&Mode=0" target="_blank" class="links">RPCD.CO.RCB.BC.No.45/07.40.06/2010-11</a></td>        <td align="center" valign="top">05.01.2011</td>        <td valign="top">Submission of Data to Credit Information Companies -Format of Data to be submitted by Credit Institutions </td>      </tr>      <tr>        <td align="center" valign="top">19</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=7046&Mode=0" target="_blank" class="links">DBOD.No.CID.BC.84/20.16.042/2011-12</a></td>        <td align="center" valign="top">05.03.2012</td>        <td valign="top">Grant of 'Certificate of Registration' - For carrying on the business of Credit Information - Credit Information Bureau (India) Limited</td>      </tr>      <tr>        <td align="center" valign="top">20</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=7144&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.71/03.05.33/2011-12 </a></td>        <td align="center" valign="top">18.04.2012</td>        <td valign="top">Grant of 'Certificate of Registration' - For Carrying on the Business of Credit Information - Credit Information Bureau (India) Limited</td>      </tr>      <tr>        <td align="center" valign="top">21</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=8202&Mode=0" target="_blank" class="links">DBOD.No.CID.BC.27/20.16.042/2013-14</a></td>        <td align="center" valign="top">01.07.2013</td>        <td valign="top">Submission of Credit Information to Credit Information Companies - Withdrawal of 'Consent Clause'</td>      </tr>      <tr>        <td align="center" valign="top">22</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=8266&Mode=0" target="_blank" class="links">RPCD.CO.RRB.BC.No.14/03.05.33/2013-14</a></td>        <td align="center" valign="top">23.07.2013</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 - Compliance </td>      </tr>      <tr>        <td align="center" valign="top">23</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=8294&Mode=0" target="_blank" class="links">RPCD.CO.RCB.BC.No.19/07.51.010/2013-14</a></td>        <td align="center" valign="top">07.08.2013</td>        <td valign="top">Credit Information Companies (Regulation) Act, 2005 - Compliance </td>      </tr>      <tr>        <td align="center" valign="top">24</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=8348&Mode=0" target="_blank" class="links">UBD.CO.BPD.PCB.Cir.No.4/16.74.000/2013-14</a></td>        <td align="center" valign="top">27.08.2013</td>        <td valign="top">Compliance with Credit Information Companies (Regulation) Act, 2005</td>      </tr>      <tr>        <td align="center" valign="top">25</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=8968&Mode=0" target="_blank" class="links">DBOD.CID.BC.127/20.16.056/2013-14</a></td>        <td align="center" valign="top">27.06.2014</td>        <td valign="top">Data Format for furnishing of credit information to Credit Information Companies and other Regulatory Measures</td>      </tr>      <tr>        <td align="center" valign="top">26</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9104&Mode=0" target="_blank" class="links">RPCD.RRB.RCB.BC.No. 13/03.05.33/2014-15</a></td>        <td align="center" valign="top">15.07.2014</td>        <td valign="top">Data Format for furnishing of credit information to Credit Information Companies and other Regulatory Measures</td>      </tr>      <tr>        <td align="center" valign="top">27</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9102&Mode=0" target="_blank" class="links">UBD. CO. BPD. PCB. Cir. No. 4 /16.74.000/2014-15</a></td>        <td align="center" valign="top">15.07.2014</td>        <td valign="top">Data Format for furnishing of credit information to Credit Information Companies and other Regulatory Measures</td>      </tr>      <tr>        <td align="center" valign="top">28</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9182&Mode=0" target="_blank" class="links">DBOD.CID.BC.34/20.16.042/2014-15</a></td>        <td align="center" valign="top">22.08.2014</td>        <td valign="top">Grant of 'Certificate of Registration' - For carrying on the business of Credit Information - CRIF High Mark Credit Information Services Private Limited </td>      </tr>      <tr>        <td align="center" valign="top">29</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9214&Mode=0" target="_blank" class="links">RPCD.CO.RRB.RCB.BC.No.27/03.05.33/2014-15</a></td>        <td align="center" valign="top">04.09.2014</td>        <td valign="top">Grant of 'Certificate of Registration' - CRIF High Mark Credit Information Services Private Limited </td>      </tr>      <tr>        <td align="center" valign="top">30</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9485&Mode=0" target="_blank" class="links">DBR.No.CID.BC.60/20.16.056/2014-15</a></td>        <td align="center" valign="top">15.01.2015</td>        <td valign="top">Membership of Credit Information Companies (CICs)</td>      </tr>      <tr>        <td align="center" valign="top">31</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9525&Mode=0" target="_blank" class="links">DCBR.BPD.(PCB/RCB).Cir No.13/16.74.000/2014-15</a></td>        <td align="center" valign="top">29.01.2015</td>        <td valign="top">Membership of Credit Information Companies (CICs) by Co-operative Banks</td>      </tr>      <tr>        <td align="center" valign="top">32</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9932&Mode=0" target="_blank" class="links">DBR.No.CID.BC.28/20.16.056/2015-16</a></td>        <td align="center" valign="top">09.07.2015 </td>        <td valign="top">Data Format for furnishing of credit information to Credit Information Companies and other Regulatory measures </td>      </tr>      <tr>        <td align="center" valign="top">33</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10001&Mode=0" target="_blank" class="links">DBR.CID.BC.35/20.16.042/2015-16</a></td>        <td align="center" valign="top">27.08.2015</td>        <td valign="top">Grant of 'Certificate of Registration' - For carrying on the business of Credit Information - CRIF High Mark Credit Information Services Private Limited </td>      </tr>      <tr>        <td align="center" valign="top">34</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10227&Mode=0" target="_blank" class="links">DBR.CID.BC.73/20.16.056/2015-16</a></td>        <td align="center" valign="top">14.01.2016</td>        <td valign="top">Credit information reporting in respect of Self Help Group (SHG) members </td>      </tr>      <tr>        <td align="center" valign="top">35</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10417&Mode=0" target="_blank" class="links">DCBR.BPD.Cir.No.17/16.74.000/2015-16</a></td>        <td align="center" valign="top">26.05.2016</td>        <td valign="top">Credit information reporting in respect of Self Help Group (SHG) members</td>      </tr>      <tr>        <td align="center" valign="top">36</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10449&Mode=0" target="_blank" class="links">DBR.CID.BC.No.104/20.16.56/2015-16</a></td>        <td align="center" valign="top">16.06.2016</td>        <td valign="top">Credit Information Reporting in respect of Self Help Group (SHG) members </td>      </tr>      <tr>        <td align="center" valign="top">37</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10459&Mode=0" target="_blank" class="links">DBR.CID.BC.107/20.16.056/2015-16</a></td>        <td align="center" valign="top">23.06.2016</td>        <td valign="top">Reporting of Information on Investment in Commercial Papers and Unhedged Foreign Currency Exposures of the Borrowers to Credit Information Companies</td>      </tr>      <tr>        <td align="center" valign="top">38</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10590&Mode=0" target="_blank" class="links">DBR.CID.BC.No.11/20.16.042/2016-17</a></td>        <td align="center" valign="top">01.09.2016</td>        <td valign="top">Free Annual Credit Report to Individuals</td>      </tr>      <tr>        <td align="center" valign="top">39</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10617&Mode=0" target="_blank" class="links">DBR.CID.BC.16/20.16.040/2016-17</a></td>        <td align="center" valign="top">29.09.2016</td>        <td valign="top">Grant of 'Certificate of Registration' - For carrying on the Business of Credit Information - Transunion CIBIL Limited </td>      </tr>      <tr>        <td align="center" valign="top">40</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10654&Mode=0" target="_blank" class="links">DBR.CID.BC.27/20.16.040/2016-17</a></td>        <td align="center" valign="top">20.10.2016</td>        <td valign="top">Grant of 'Certificate of Registration' – For carrying on the business of credit information - Experian Credit Information Company of India Private Limited (ECICI) </td>      </tr>      <tr>        <td align="center" valign="top">41</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=10922&Mode=0" target="_blank" class="links">DBR.CID.BC.60/20.16.040/2016-17</a></td>        <td align="center" valign="top">13.04.2017</td>        <td valign="top">Grant of 'Certificate of Registration' - For Carrying on the Business of Credit Information - Transunion CIBIL Limited </td>      </tr>      <tr>        <td align="center" valign="top">42</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11077&Mode=0" target="_blank" class="links">DBR.CID.BC.No.79/20.16.042/2017-18</a></td>        <td align="center" valign="top">02.08.2017</td>        <td valign="top">Issue of comprehensive Credit Information Reports </td>      </tr>      <tr>        <td align="center" valign="top">43</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11471&Mode=0" target="_blank" class="links">DBR.CID.BC.24/20.16.042/2018-19</a></td>        <td align="center" valign="top">07.02.2019 </td>        <td valign="top">Grant of 'Certificate of Registration' - For carrying on the business of credit information - CRIF High Mark Credit Information Services Private Limited </td>      </tr>      <tr>        <td align="center" valign="top">44</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12038&Mode=0" target="_blank" class="links">DoR.FIN.REC.46/20.16.056/2020-21</a></td>        <td align="center" valign="top">12.03.2021</td>        <td valign="top">Data Format for Furnishing of Credit Information to Credit Information Companies and other Regulatory Measures </td>      </tr>      <tr>        <td align="center" valign="top">45</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12178&Mode=0" target="_blank" class="links">DoR.FIN.REC.59/20.16.056/2021-22</a></td>        <td align="center" valign="top">14.10.2021</td>        <td valign="top">Data Format for Furnishing of Credit Information to Credit Information Companies </td>      </tr>      <tr>        <td align="center" valign="top">46</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12425&Mode=0" target="_blank" class="links">DoR.FIN.REC.90/20.16.056/2022-23</a></td>        <td align="center" valign="top">13.12.2022</td>        <td valign="top">Data Format for Furnishing of Credit Information to Credit Information Companies and other Regulatory Measures</td>      </tr>      <tr>        <td align="center" valign="top">47</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12537&Mode=0" target="_blank" class="links">DoR.FIN.REC.39/20.16.056/2023-24</a></td>        <td align="center" valign="top">20.09.2023</td>        <td valign="top">Data Quality Index for Commercial and Microfinance Segments by Credit Information Companies </td>      </tr>      <tr>        <td align="center" valign="top">48</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12539&Mode=0" target="_blank" class="links">DoR.FIN.REC.41/20.16.003/2023-24</a></td>        <td align="center" valign="top">25.09.2023</td>        <td valign="top">Display of information - Secured assets possessed under the SARFAESI Act, 2002</td>      </tr>      <tr>        <td align="center" valign="top">49</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12554&Mode=0" target="_blank" class="links">DoR.FIN.REC.48/20.16.003/2023-24</a></td>        <td align="center" valign="top">26.10.2023</td>        <td valign="top">Framework for compensation to customers for delayed updation/ rectification of credit information</td>      </tr>      <tr>        <td align="center" valign="top">50</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12553&Mode=0" target="_blank" class="links">DoR.FIN.REC.49/20.16.003/2023-24</a></td>        <td align="center" valign="top">26.10.2023</td>        <td valign="top">Strengthening of customer service rendered by Credit Information Companies and Credit Institutions</td>      </tr>      <tr>        <td align="center" valign="top">51</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12718&Mode=0" target="_blank" class="links">DoR.FIN.REC.32/20.16.056/2024-25</a></td>        <td align="center" valign="top">08.08.2024</td>        <td valign="top">Frequency of reporting of credit information by Credit Institutions to Credit Information Companies</td>      </tr>      <tr>        <td align="center" valign="top">52</td>        <td valign="top"><a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12739&Mode=0" target="_blank" class="links">DoR.FIN.REC.47/20.16.042/2024-25</a></td>        <td align="center" valign="top">10.10.2024</td>        <td valign="top">Implementation of Credit Information Reporting Mechanism subsequent to cancellation of licence or Certificate of Registration</td>      </tr>    </table>    <hr>    <p class="footnote"><a id="F1"></a><sup>1</sup> Except those which are purely into investment activities without any customer interface.</p>    <p> <span class="footnote"><sup><a id="F2"></a>2</sup> Credit Information Companies (Amendment) Regulations, 2021, published in the Gazette of India vide notification CG-DL-E-30112021-231472 dated November 29, 2021, expanded the definition of ‘Specified Users’ under Regulation 3 of CIC Regulations, 2006 to include “an entity engaged in the processing of information, for the support or benefit of credit institutions, and satisfying the criteria laid down by the Reserve Bank from time to time.”</span></p>    <p> <span class="footnote"><sup><a id="F3"></a>3</sup> The Report of the Committee can be accessed through the link: <a href="https://rbi.org.in/scripts/PublicationReportDetails.aspx?UrlPage=&ID=763" target="_blank" class="links">https://rbi.org.in/scripts/PublicationReportDetails.aspx?UrlPage=&ID=763</a></span></p>    <p class="footnote"><sup><a id="F4"></a>4</sup> Frequently asked questions (FAQs) on this aspect are available on the following link: <a href="https://rbi.org.in/Scripts/FAQView.aspx?Id=163" target="_blank" class="links">https://rbi.org.in/Scripts/FAQView.aspx?Id=163</a></p></td>  </tr></table></td></tr></table>
+                                    </table>
+                                </div>
+                                <br />
+                                <div align="right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+</div>
+                <div class="grid_1 archives alpha">
+                    <span id="DateSettree_lbltree"><div class="grid_subtree archives alpha" id="treeYearMonth_PR"><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2026">2026</a></h2><div class="accordionContent month" id="2026"><ul class="accordionlist"><li><a href="#" id="20260" onclick='GetYearMonth("2026","0")'>All Months</a></li><li><a href="#" id="20261" onclick='GetYearMonth("2026","1")'>January</a></li><li><a href="#" id="20262" onclick='GetYearMonth("2026","2")'>February</a></li><li><a href="#" id="20263" onclick='GetYearMonth("2026","3")'>March</a></li><li><a href="#" id="20264" onclick='GetYearMonth("2026","4")'>April</a></li><li><a href="#" id="20265" onclick='GetYearMonth("2026","5")'>May</a></li><li><a href="#" id="20266" onclick='GetYearMonth("2026","6")'>June</a></li><li><a href="#" id="20267" onclick='GetYearMonth("2026","7")'>July</a></li><li><a href="#" id="20268" onclick='GetYearMonth("2026","8")'>August</a></li><li><a href="#" id="20269" onclick='GetYearMonth("2026","9")'>September</a></li><li><a href="#" id="202610" onclick='GetYearMonth("2026","10")'>October</a></li><li><a href="#" id="202611" onclick='GetYearMonth("2026","11")'>November</a></li><li><a href="#" id="202612" onclick='GetYearMonth("2026","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2025">2025</a></h2><div class="accordionContent month" id="2025"><ul class="accordionlist"><li><a href="#" id="20250" onclick='GetYearMonth("2025","0")'>All Months</a></li><li><a href="#" id="20251" onclick='GetYearMonth("2025","1")'>January</a></li><li><a href="#" id="20252" onclick='GetYearMonth("2025","2")'>February</a></li><li><a href="#" id="20253" onclick='GetYearMonth("2025","3")'>March</a></li><li><a href="#" id="20254" onclick='GetYearMonth("2025","4")'>April</a></li><li><a href="#" id="20255" onclick='GetYearMonth("2025","5")'>May</a></li><li><a href="#" id="20256" onclick='GetYearMonth("2025","6")'>June</a></li><li><a href="#" id="20257" onclick='GetYearMonth("2025","7")'>July</a></li><li><a href="#" id="20258" onclick='GetYearMonth("2025","8")'>August</a></li><li><a href="#" id="20259" onclick='GetYearMonth("2025","9")'>September</a></li><li><a href="#" id="202510" onclick='GetYearMonth("2025","10")'>October</a></li><li><a href="#" id="202511" onclick='GetYearMonth("2025","11")'>November</a></li><li><a href="#" id="202512" onclick='GetYearMonth("2025","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2024">2024</a></h2><div class="accordionContent month" id="2024"><ul class="accordionlist"><li><a href="#" id="20240" onclick='GetYearMonth("2024","0")'>All Months</a></li><li><a href="#" id="20241" onclick='GetYearMonth("2024","1")'>January</a></li><li><a href="#" id="20242" onclick='GetYearMonth("2024","2")'>February</a></li><li><a href="#" id="20243" onclick='GetYearMonth("2024","3")'>March</a></li><li><a href="#" id="20244" onclick='GetYearMonth("2024","4")'>April</a></li><li><a href="#" id="20245" onclick='GetYearMonth("2024","5")'>May</a></li><li><a href="#" id="20246" onclick='GetYearMonth("2024","6")'>June</a></li><li><a href="#" id="20247" onclick='GetYearMonth("2024","7")'>July</a></li><li><a href="#" id="20248" onclick='GetYearMonth("2024","8")'>August</a></li><li><a href="#" id="20249" onclick='GetYearMonth("2024","9")'>September</a></li><li><a href="#" id="202410" onclick='GetYearMonth("2024","10")'>October</a></li><li><a href="#" id="202411" onclick='GetYearMonth("2024","11")'>November</a></li><li><a href="#" id="202412" onclick='GetYearMonth("2024","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2023">2023</a></h2><div class="accordionContent month" id="2023"><ul class="accordionlist"><li><a href="#" id="20230" onclick='GetYearMonth("2023","0")'>All Months</a></li><li><a href="#" id="20231" onclick='GetYearMonth("2023","1")'>January</a></li><li><a href="#" id="20232" onclick='GetYearMonth("2023","2")'>February</a></li><li><a href="#" id="20233" onclick='GetYearMonth("2023","3")'>March</a></li><li><a href="#" id="20234" onclick='GetYearMonth("2023","4")'>April</a></li><li><a href="#" id="20235" onclick='GetYearMonth("2023","5")'>May</a></li><li><a href="#" id="20236" onclick='GetYearMonth("2023","6")'>June</a></li><li><a href="#" id="20237" onclick='GetYearMonth("2023","7")'>July</a></li><li><a href="#" id="20238" onclick='GetYearMonth("2023","8")'>August</a></li><li><a href="#" id="20239" onclick='GetYearMonth("2023","9")'>September</a></li><li><a href="#" id="202310" onclick='GetYearMonth("2023","10")'>October</a></li><li><a href="#" id="202311" onclick='GetYearMonth("2023","11")'>November</a></li><li><a href="#" id="202312" onclick='GetYearMonth("2023","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2022">2022</a></h2><div class="accordionContent month" id="2022"><ul class="accordionlist"><li><a href="#" id="20220" onclick='GetYearMonth("2022","0")'>All Months</a></li><li><a href="#" id="20221" onclick='GetYearMonth("2022","1")'>January</a></li><li><a href="#" id="20222" onclick='GetYearMonth("2022","2")'>February</a></li><li><a href="#" id="20223" onclick='GetYearMonth("2022","3")'>March</a></li><li><a href="#" id="20224" onclick='GetYearMonth("2022","4")'>April</a></li><li><a href="#" id="20225" onclick='GetYearMonth("2022","5")'>May</a></li><li><a href="#" id="20226" onclick='GetYearMonth("2022","6")'>June</a></li><li><a href="#" id="20227" onclick='GetYearMonth("2022","7")'>July</a></li><li><a href="#" id="20228" onclick='GetYearMonth("2022","8")'>August</a></li><li><a href="#" id="20229" onclick='GetYearMonth("2022","9")'>September</a></li><li><a href="#" id="202210" onclick='GetYearMonth("2022","10")'>October</a></li><li><a href="#" id="202211" onclick='GetYearMonth("2022","11")'>November</a></li><li><a href="#" id="202212" onclick='GetYearMonth("2022","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2021">2021</a></h2><div class="accordionContent month" id="2021"><ul class="accordionlist"><li><a href="#" id="20210" onclick='GetYearMonth("2021","0")'>All Months</a></li><li><a href="#" id="20211" onclick='GetYearMonth("2021","1")'>January</a></li><li><a href="#" id="20212" onclick='GetYearMonth("2021","2")'>February</a></li><li><a href="#" id="20213" onclick='GetYearMonth("2021","3")'>March</a></li><li><a href="#" id="20214" onclick='GetYearMonth("2021","4")'>April</a></li><li><a href="#" id="20215" onclick='GetYearMonth("2021","5")'>May</a></li><li><a href="#" id="20216" onclick='GetYearMonth("2021","6")'>June</a></li><li><a href="#" id="20217" onclick='GetYearMonth("2021","7")'>July</a></li><li><a href="#" id="20218" onclick='GetYearMonth("2021","8")'>August</a></li><li><a href="#" id="20219" onclick='GetYearMonth("2021","9")'>September</a></li><li><a href="#" id="202110" onclick='GetYearMonth("2021","10")'>October</a></li><li><a href="#" id="202111" onclick='GetYearMonth("2021","11")'>November</a></li><li><a href="#" id="202112" onclick='GetYearMonth("2021","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2020">2020</a></h2><div class="accordionContent month" id="2020"><ul class="accordionlist"><li><a href="#" id="20200" onclick='GetYearMonth("2020","0")'>All Months</a></li><li><a href="#" id="20201" onclick='GetYearMonth("2020","1")'>January</a></li><li><a href="#" id="20202" onclick='GetYearMonth("2020","2")'>February</a></li><li><a href="#" id="20203" onclick='GetYearMonth("2020","3")'>March</a></li><li><a href="#" id="20204" onclick='GetYearMonth("2020","4")'>April</a></li><li><a href="#" id="20205" onclick='GetYearMonth("2020","5")'>May</a></li><li><a href="#" id="20206" onclick='GetYearMonth("2020","6")'>June</a></li><li><a href="#" id="20207" onclick='GetYearMonth("2020","7")'>July</a></li><li><a href="#" id="20208" onclick='GetYearMonth("2020","8")'>August</a></li><li><a href="#" id="20209" onclick='GetYearMonth("2020","9")'>September</a></li><li><a href="#" id="202010" onclick='GetYearMonth("2020","10")'>October</a></li><li><a href="#" id="202011" onclick='GetYearMonth("2020","11")'>November</a></li><li><a href="#" id="202012" onclick='GetYearMonth("2020","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2019">2019</a></h2><div class="accordionContent month" id="2019"><ul class="accordionlist"><li><a href="#" id="20190" onclick='GetYearMonth("2019","0")'>All Months</a></li><li><a href="#" id="20191" onclick='GetYearMonth("2019","1")'>January</a></li><li><a href="#" id="20192" onclick='GetYearMonth("2019","2")'>February</a></li><li><a href="#" id="20193" onclick='GetYearMonth("2019","3")'>March</a></li><li><a href="#" id="20194" onclick='GetYearMonth("2019","4")'>April</a></li><li><a href="#" id="20195" onclick='GetYearMonth("2019","5")'>May</a></li><li><a href="#" id="20196" onclick='GetYearMonth("2019","6")'>June</a></li><li><a href="#" id="20197" onclick='GetYearMonth("2019","7")'>July</a></li><li><a href="#" id="20198" onclick='GetYearMonth("2019","8")'>August</a></li><li><a href="#" id="20199" onclick='GetYearMonth("2019","9")'>September</a></li><li><a href="#" id="201910" onclick='GetYearMonth("2019","10")'>October</a></li><li><a href="#" id="201911" onclick='GetYearMonth("2019","11")'>November</a></li><li><a href="#" id="201912" onclick='GetYearMonth("2019","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2018">2018</a></h2><div class="accordionContent month" id="2018"><ul class="accordionlist"><li><a href="#" id="20180" onclick='GetYearMonth("2018","0")'>All Months</a></li><li><a href="#" id="20181" onclick='GetYearMonth("2018","1")'>January</a></li><li><a href="#" id="20182" onclick='GetYearMonth("2018","2")'>February</a></li><li><a href="#" id="20183" onclick='GetYearMonth("2018","3")'>March</a></li><li><a href="#" id="20184" onclick='GetYearMonth("2018","4")'>April</a></li><li><a href="#" id="20185" onclick='GetYearMonth("2018","5")'>May</a></li><li><a href="#" id="20186" onclick='GetYearMonth("2018","6")'>June</a></li><li><a href="#" id="20187" onclick='GetYearMonth("2018","7")'>July</a></li><li><a href="#" id="20188" onclick='GetYearMonth("2018","8")'>August</a></li><li><a href="#" id="20189" onclick='GetYearMonth("2018","9")'>September</a></li><li><a href="#" id="201810" onclick='GetYearMonth("2018","10")'>October</a></li><li><a href="#" id="201811" onclick='GetYearMonth("2018","11")'>November</a></li><li><a href="#" id="201812" onclick='GetYearMonth("2018","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2017">2017</a></h2><div class="accordionContent month" id="2017"><ul class="accordionlist"><li><a href="#" id="20170" onclick='GetYearMonth("2017","0")'>All Months</a></li><li><a href="#" id="20171" onclick='GetYearMonth("2017","1")'>January</a></li><li><a href="#" id="20172" onclick='GetYearMonth("2017","2")'>February</a></li><li><a href="#" id="20173" onclick='GetYearMonth("2017","3")'>March</a></li><li><a href="#" id="20174" onclick='GetYearMonth("2017","4")'>April</a></li><li><a href="#" id="20175" onclick='GetYearMonth("2017","5")'>May</a></li><li><a href="#" id="20176" onclick='GetYearMonth("2017","6")'>June</a></li><li><a href="#" id="20177" onclick='GetYearMonth("2017","7")'>July</a></li><li><a href="#" id="20178" onclick='GetYearMonth("2017","8")'>August</a></li><li><a href="#" id="20179" onclick='GetYearMonth("2017","9")'>September</a></li><li><a href="#" id="201710" onclick='GetYearMonth("2017","10")'>October</a></li><li><a href="#" id="201711" onclick='GetYearMonth("2017","11")'>November</a></li><li><a href="#" id="201712" onclick='GetYearMonth("2017","12")'>December</a></li></ul></div><h2 class="year"><a href="javascript:void(0);" style="text-decoration:none;" id="divArchiveMain"  onclick="hideshow('divArchiveSub');" style="cursor: pointer;">Archives</a></h2><div  id="divArchiveSub" style="display: none;"><div class="grid_subtree archives alpha" id="treeYearMonth_PR"><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2016">2016</a></h2><div class="accordionContent month" id="2016"><ul class="accordionlist"><li><a href="#" id="20160" onclick='GetYearMonth("2016","0")'>All Months</a></li><li><a href="#" id="20161" onclick='GetYearMonth("2016","1")'>January</a></li><li><a href="#" id="20162" onclick='GetYearMonth("2016","2")'>February</a></li><li><a href="#" id="20163" onclick='GetYearMonth("2016","3")'>March</a></li><li><a href="#" id="20164" onclick='GetYearMonth("2016","4")'>April</a></li><li><a href="#" id="20165" onclick='GetYearMonth("2016","5")'>May</a></li><li><a href="#" id="20166" onclick='GetYearMonth("2016","6")'>June</a></li><li><a href="#" id="20167" onclick='GetYearMonth("2016","7")'>July</a></li><li><a href="#" id="20168" onclick='GetYearMonth("2016","8")'>August</a></li><li><a href="#" id="20169" onclick='GetYearMonth("2016","9")'>September</a></li><li><a href="#" id="201610" onclick='GetYearMonth("2016","10")'>October</a></li><li><a href="#" id="201611" onclick='GetYearMonth("2016","11")'>November</a></li><li><a href="#" id="201612" onclick='GetYearMonth("2016","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2015">2015</a></h2><div class="accordionContent month" id="2015"><ul class="accordionlist"><li><a href="#" id="20150" onclick='GetYearMonth("2015","0")'>All Months</a></li><li><a href="#" id="20151" onclick='GetYearMonth("2015","1")'>January</a></li><li><a href="#" id="20152" onclick='GetYearMonth("2015","2")'>February</a></li><li><a href="#" id="20153" onclick='GetYearMonth("2015","3")'>March</a></li><li><a href="#" id="20154" onclick='GetYearMonth("2015","4")'>April</a></li><li><a href="#" id="20155" onclick='GetYearMonth("2015","5")'>May</a></li><li><a href="#" id="20156" onclick='GetYearMonth("2015","6")'>June</a></li><li><a href="#" id="20157" onclick='GetYearMonth("2015","7")'>July</a></li><li><a href="#" id="20158" onclick='GetYearMonth("2015","8")'>August</a></li><li><a href="#" id="20159" onclick='GetYearMonth("2015","9")'>September</a></li><li><a href="#" id="201510" onclick='GetYearMonth("2015","10")'>October</a></li><li><a href="#" id="201511" onclick='GetYearMonth("2015","11")'>November</a></li><li><a href="#" id="201512" onclick='GetYearMonth("2015","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2014">2014</a></h2><div class="accordionContent month" id="2014"><ul class="accordionlist"><li><a href="#" id="20140" onclick='GetYearMonth("2014","0")'>All Months</a></li><li><a href="#" id="20141" onclick='GetYearMonth("2014","1")'>January</a></li><li><a href="#" id="20142" onclick='GetYearMonth("2014","2")'>February</a></li><li><a href="#" id="20143" onclick='GetYearMonth("2014","3")'>March</a></li><li><a href="#" id="20144" onclick='GetYearMonth("2014","4")'>April</a></li><li><a href="#" id="20145" onclick='GetYearMonth("2014","5")'>May</a></li><li><a href="#" id="20146" onclick='GetYearMonth("2014","6")'>June</a></li><li><a href="#" id="20147" onclick='GetYearMonth("2014","7")'>July</a></li><li><a href="#" id="20148" onclick='GetYearMonth("2014","8")'>August</a></li><li><a href="#" id="20149" onclick='GetYearMonth("2014","9")'>September</a></li><li><a href="#" id="201410" onclick='GetYearMonth("2014","10")'>October</a></li><li><a href="#" id="201411" onclick='GetYearMonth("2014","11")'>November</a></li><li><a href="#" id="201412" onclick='GetYearMonth("2014","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2013">2013</a></h2><div class="accordionContent month" id="2013"><ul class="accordionlist"><li><a href="#" id="20130" onclick='GetYearMonth("2013","0")'>All Months</a></li><li><a href="#" id="20131" onclick='GetYearMonth("2013","1")'>January</a></li><li><a href="#" id="20132" onclick='GetYearMonth("2013","2")'>February</a></li><li><a href="#" id="20133" onclick='GetYearMonth("2013","3")'>March</a></li><li><a href="#" id="20134" onclick='GetYearMonth("2013","4")'>April</a></li><li><a href="#" id="20135" onclick='GetYearMonth("2013","5")'>May</a></li><li><a href="#" id="20136" onclick='GetYearMonth("2013","6")'>June</a></li><li><a href="#" id="20137" onclick='GetYearMonth("2013","7")'>July</a></li><li><a href="#" id="20138" onclick='GetYearMonth("2013","8")'>August</a></li><li><a href="#" id="20139" onclick='GetYearMonth("2013","9")'>September</a></li><li><a href="#" id="201310" onclick='GetYearMonth("2013","10")'>October</a></li><li><a href="#" id="201311" onclick='GetYearMonth("2013","11")'>November</a></li><li><a href="#" id="201312" onclick='GetYearMonth("2013","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2012">2012</a></h2><div class="accordionContent month" id="2012"><ul class="accordionlist"><li><a href="#" id="20120" onclick='GetYearMonth("2012","0")'>All Months</a></li><li><a href="#" id="20121" onclick='GetYearMonth("2012","1")'>January</a></li><li><a href="#" id="20122" onclick='GetYearMonth("2012","2")'>February</a></li><li><a href="#" id="20123" onclick='GetYearMonth("2012","3")'>March</a></li><li><a href="#" id="20124" onclick='GetYearMonth("2012","4")'>April</a></li><li><a href="#" id="20125" onclick='GetYearMonth("2012","5")'>May</a></li><li><a href="#" id="20126" onclick='GetYearMonth("2012","6")'>June</a></li><li><a href="#" id="20127" onclick='GetYearMonth("2012","7")'>July</a></li><li><a href="#" id="20128" onclick='GetYearMonth("2012","8")'>August</a></li><li><a href="#" id="20129" onclick='GetYearMonth("2012","9")'>September</a></li><li><a href="#" id="201210" onclick='GetYearMonth("2012","10")'>October</a></li><li><a href="#" id="201211" onclick='GetYearMonth("2012","11")'>November</a></li><li><a href="#" id="201212" onclick='GetYearMonth("2012","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2011">2011</a></h2><div class="accordionContent month" id="2011"><ul class="accordionlist"><li><a href="#" id="20110" onclick='GetYearMonth("2011","0")'>All Months</a></li><li><a href="#" id="20111" onclick='GetYearMonth("2011","1")'>January</a></li><li><a href="#" id="20112" onclick='GetYearMonth("2011","2")'>February</a></li><li><a href="#" id="20113" onclick='GetYearMonth("2011","3")'>March</a></li><li><a href="#" id="20114" onclick='GetYearMonth("2011","4")'>April</a></li><li><a href="#" id="20115" onclick='GetYearMonth("2011","5")'>May</a></li><li><a href="#" id="20116" onclick='GetYearMonth("2011","6")'>June</a></li><li><a href="#" id="20117" onclick='GetYearMonth("2011","7")'>July</a></li><li><a href="#" id="20118" onclick='GetYearMonth("2011","8")'>August</a></li><li><a href="#" id="20119" onclick='GetYearMonth("2011","9")'>September</a></li><li><a href="#" id="201110" onclick='GetYearMonth("2011","10")'>October</a></li><li><a href="#" id="201111" onclick='GetYearMonth("2011","11")'>November</a></li><li><a href="#" id="201112" onclick='GetYearMonth("2011","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2010">2010</a></h2><div class="accordionContent month" id="2010"><ul class="accordionlist"><li><a href="#" id="20100" onclick='GetYearMonth("2010","0")'>All Months</a></li><li><a href="#" id="20101" onclick='GetYearMonth("2010","1")'>January</a></li><li><a href="#" id="20102" onclick='GetYearMonth("2010","2")'>February</a></li><li><a href="#" id="20103" onclick='GetYearMonth("2010","3")'>March</a></li><li><a href="#" id="20104" onclick='GetYearMonth("2010","4")'>April</a></li><li><a href="#" id="20105" onclick='GetYearMonth("2010","5")'>May</a></li><li><a href="#" id="20106" onclick='GetYearMonth("2010","6")'>June</a></li><li><a href="#" id="20107" onclick='GetYearMonth("2010","7")'>July</a></li><li><a href="#" id="20108" onclick='GetYearMonth("2010","8")'>August</a></li><li><a href="#" id="20109" onclick='GetYearMonth("2010","9")'>September</a></li><li><a href="#" id="201010" onclick='GetYearMonth("2010","10")'>October</a></li><li><a href="#" id="201011" onclick='GetYearMonth("2010","11")'>November</a></li><li><a href="#" id="201012" onclick='GetYearMonth("2010","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2009">2009</a></h2><div class="accordionContent month" id="2009"><ul class="accordionlist"><li><a href="#" id="20090" onclick='GetYearMonth("2009","0")'>All Months</a></li><li><a href="#" id="20091" onclick='GetYearMonth("2009","1")'>January</a></li><li><a href="#" id="20092" onclick='GetYearMonth("2009","2")'>February</a></li><li><a href="#" id="20093" onclick='GetYearMonth("2009","3")'>March</a></li><li><a href="#" id="20094" onclick='GetYearMonth("2009","4")'>April</a></li><li><a href="#" id="20095" onclick='GetYearMonth("2009","5")'>May</a></li><li><a href="#" id="20096" onclick='GetYearMonth("2009","6")'>June</a></li><li><a href="#" id="20097" onclick='GetYearMonth("2009","7")'>July</a></li><li><a href="#" id="20098" onclick='GetYearMonth("2009","8")'>August</a></li><li><a href="#" id="20099" onclick='GetYearMonth("2009","9")'>September</a></li><li><a href="#" id="200910" onclick='GetYearMonth("2009","10")'>October</a></li><li><a href="#" id="200911" onclick='GetYearMonth("2009","11")'>November</a></li><li><a href="#" id="200912" onclick='GetYearMonth("2009","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2008">2008</a></h2><div class="accordionContent month" id="2008"><ul class="accordionlist"><li><a href="#" id="20080" onclick='GetYearMonth("2008","0")'>All Months</a></li><li><a href="#" id="20081" onclick='GetYearMonth("2008","1")'>January</a></li><li><a href="#" id="20082" onclick='GetYearMonth("2008","2")'>February</a></li><li><a href="#" id="20083" onclick='GetYearMonth("2008","3")'>March</a></li><li><a href="#" id="20084" onclick='GetYearMonth("2008","4")'>April</a></li><li><a href="#" id="20085" onclick='GetYearMonth("2008","5")'>May</a></li><li><a href="#" id="20086" onclick='GetYearMonth("2008","6")'>June</a></li><li><a href="#" id="20087" onclick='GetYearMonth("2008","7")'>July</a></li><li><a href="#" id="20088" onclick='GetYearMonth("2008","8")'>August</a></li><li><a href="#" id="20089" onclick='GetYearMonth("2008","9")'>September</a></li><li><a href="#" id="200810" onclick='GetYearMonth("2008","10")'>October</a></li><li><a href="#" id="200811" onclick='GetYearMonth("2008","11")'>November</a></li><li><a href="#" id="200812" onclick='GetYearMonth("2008","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2007">2007</a></h2><div class="accordionContent month" id="2007"><ul class="accordionlist"><li><a href="#" id="20070" onclick='GetYearMonth("2007","0")'>All Months</a></li><li><a href="#" id="20071" onclick='GetYearMonth("2007","1")'>January</a></li><li><a href="#" id="20072" onclick='GetYearMonth("2007","2")'>February</a></li><li><a href="#" id="20073" onclick='GetYearMonth("2007","3")'>March</a></li><li><a href="#" id="20074" onclick='GetYearMonth("2007","4")'>April</a></li><li><a href="#" id="20075" onclick='GetYearMonth("2007","5")'>May</a></li><li><a href="#" id="20076" onclick='GetYearMonth("2007","6")'>June</a></li><li><a href="#" id="20077" onclick='GetYearMonth("2007","7")'>July</a></li><li><a href="#" id="20078" onclick='GetYearMonth("2007","8")'>August</a></li><li><a href="#" id="20079" onclick='GetYearMonth("2007","9")'>September</a></li><li><a href="#" id="200710" onclick='GetYearMonth("2007","10")'>October</a></li><li><a href="#" id="200711" onclick='GetYearMonth("2007","11")'>November</a></li><li><a href="#" id="200712" onclick='GetYearMonth("2007","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2006">2006</a></h2><div class="accordionContent month" id="2006"><ul class="accordionlist"><li><a href="#" id="20060" onclick='GetYearMonth("2006","0")'>All Months</a></li><li><a href="#" id="20061" onclick='GetYearMonth("2006","1")'>January</a></li><li><a href="#" id="20062" onclick='GetYearMonth("2006","2")'>February</a></li><li><a href="#" id="20063" onclick='GetYearMonth("2006","3")'>March</a></li><li><a href="#" id="20064" onclick='GetYearMonth("2006","4")'>April</a></li><li><a href="#" id="20065" onclick='GetYearMonth("2006","5")'>May</a></li><li><a href="#" id="20066" onclick='GetYearMonth("2006","6")'>June</a></li><li><a href="#" id="20067" onclick='GetYearMonth("2006","7")'>July</a></li><li><a href="#" id="20068" onclick='GetYearMonth("2006","8")'>August</a></li><li><a href="#" id="20069" onclick='GetYearMonth("2006","9")'>September</a></li><li><a href="#" id="200610" onclick='GetYearMonth("2006","10")'>October</a></li><li><a href="#" id="200611" onclick='GetYearMonth("2006","11")'>November</a></li><li><a href="#" id="200612" onclick='GetYearMonth("2006","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2005">2005</a></h2><div class="accordionContent month" id="2005"><ul class="accordionlist"><li><a href="#" id="20050" onclick='GetYearMonth("2005","0")'>All Months</a></li><li><a href="#" id="20051" onclick='GetYearMonth("2005","1")'>January</a></li><li><a href="#" id="20052" onclick='GetYearMonth("2005","2")'>February</a></li><li><a href="#" id="20053" onclick='GetYearMonth("2005","3")'>March</a></li><li><a href="#" id="20054" onclick='GetYearMonth("2005","4")'>April</a></li><li><a href="#" id="20055" onclick='GetYearMonth("2005","5")'>May</a></li><li><a href="#" id="20056" onclick='GetYearMonth("2005","6")'>June</a></li><li><a href="#" id="20057" onclick='GetYearMonth("2005","7")'>July</a></li><li><a href="#" id="20058" onclick='GetYearMonth("2005","8")'>August</a></li><li><a href="#" id="20059" onclick='GetYearMonth("2005","9")'>September</a></li><li><a href="#" id="200510" onclick='GetYearMonth("2005","10")'>October</a></li><li><a href="#" id="200511" onclick='GetYearMonth("2005","11")'>November</a></li><li><a href="#" id="200512" onclick='GetYearMonth("2005","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2004">2004</a></h2><div class="accordionContent month" id="2004"><ul class="accordionlist"><li><a href="#" id="20040" onclick='GetYearMonth("2004","0")'>All Months</a></li><li><a href="#" id="20041" onclick='GetYearMonth("2004","1")'>January</a></li><li><a href="#" id="20042" onclick='GetYearMonth("2004","2")'>February</a></li><li><a href="#" id="20043" onclick='GetYearMonth("2004","3")'>March</a></li><li><a href="#" id="20044" onclick='GetYearMonth("2004","4")'>April</a></li><li><a href="#" id="20045" onclick='GetYearMonth("2004","5")'>May</a></li><li><a href="#" id="20046" onclick='GetYearMonth("2004","6")'>June</a></li><li><a href="#" id="20047" onclick='GetYearMonth("2004","7")'>July</a></li><li><a href="#" id="20048" onclick='GetYearMonth("2004","8")'>August</a></li><li><a href="#" id="20049" onclick='GetYearMonth("2004","9")'>September</a></li><li><a href="#" id="200410" onclick='GetYearMonth("2004","10")'>October</a></li><li><a href="#" id="200411" onclick='GetYearMonth("2004","11")'>November</a></li><li><a href="#" id="200412" onclick='GetYearMonth("2004","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2003">2003</a></h2><div class="accordionContent month" id="2003"><ul class="accordionlist"><li><a href="#" id="20030" onclick='GetYearMonth("2003","0")'>All Months</a></li><li><a href="#" id="20031" onclick='GetYearMonth("2003","1")'>January</a></li><li><a href="#" id="20032" onclick='GetYearMonth("2003","2")'>February</a></li><li><a href="#" id="20033" onclick='GetYearMonth("2003","3")'>March</a></li><li><a href="#" id="20034" onclick='GetYearMonth("2003","4")'>April</a></li><li><a href="#" id="20035" onclick='GetYearMonth("2003","5")'>May</a></li><li><a href="#" id="20036" onclick='GetYearMonth("2003","6")'>June</a></li><li><a href="#" id="20037" onclick='GetYearMonth("2003","7")'>July</a></li><li><a href="#" id="20038" onclick='GetYearMonth("2003","8")'>August</a></li><li><a href="#" id="20039" onclick='GetYearMonth("2003","9")'>September</a></li><li><a href="#" id="200310" onclick='GetYearMonth("2003","10")'>October</a></li><li><a href="#" id="200311" onclick='GetYearMonth("2003","11")'>November</a></li><li><a href="#" id="200312" onclick='GetYearMonth("2003","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2002">2002</a></h2><div class="accordionContent month" id="2002"><ul class="accordionlist"><li><a href="#" id="20020" onclick='GetYearMonth("2002","0")'>All Months</a></li><li><a href="#" id="20021" onclick='GetYearMonth("2002","1")'>January</a></li><li><a href="#" id="20022" onclick='GetYearMonth("2002","2")'>February</a></li><li><a href="#" id="20023" onclick='GetYearMonth("2002","3")'>March</a></li><li><a href="#" id="20024" onclick='GetYearMonth("2002","4")'>April</a></li><li><a href="#" id="20025" onclick='GetYearMonth("2002","5")'>May</a></li><li><a href="#" id="20026" onclick='GetYearMonth("2002","6")'>June</a></li><li><a href="#" id="20027" onclick='GetYearMonth("2002","7")'>July</a></li><li><a href="#" id="20028" onclick='GetYearMonth("2002","8")'>August</a></li><li><a href="#" id="20029" onclick='GetYearMonth("2002","9")'>September</a></li><li><a href="#" id="200210" onclick='GetYearMonth("2002","10")'>October</a></li><li><a href="#" id="200211" onclick='GetYearMonth("2002","11")'>November</a></li><li><a href="#" id="200212" onclick='GetYearMonth("2002","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2001">2001</a></h2><div class="accordionContent month" id="2001"><ul class="accordionlist"><li><a href="#" id="20010" onclick='GetYearMonth("2001","0")'>All Months</a></li><li><a href="#" id="20011" onclick='GetYearMonth("2001","1")'>January</a></li><li><a href="#" id="20012" onclick='GetYearMonth("2001","2")'>February</a></li><li><a href="#" id="20013" onclick='GetYearMonth("2001","3")'>March</a></li><li><a href="#" id="20014" onclick='GetYearMonth("2001","4")'>April</a></li><li><a href="#" id="20015" onclick='GetYearMonth("2001","5")'>May</a></li><li><a href="#" id="20016" onclick='GetYearMonth("2001","6")'>June</a></li><li><a href="#" id="20017" onclick='GetYearMonth("2001","7")'>July</a></li><li><a href="#" id="20018" onclick='GetYearMonth("2001","8")'>August</a></li><li><a href="#" id="20019" onclick='GetYearMonth("2001","9")'>September</a></li><li><a href="#" id="200110" onclick='GetYearMonth("2001","10")'>October</a></li><li><a href="#" id="200111" onclick='GetYearMonth("2001","11")'>November</a></li><li><a href="#" id="200112" onclick='GetYearMonth("2001","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2000">2000</a></h2><div class="accordionContent month" id="2000"><ul class="accordionlist"><li><a href="#" id="20000" onclick='GetYearMonth("2000","0")'>All Months</a></li><li><a href="#" id="20001" onclick='GetYearMonth("2000","1")'>January</a></li><li><a href="#" id="20002" onclick='GetYearMonth("2000","2")'>February</a></li><li><a href="#" id="20003" onclick='GetYearMonth("2000","3")'>March</a></li><li><a href="#" id="20004" onclick='GetYearMonth("2000","4")'>April</a></li><li><a href="#" id="20005" onclick='GetYearMonth("2000","5")'>May</a></li><li><a href="#" id="20006" onclick='GetYearMonth("2000","6")'>June</a></li><li><a href="#" id="20007" onclick='GetYearMonth("2000","7")'>July</a></li><li><a href="#" id="20008" onclick='GetYearMonth("2000","8")'>August</a></li><li><a href="#" id="20009" onclick='GetYearMonth("2000","9")'>September</a></li><li><a href="#" id="200010" onclick='GetYearMonth("2000","10")'>October</a></li><li><a href="#" id="200011" onclick='GetYearMonth("2000","11")'>November</a></li><li><a href="#" id="200012" onclick='GetYearMonth("2000","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1999">1999</a></h2><div class="accordionContent month" id="1999"><ul class="accordionlist"><li><a href="#" id="19990" onclick='GetYearMonth("1999","0")'>All Months</a></li><li><a href="#" id="19991" onclick='GetYearMonth("1999","1")'>January</a></li><li><a href="#" id="19992" onclick='GetYearMonth("1999","2")'>February</a></li><li><a href="#" id="19993" onclick='GetYearMonth("1999","3")'>March</a></li><li><a href="#" id="19994" onclick='GetYearMonth("1999","4")'>April</a></li><li><a href="#" id="19995" onclick='GetYearMonth("1999","5")'>May</a></li><li><a href="#" id="19996" onclick='GetYearMonth("1999","6")'>June</a></li><li><a href="#" id="19997" onclick='GetYearMonth("1999","7")'>July</a></li><li><a href="#" id="19998" onclick='GetYearMonth("1999","8")'>August</a></li><li><a href="#" id="19999" onclick='GetYearMonth("1999","9")'>September</a></li><li><a href="#" id="199910" onclick='GetYearMonth("1999","10")'>October</a></li><li><a href="#" id="199911" onclick='GetYearMonth("1999","11")'>November</a></li><li><a href="#" id="199912" onclick='GetYearMonth("1999","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1998">1998</a></h2><div class="accordionContent month" id="1998"><ul class="accordionlist"><li><a href="#" id="19980" onclick='GetYearMonth("1998","0")'>All Months</a></li><li><a href="#" id="19981" onclick='GetYearMonth("1998","1")'>January</a></li><li><a href="#" id="19982" onclick='GetYearMonth("1998","2")'>February</a></li><li><a href="#" id="19983" onclick='GetYearMonth("1998","3")'>March</a></li><li><a href="#" id="19984" onclick='GetYearMonth("1998","4")'>April</a></li><li><a href="#" id="19985" onclick='GetYearMonth("1998","5")'>May</a></li><li><a href="#" id="19986" onclick='GetYearMonth("1998","6")'>June</a></li><li><a href="#" id="19987" onclick='GetYearMonth("1998","7")'>July</a></li><li><a href="#" id="19988" onclick='GetYearMonth("1998","8")'>August</a></li><li><a href="#" id="19989" onclick='GetYearMonth("1998","9")'>September</a></li><li><a href="#" id="199810" onclick='GetYearMonth("1998","10")'>October</a></li><li><a href="#" id="199811" onclick='GetYearMonth("1998","11")'>November</a></li><li><a href="#" id="199812" onclick='GetYearMonth("1998","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1997">1997</a></h2><div class="accordionContent month" id="1997"><ul class="accordionlist"><li><a href="#" id="19970" onclick='GetYearMonth("1997","0")'>All Months</a></li><li><a href="#" id="19971" onclick='GetYearMonth("1997","1")'>January</a></li><li><a href="#" id="19972" onclick='GetYearMonth("1997","2")'>February</a></li><li><a href="#" id="19973" onclick='GetYearMonth("1997","3")'>March</a></li><li><a href="#" id="19974" onclick='GetYearMonth("1997","4")'>April</a></li><li><a href="#" id="19975" onclick='GetYearMonth("1997","5")'>May</a></li><li><a href="#" id="19976" onclick='GetYearMonth("1997","6")'>June</a></li><li><a href="#" id="19977" onclick='GetYearMonth("1997","7")'>July</a></li><li><a href="#" id="19978" onclick='GetYearMonth("1997","8")'>August</a></li><li><a href="#" id="19979" onclick='GetYearMonth("1997","9")'>September</a></li><li><a href="#" id="199710" onclick='GetYearMonth("1997","10")'>October</a></li><li><a href="#" id="199711" onclick='GetYearMonth("1997","11")'>November</a></li><li><a href="#" id="199712" onclick='GetYearMonth("1997","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1996">1996</a></h2><div class="accordionContent month" id="1996"><ul class="accordionlist"><li><a href="#" id="19960" onclick='GetYearMonth("1996","0")'>All Months</a></li><li><a href="#" id="19961" onclick='GetYearMonth("1996","1")'>January</a></li><li><a href="#" id="19962" onclick='GetYearMonth("1996","2")'>February</a></li><li><a href="#" id="19963" onclick='GetYearMonth("1996","3")'>March</a></li><li><a href="#" id="19964" onclick='GetYearMonth("1996","4")'>April</a></li><li><a href="#" id="19965" onclick='GetYearMonth("1996","5")'>May</a></li><li><a href="#" id="19966" onclick='GetYearMonth("1996","6")'>June</a></li><li><a href="#" id="19967" onclick='GetYearMonth("1996","7")'>July</a></li><li><a href="#" id="19968" onclick='GetYearMonth("1996","8")'>August</a></li><li><a href="#" id="19969" onclick='GetYearMonth("1996","9")'>September</a></li><li><a href="#" id="199610" onclick='GetYearMonth("1996","10")'>October</a></li><li><a href="#" id="199611" onclick='GetYearMonth("1996","11")'>November</a></li><li><a href="#" id="199612" onclick='GetYearMonth("1996","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1995">1995</a></h2><div class="accordionContent month" id="1995"><ul class="accordionlist"><li><a href="#" id="19950" onclick='GetYearMonth("1995","0")'>All Months</a></li><li><a href="#" id="19951" onclick='GetYearMonth("1995","1")'>January</a></li><li><a href="#" id="19952" onclick='GetYearMonth("1995","2")'>February</a></li><li><a href="#" id="19953" onclick='GetYearMonth("1995","3")'>March</a></li><li><a href="#" id="19954" onclick='GetYearMonth("1995","4")'>April</a></li><li><a href="#" id="19955" onclick='GetYearMonth("1995","5")'>May</a></li><li><a href="#" id="19956" onclick='GetYearMonth("1995","6")'>June</a></li><li><a href="#" id="19957" onclick='GetYearMonth("1995","7")'>July</a></li><li><a href="#" id="19958" onclick='GetYearMonth("1995","8")'>August</a></li><li><a href="#" id="19959" onclick='GetYearMonth("1995","9")'>September</a></li><li><a href="#" id="199510" onclick='GetYearMonth("1995","10")'>October</a></li><li><a href="#" id="199511" onclick='GetYearMonth("1995","11")'>November</a></li><li><a href="#" id="199512" onclick='GetYearMonth("1995","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1994">1994</a></h2><div class="accordionContent month" id="1994"><ul class="accordionlist"><li><a href="#" id="19940" onclick='GetYearMonth("1994","0")'>All Months</a></li><li><a href="#" id="19941" onclick='GetYearMonth("1994","1")'>January</a></li><li><a href="#" id="19942" onclick='GetYearMonth("1994","2")'>February</a></li><li><a href="#" id="19943" onclick='GetYearMonth("1994","3")'>March</a></li><li><a href="#" id="19944" onclick='GetYearMonth("1994","4")'>April</a></li><li><a href="#" id="19945" onclick='GetYearMonth("1994","5")'>May</a></li><li><a href="#" id="19946" onclick='GetYearMonth("1994","6")'>June</a></li><li><a href="#" id="19947" onclick='GetYearMonth("1994","7")'>July</a></li><li><a href="#" id="19948" onclick='GetYearMonth("1994","8")'>August</a></li><li><a href="#" id="19949" onclick='GetYearMonth("1994","9")'>September</a></li><li><a href="#" id="199410" onclick='GetYearMonth("1994","10")'>October</a></li><li><a href="#" id="199411" onclick='GetYearMonth("1994","11")'>November</a></li><li><a href="#" id="199412" onclick='GetYearMonth("1994","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1993">1993</a></h2><div class="accordionContent month" id="1993"><ul class="accordionlist"><li><a href="#" id="19930" onclick='GetYearMonth("1993","0")'>All Months</a></li><li><a href="#" id="19931" onclick='GetYearMonth("1993","1")'>January</a></li><li><a href="#" id="19932" onclick='GetYearMonth("1993","2")'>February</a></li><li><a href="#" id="19933" onclick='GetYearMonth("1993","3")'>March</a></li><li><a href="#" id="19934" onclick='GetYearMonth("1993","4")'>April</a></li><li><a href="#" id="19935" onclick='GetYearMonth("1993","5")'>May</a></li><li><a href="#" id="19936" onclick='GetYearMonth("1993","6")'>June</a></li><li><a href="#" id="19937" onclick='GetYearMonth("1993","7")'>July</a></li><li><a href="#" id="19938" onclick='GetYearMonth("1993","8")'>August</a></li><li><a href="#" id="19939" onclick='GetYearMonth("1993","9")'>September</a></li><li><a href="#" id="199310" onclick='GetYearMonth("1993","10")'>October</a></li><li><a href="#" id="199311" onclick='GetYearMonth("1993","11")'>November</a></li><li><a href="#" id="199312" onclick='GetYearMonth("1993","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1992">1992</a></h2><div class="accordionContent month" id="1992"><ul class="accordionlist"><li><a href="#" id="19920" onclick='GetYearMonth("1992","0")'>All Months</a></li><li><a href="#" id="19921" onclick='GetYearMonth("1992","1")'>January</a></li><li><a href="#" id="19922" onclick='GetYearMonth("1992","2")'>February</a></li><li><a href="#" id="19923" onclick='GetYearMonth("1992","3")'>March</a></li><li><a href="#" id="19924" onclick='GetYearMonth("1992","4")'>April</a></li><li><a href="#" id="19925" onclick='GetYearMonth("1992","5")'>May</a></li><li><a href="#" id="19926" onclick='GetYearMonth("1992","6")'>June</a></li><li><a href="#" id="19927" onclick='GetYearMonth("1992","7")'>July</a></li><li><a href="#" id="19928" onclick='GetYearMonth("1992","8")'>August</a></li><li><a href="#" id="19929" onclick='GetYearMonth("1992","9")'>September</a></li><li><a href="#" id="199210" onclick='GetYearMonth("1992","10")'>October</a></li><li><a href="#" id="199211" onclick='GetYearMonth("1992","11")'>November</a></li><li><a href="#" id="199212" onclick='GetYearMonth("1992","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1991">1991</a></h2><div class="accordionContent month" id="1991"><ul class="accordionlist"><li><a href="#" id="19910" onclick='GetYearMonth("1991","0")'>All Months</a></li><li><a href="#" id="19911" onclick='GetYearMonth("1991","1")'>January</a></li><li><a href="#" id="19912" onclick='GetYearMonth("1991","2")'>February</a></li><li><a href="#" id="19913" onclick='GetYearMonth("1991","3")'>March</a></li><li><a href="#" id="19914" onclick='GetYearMonth("1991","4")'>April</a></li><li><a href="#" id="19915" onclick='GetYearMonth("1991","5")'>May</a></li><li><a href="#" id="19916" onclick='GetYearMonth("1991","6")'>June</a></li><li><a href="#" id="19917" onclick='GetYearMonth("1991","7")'>July</a></li><li><a href="#" id="19918" onclick='GetYearMonth("1991","8")'>August</a></li><li><a href="#" id="19919" onclick='GetYearMonth("1991","9")'>September</a></li><li><a href="#" id="199110" onclick='GetYearMonth("1991","10")'>October</a></li><li><a href="#" id="199111" onclick='GetYearMonth("1991","11")'>November</a></li><li><a href="#" id="199112" onclick='GetYearMonth("1991","12")'>December</a></li></ul></div></div></div></span>
+<style type="text/css"> /*added by ni*/
+.year a
+{
+    text-transform:none;
+    margin:0px;
+    /*color:Black;*/
+    font-size:12px;
+    text-decoration:none;
+    padding: 3px 4px 5px 2px;
+    }
+#DateSettree_lbltree h2
+{
+    margin-top:0px;
+}
+.month ul li a {
+    padding: 3px 4px 7px 2px;
+}
+
+.accordionContent ul.accordionlist li {
+    
+    min-height: 24px;
+}
+</style>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+        </div>
+        <div>
+            <a href="#top" class="scrollToTop" id="backToTop">Top</a>
+<div id="backDiv" style=" text-align:center;" >
+<a href="javascript:history.back()" class="paraheader">Back to previous page</a><br/>
+<span id="lblGetLastUpdateDate" class="paraheader"></span>
+</div>
+<footer class="footer">
+
+<div class="footer">
+  <div class="container_12">    
+      <div class="grid_9" style="width: 833px !important; ">
+          
+          <h2><span class="blue">More</span> Links </h2>
+          
+		<ul class="footerlist" style="column-count:4">
+                  <li ><a href="/Scripts/HolidayMatrixDisplay.aspx">Bank Holidays</a></li>
+                  <li ><a href="https://shabdavali.rbi.org.in/">Banking Glossary</a></li>
+                  <li ><a href="/Scripts/CitiChart.aspx">Citizen's Charter</a></li>
+                  <li ><a href="/Scripts/Complaints.aspx">Complaints</a></li>
+                  <li ><a href="/Scripts/contactus.aspx">Contact Us</a></li>
+  		<li ><a href="https://www.rbi.org.in/scripts/bs_viewcontent.aspx?Id=3894">COVID-19 Measures</a></li>
+                  <li ><a target="_blank" href="https://ncfe.org.in/e-lms">E-LMS</a></li>
+                  <li ><a href="/Scripts/EventsDisplay.aspx">Events</a></li>
+                  <li ><a href="/Scripts/FAQDisplay.aspx">FAQs</a></li>
+                  <li ><a target="_blank" href="https://www.rbi.org.in/FinancialEducation/">Financial Education</a></li>
+		<li ><a href="/Scripts/BS_ViewForms.aspx">Forms</a></li>
+                  <li ><a href="/Scripts/IFSCMICRDetails.aspx">IFSC/MICR Codes</a></li>
+                  <li><a href="/Scripts/OtherLinks.aspx">Important Websites</a></li>
+                  <li><a target="_blank" href="https://opportunities.rbi.org.in/scripts/index.aspx">Opportunities<span>@</span>RBI</a></li>
+                  <li><a href="/Scripts/rbi_clarification.aspx">RBI Clarifications</a></li>
+ 		<li><a target="_blank" href="https://rbikehtahai.rbi.org.in/">RBI Kehta Hai</a></li>
+                  <li><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Utkarsh202910042026.pdf" target="_blank">RBI’s Vision and Values <img src="../Images/pdf.gif" alt="PDF document" style="padding-bottom: 4px; width:12px; border:0;vertical-align: middle;"> (652 kb)</a></li>
+                  <li><a href="/Scripts/Righttoinfoact.aspx">Right to Information Act</a></li>
+                  <li><a href="/Scripts/BS_ViewTenders.aspx">Tenders</a></li>
+                  
+              </ul>
+      </div>
+
+    <div class="grid_3" style="width:197px !important">
+      
+        <h2><span class="blue">Follow</span> RBI</h2>
+      <ul class="footerlist">
+        
+
+          <li style="float: left;background: url(/images/footer_list_arrow.gif) left 8px no-repeat;"><a href="/Scripts/rss.aspx"><img src="/images/rss-icon.png" alt="RSS Icon" class="rss">RSS</a></li>
+
+        
+          <li>
+              <a href="https://twitter.com/RBI" target="_blank" class="twitter">
+                  <img src="/images/Twitter_New.png" alt="Twitter Icon" class="videos" style="padding-left: 18%; width:14px;">Twitter
+              </a>
+          </li>
+
+        
+
+          <li style="float: left;"><a href="https://www.youtube.com/channel/UCIfCOl43tunZVNYafeC4RQA" class="videos" target="_blank"><img src="/images/youtube.png" alt="YouTube Icon" class="videos">YouTube</a></li>
+
+          <li>
+              <a href="https://instagram.com/reservebankofindia" class="videos" target="_blank">
+                  <img src="/images/Instagram.jpg"  alt="Instagram Icon" class="videos" style="padding-left: 5%; width:14px;">Instagram
+              </a>
+          </li>
+          <li style="float: left;"><a href="https://www.facebook.com/RBIsays" class="videos" target="_blank"><img src="/images/Facebook.jpg" style="width:14px;" alt="Facebook Icon" class="videos">Facebook</a></li>
+          <li>
+              <a href="https://www.linkedin.com/company/reservebankofindia" class="videos" target="_blank">
+                  <img src="/images/LinkedinIcon1.png" alt="LinkedIn Icon" class="" style="padding-left: 4%;width: 17px;background: bottom no-repeat;display: block;float: left;margin: 2px 3px 0 1px;">LinkedIn
+              </a>
+          </li>
+      </ul>
+	<a href="https://www.india.gov.in" class="videos" target="_blank" >
+                  <img src="/images/indiaGov.png" alt="National Portal of India logo" class="">
+              </a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="copyright">
+    <div class="container_12">
+     <div class="grid_6 pull_left">&copy; Reserve Bank of India. All Rights Reserved. </div>
+        <div class="grid_5 pull_right"><a href="/Scripts/sitemap.aspx">Sitemap</a> <span aria-hidden="true">|</span> <a href="/Scripts/Disclaimer.aspx">Disclaimer</a></div>
+        <div class="clearfix"></div>
+
+        <div class="grid_6 pull_left">Website owned and managed by Reserve Bank of India. Contact us on helpdoc[at]rbi[dot]org[dot]in</div>
+        <div class="grid_5 pull_right">Website last updated date: Nov 11, 2026</div>
+        <div class="clearfix"></div>
+	<div class="grid_6 pull_left"><a href="https://www.rbi.org.in/scripts/wim.aspx">Web Information Manager</a></div>
+	<div class="grid_5 pull_right"><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Accessibility20012026.pdf" target="_blank">Accessibility Statement
+	<img alt="PDF - Accessibility Statement" style="padding: 1px; width:16px; border:0; vertical-align: middle;" src="../Images/pdf.gif" > (133 KB)
+	</a><span aria-hidden="true"> |</span><a href="/scripts/ScreenReader.aspx" title="Information related to screen reader">Screen Reader and Accessibility Help</a></div>
+	<div class="clearfix"></div>
+        <div class="grid_12 pull_left">Supports: Google Chrome 147+ | Firefox 150+ | Microsoft Edge Version 147+ | Safari 17+</div>
+        
+        <div class="clearfix"></div>
+    </div>
+  </div>
+  
+
+
+
+</div>
+
+</footer>
+
+<script src="/js/ReplaceURL.js" ></script>
+<script >
+
+
+    //this is for floating TOP link
+    
+    $(document).ready(function () {
+
+        var offset = 230;
+        var duration = 500;
+
+
+        jQuery(window).scroll(function () {
+            if (jQuery(this).scrollTop() > offset) {
+                jQuery('.scrollToTop').fadeIn(duration);
+                
+            } else {
+                jQuery('.scrollToTop').fadeOut(duration);
+                
+            }
+        });
+
+        
+	$('.page_title').attr('tabindex','-1');
+        $('.scrollToTop').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+		$('.page_title').focus(); 
+            return false;
+        });
+	
+
+
+	if(!window.location.href.includes("Home.aspx") && !window.location.href.includes("home.aspx"))
+{ 
+if( window.location.href.includes(".aspx")){
+var div= document.getElementById('backDiv');
+	div.removeAttribute("hidden");}
+else{
+var div1= document.getElementById('backDiv');
+	div1.setAttribute("hidden","true");}
+}
+else{
+
+
+	var div1= document.getElementById('backDiv');
+	div1.setAttribute("hidden","true");}
+    });
+
+
+  
+    $(window).scroll(function () {
+
+        if ($('div.banner2').length) {
+
+            if ($(window).scrollTop() >= 265) {
+                $('#menubar').css("position", "fixed");
+                $('#menubar').css("width", "240px");
+                $('#menubar').css("margin-top", "-281px");
+                $('.content_area').css("margin-left", "252px");
+
+                $('.sidebar_nav').css("position", "fixed");
+                $('.sidebar_nav').css("margin-top", "-200px");
+                $('.sidebar_nav').css("width", "236px");
+
+
+             
+
+            }
+
+            else {
+                $('#menubar').css("position", "");
+                $('#menubar').css("width", "");
+                $('#menubar').css("margin-top", "");
+                $('.content_area').css("margin-left", "");
+
+                $('.sidebar_nav').css("position", "");
+                $('.sidebar_nav').css("margin-top", "");
+                $('.sidebar_nav').css("width", "");
+
+
+
+         
+            }
+
+        }
+
+        else if ($(window).scrollTop() >= 185) {
+            $('#menubar').css("position", "fixed");
+            $('#menubar').css("width", "240px");
+            $('#menubar').css("margin-top", "-200px");
+            $('.content_area').css("margin-left", "252px");
+
+            $('.sidebar_nav').css("position", "fixed");
+            $('.sidebar_nav').css("margin-top", "-200px");
+            $('.sidebar_nav').css("width", "236px");
+
+
+          
+		var treeheight=0;
+		if($('#treeYear').height()>0){treeheight=$('#treeYear').height();}
+	    	if($(window).scrollTop() >= $('#example-min').height()-treeheight)
+		{			 
+			$('#menubar').css("position", "absolute");
+            		
+			$('#menubar').css("margin-top", "");
+			$('#menubar').css("top", $('#example-min').height()+100-treeheight +"px");
+		}
+		else{$('#menubar').css("position", "fixed"); $('#menubar').css("top", "");}
+		
+        }
+
+        else {
+            $('#menubar').css("position", "");
+            $('#menubar').css("width", "");
+            $('#menubar').css("margin-top", "");
+            $('.content_area').css("margin-left", "");
+
+            $('.sidebar_nav').css("position", "");
+            $('.sidebar_nav').css("margin-top", "");
+            $('.sidebar_nav').css("width", "");
+
+
+       
+        }
+     
+
+       
+    });
+	
+      
+    $(document).ready(function () {
+	
+	
+		  $('.window .close').click(function (e) {
+            //Cancel the link behavior
+            e.preventDefault();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('#maskWN').hide();
+            $('.window').hide();
+            var scroll = $(window).scrollTop();
+            $("html").scrollTop(scroll);
+        });
+		
+		 $('#maskWN').click(function () {
+            $(this).hide();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('.window').hide();
+
+        });
+
+        
+
+        //if close button is clicked
+        $('.window .close').click(function (e) {
+            //Cancel the link behavior
+            e.preventDefault();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('#mask').hide();
+            $('.window').hide();
+            var scroll = $(window).scrollTop();
+            $("html").scrollTop(scroll);
+        });
+
+        //if mask is clicked
+        $('#mask').click(function () {
+            $(this).hide();
+            $('.window').hide();
+        });
+        $('#feedbackbtn').click(function () {
+            var id = '#dialog';
+
+            //Get the screen height and width
+            var maskHeight = $(document).height();
+            var maskWidth = $(window).width();
+
+            //Set heigth and width to mask to fill up the whole screen
+            
+            $('#mask').css({ 'width': '100%', 'height': '100%', 'position': 'fixed' });
+
+            //transition effect
+            $('#mask').fadeIn(500);
+            $('#mask').fadeTo("slow", 0.9);
+
+            //Get the window height and width
+            var winH = $(window).height();
+            var winW = $(window).width();
+
+            //Set the popup window to center
+            $(id).css('top', winH / 2 - $(id).height() / 2);
+            $(id).css('left', winW / 2 - $(id).width() / 2);
+
+            //transition effect
+            $(id).fadeIn(2000);
+        });
+
+        $('.submit').click(function () {
+            var Name = $("[id*=txtFeedbackName]").val();
+            var Email = $("[id*=txtFeedbackEmail]").val();
+            var Comments = $("[id*=txtFeedbackComments]").val();
+            if (Name == "") {
+
+                alert("Please enter your name");
+                $("[id*=txtFeedbackName]").focus();
+                return false;
+            }
+            else if (Email == "") {
+                alert("Please enter your email");
+                $("[id*=txtFeedbackEmail]").focus();
+                return false;
+            }
+            else if (Email != "" && !ValidateEmail(Email)) {
+                alert("Please enter a valid email address");
+                $("[id*=txtFeedbackEmail]").focus();
+                return false;
+            }
+
+            else if (Comments == "") {
+
+                alert("Please enter some comments");
+                $("[id*=txtFeedbackComments]").focus();
+                return false;
+            }
+
+            else {
+                $('[id*=Button1]').attr('disabled', 'disabled');
+
+                var param = { Name: Name, EmailID: Email, Comments: Comments };
+                $.ajax({
+                    type: "POST",
+                    url: "../Home.aspx/SaveFeedback",
+                    data: JSON.stringify(param),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (response) {
+
+                        if (response.d == "0") {
+                            alert("Thank you for your feedback");
+                            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+                            $('#mask').hide();
+                            $('.window').hide();
+                            $('[id*=Button1]').removeAttr('disabled');
+                            $("[id*=txtFeedbackName]").val("");
+                            $("[id*=txtFeedbackEmail]").val("");
+                            $("[id*=txtFeedbackComments]").val("");
+                        }
+                        else {
+                            alert("Please try again");
+                            $('[id*=Button1]').removeAttr('disabled');
+
+
+                        }
+
+                    }
+                });
+            }
+
+        });
+
+        function ValidateEmail(email) {
+            var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            return expr.test(email);
+        };
+
+       
+
+        $('a.style1').each(function () {
+
+            var $this = $(this);
+            var aHref = $this.attr('class');
+            $this.attr('class', aHref.replace('style1', 'links'));
+        });
+
+		
+   });
+
+  function isExternal(url) {
+	if(url){url=url.toLowerCase();
+       if(url=='#' || url=='javascript:void(0);' || url.includes('javascript')||url=='' )
+	{ return false;} 
+	else{//return (url.indexOf("rbi.org.in")==-1)
+	
+	if(url.indexOf("www.rbi.org.in")==-1 || url.indexOf("https://rbi.org.in")==-1)
+		{	
+			if(url.indexOf("rbi.org.in")==-1)		
+    				return "external";
+			else if(url.indexOf("www.rbi.org.in")==-1 && url.indexOf(".rbi.org.in")>0 && url.indexOf("rbidocs.rbi.org.in")==-1)
+				{return "subdomain";}
+			else if(url.indexOf("financialeducation")>0 || url.indexOf("commonperson")>0 || url.indexOf("/rekyc/")>0 || url.indexOf("rbi90years")>0 ){
+				return "subsite";}
+			
+		}
+	
+	}}
+    }
+    document.addEventListener("click", function () {
+	linkMessage();
+        
+    });
+function linkMessage(){
+	if (event.target.tagName.toLowerCase() === "a") {
+            if (isExternal(event.target.href)=="external") {
+
+                if (confirm("You are being redirected to an external website that opens in a new tab. Please note that Reserve Bank of India will not be held responsible for external websites content in any manner.")) {
+
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+            }
+	    if (isExternal(event.target.href)=="subdomain") {
+	    	 if (confirm("You are being redirected to a subdomain that will open in a new browser tab. The subdomain may have a different header, footer, and navigation structure from the main website. Continue?")) {
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+	    }
+		if (isExternal(event.target.href)=="subsite") {
+	    	 if (confirm("You are being redirected to a subsite that will open in a new browser tab. The subsite may have a different header, footer, and navigation structure from the main website. Some design elements and links may vary from the primary site experience. Continue?")) {
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+	    }
+        }
+	else if (event.target.tagName.toLowerCase() === "img") {
+		$(event.target).preventDefault;		
+		if($(event.target).parent('a').length){
+			 if (isExternal($(event.target).parent('a').prop('href'))==="external") {
+                		if (confirm("You are being redirected to an external website that opens in a new tab. Please note that Reserve Bank of India will not be held responsible for external websites content in any manner.")) {
+                    		return;
+               		 }
+
+                	else {                   
+                    		event.preventDefault();
+                    		return;
+                	}}
+			if (isExternal($(event.target).parent('a').prop('href'))==="subdomain") {
+                		if (confirm("You are being redirected to a subdomain that will open in a new browser tab. The subdomain may have a different header, footer, and navigation structure from the main website. Continue?")) {
+                    		return;
+               		 	}
+
+                		else {                   
+                    		event.preventDefault();
+                    		return;
+                		}
+			}
+			if (isExternal(event.target.href)=="subsite") {
+	    	 	if (confirm("You are being redirected to a subsite that will open in a new browser tab. The subsite may have a different header, footer, and navigation structure from the main website. Some design elements and links may vary from the primary site experience. Continue?")) {
+                    	return;
+                	}
+                	else {
+                   
+                    		event.preventDefault();
+                    	return;
+                	}
+	    		}
+	}}
+	const link = event.target.closest('a[target="_blank"]');
+	if(link){ 
+		event.preventDefault();
+		const docRegx = /\.(pdf|docx?|xlsx?|zip?|doc|xls)$/i;
+		if(docRegx.test(link)){
+			if(/\.pdf$/i.test(link))
+			{	
+				if(confirm("This PDF will open in a new browser tab. Do you want to continue?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.docx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.doc$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xlsx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xls$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.zip$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this file?")){
+				window.open(link.href,"_blank");}
+			}
+		}
+		else
+		if(confirm("This link will open in a new browser tab. Do you want to continue?")){
+			window.open(link.href,"_blank");
+		}
+	}
+		if (event.target.tagName.toLowerCase() === "button") {
+		if($(event.target).parent('a').length>0){
+			const link1 = event.target.closest('a[target="_blank"]');
+		if(link1){
+			event.preventDefault();
+			if(confirm("This link will open in a new browser tab. Do you want to continue?")){
+				window.open(link.href,"_blank");
+			}
+		}
+		}
+	}
+}
+
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61369961-1', 'auto');
+  ga('send', 'pageview');
+
+document.querySelectorAll('table.tablebg').forEach(table => {
+    const anchors = table.querySelectorAll('a[href^="#"]:not([href="#"])');
+
+    const hasInPageAnchorsInThisTableOnly = Array.from(anchors).some(a => {
+        // Find the closest table ancestor of this anchor
+        const closestTable = a.closest('table');
+    
+        // Only count it if it belongs to the current table (not a nested one)
+        return closestTable === table;
+    });
+
+    if (!hasInPageAnchorsInThisTableOnly) {
+    //    table.setAttribute('role', 'presentation');
+    //} else {
+    //    table.removeAttribute('role'); 
+	if(table.closest('td')){
+	if(table.querySelector('th'))
+	{	
+		table.removeAttribute('role');
+	}
+	else{
+        table.setAttribute('role', 'presentation');
+		}
+	}
+	else{
+        table.setAttribute('role', 'presentation');
+		}
+    }
+});
+$('.brd-ptable1').attr('role','presentation');
+$('html').attr('lang', 'en');
+document.querySelectorAll('br').forEach(br => {br.setAttribute('aria-hidden','true');});
+$('#doublescroll').children('table').filter(':first').attr("role", "presentation");
+$('.page_title').nextAll('table').first().attr("role", "presentation");
+
+
+
+document.addEventListener('DOMContentLoaded', function(){
+$('.tableheader b').each(function () {
+		var curEle= $(this);
+           $(curEle).replaceWith("<h2 class='dop_header'>"+$(curEle).html()+"</h2>")
+        });
+ });
+
+//  tooltip 
+var TooltipManager = {
+    _tip: null, // Create the tooltip element once 
+init: function() {
+    if (!this._tip) {
+    
+        this._tip = $('<div id="js-custom-tooltip"></div>').css({
+            "position": "absolute", "background": '#ffffca', "color":"#000", "padding": "2px 5px", "border-radius": "0px", "font-size": "11px","font-family":"Sans-serif", "z-index": "10000", "pointer-events": "none","border":"1px solid #767676", "box-shadow":"2px 2px 3px rgba(0,0,0,0.2)","white-space":"nowrap"
+        }).appendTo('body');
+        
+    }
+}, 
+show: function(element, text) {
+    this.init(); 
+var $el = $(element); // Update text and position 
+    
+this._tip.text(text).show();
+var pos = $el.offset(); 
+this._tip.css({
+    top: pos.top + this._tip.outerHeight()  + "px", // Show above 
+    left: pos.left + ($el.outerWidth() / 2) - (this._tip.outerWidth() / 2) + "px"
+});
+    }, hide: function() { if (this._tip) this._tip.hide(); }
+}; // Apply to all elements that have a ToolTip (ToolTip renders as 'title') 
+$(document).ready(function() {
+   
+    $('body').on('focusin', 'input, button, a, select, textarea, img', function() {
+        var title = $(this).attr('title'); if (title) {
+    
+            
+      
+            TooltipManager.show(this, title);
+        }
+    }).on('focusout', 'input, button, a, select, textarea, img', function() { 
+       
+            TooltipManager.hide();
+       
+    }); // Dismiss on Escape key
+    $(document).keyup(function(e) { if (e.key === "Escape") TooltipManager.hide(); });
+});
+
+//breadcrumb current page announce
+$(document).ready(function(){
+
+const breadcrumbList = document.querySelector('.breadcrumbs');
+
+    if (breadcrumbList) {
+        const listItems = breadcrumbList.querySelectorAll('li');
+    
+        if (listItems.length > 0) {
+            
+            const lastItem = $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).last().attr('aria-current', 'page').css('background','none'); //remove extra icons from empty breadcrumbs
+            $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" && $(this).children().length===0;}).attr('role','presentation');
+	    
+       		$('.breadcrumbs li').filter(function(){
+			if($(this).children().length!==0)
+			{
+				if($(this).children().text() ===""){}
+			}
+		});
+            const lastLink =lastItem.find('a');
+            if (lastLink) {
+                lastLink.attr('aria-current', 'page');               
+                
+            }
+		if($('.breadcrumbs li').last().find('a').length>0)
+		{			
+			const $a = $('.breadcrumbs li').last().find('a');
+			$('<span>',{class: $a.attr('class'), text: $a.text()}).replaceAll($a).attr('aria-current', 'page').css('background','none');;
+		}
+		
+		if($('.breadcrumbs li').last().find('span').length>0)
+		{
+			
+			if($('.breadcrumbs li').last().find('span')[0].innerText==='')
+			{
+				$('.breadcrumbs li').last().find('span').removeAttr('aria-current');				
+			}
+			else{
+				$('.breadcrumbs li').last().find('span').filter(function(){ return $(this).attr('role')!=='presentation';}).last().attr('aria-current', 'page').css('background','none');;					
+			}		
+		}
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).removeAttr('role','presentation'); 
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" }).css('background','none');//remove extra icons from empty breadcrumbs
+        }
+    }
+});
+
+//document.addEventListener("DOMContentLoaded", () => {
+//    document.querySelectorAll('img').forEach(img => {
+//      try {
+//        const url = new URL(img.src);
+//        img.crossOrigin = "anonymous";
+//        img.src = window.location.origin + url.pathname + url.search + url.hash;
+//      } catch (e) {}
+//    });
+//  });
+</script>
+        </div>
+        <style type="text/css">
+            .tablebg table, .tablebg table table {
+                background-color: transparent !important;
+                border-color: rgb(239, 209, 170) !important;
+                border-collapse: collapse;
+            }
+
+            table table table td {
+                background-color: transparent !important;
+            }
+
+            .table {
+                background-color: transparent !important;
+            }
+        </style>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+setLetterSpace(false);//]]>
+</script>
+</form>
+</body>
+</html>
+<script type="text/javascript" src="/js/plugins.js"></script>
+<script type="text/javascript" src="/js/script.js"></script>
+<script type="text/javascript" src="/js/Scroll.js"></script>
+<script type="text/javascript" language="javascript">
+    DoubleScrollWithTree(document.getElementById('doublescroll'));
+
+function GetYearMonth(year, month) {
+    document.getElementById("hdnYear").value = year;
+    document.getElementById("hdnMonth").value = month;
+    document.getElementById("btn").click();
+}
+//Implemented onlick for 'archives' link in tree structure
+function hideshow(divArchive) {
+    if (!document.getElementById(divArchive))
+        return
+    if (document.getElementById(divArchive).style.display == "block")
+        document.getElementById(divArchive).style.display = "none"
+    else
+        document.getElementById(divArchive).style.display = "block"
+}
+function SetTreeStyles() {
+    var strYear = document.getElementById("hdnYear").value;
+    var strMonth = document.getElementById("hdnMonth").value
+    if (strYear != "") {
+        var toDay = new Date();
+        document.getElementById("btn" + strYear).setAttribute("class", "accordionButton year active_year");
+        document.getElementById(strYear).style.display = "block"
+        if (strMonth) document.getElementById(strYear + strMonth).setAttribute("class", "active");
+        if (toDay.getFullYear() - 9 > parseInt(strYear)) { document.getElementById("divArchiveSub").style.display = "block" }
+    }
+}
+
+$(document).ready(function() {
+    document.getElementById("2769").style.visibility = "hidden";
+});
+       
+</script>
+<script id="f5_cspm">(function(){var f5_cspm={f5_p:'DBONDEOOAKGPACLLILMBKCABPGBGEBHCMBCKMCKAGOCKOCMIDLFLCNPNKAJINLBPMHCBKNBIAALIDLJEOILAMIJOAANKGKIFGLIEOOPMBHOLBANOJDOGDKOOOKHHHDJB',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0455741970aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>

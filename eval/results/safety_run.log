@@ -1,0 +1,6 @@
+fake_model  injection  15/15 []
+fake_model  pii        15/15 []
+fake_model  refusal    10/10 []
+real_model  injection  15/15 []
+real_model  pii        15/15 []
+real_model  refusal    10/10 []

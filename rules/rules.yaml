@@ -1,0 +1,758 @@
+# RBI Home Loan Rule Checker - rules file
+# Every value below was taken from RBI text downloaded from rbi.org.in and read on the date shown.
+# Nothing here is from memory, a blog, or another country's rules.
+# status: verified   = quoted wording read in the latest version published on rbi.org.in
+#         unverified = see `unverified_reason`. Tools and gold answers must NOT use an unverified record.
+# Each `quote` segment is checked verbatim against the parsed source by rules/check_quotes.py.
+# Money is in rupees (1 lakh = 100000, 1 crore = 10000000).
+
+meta:
+  rules_version: "2026-11-12.2"
+  read_on: "2026-11-12"
+  read_by: "automated read of rbi.org.in HTML; reviewed by team before freeze"
+
+sources:
+  HFC-MD:
+    title: "Reserve Bank of India (Housing Finance Companies) Directions, 2025"
+    version: "Updated as on October 01, 2026"
+    reference: "RBI/DoR/2025-26/365; DoR.FIN.REC.284/03-10-119/2025-26"
+    dated: "2025-11-28"
+    applies_to: hfc
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12939"
+    local_file: "data/parsed/text/rbi_md_12939.txt"
+    latest_version_read: true
+  NBFC-RBC:
+    title: "Reserve Bank of India (Non-Banking Financial Companies – Responsible Business Conduct) Directions, 2025"
+    version: "Updated as on July 1, 2026"
+    reference: "RBI/DOR/2025-26/362; DOR.MCS.REC.No.281/01-01-039/2025-26"
+    dated: "2025-11-28"
+    applies_to: hfc   # applies to HFCs: para 3(7) of these Directions and para 5(25) of HFC-MD
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12942"
+    local_file: "data/parsed/text/rbi_md_12942.txt"
+    latest_version_read: true
+  NBFC-KYC:
+    title: "Reserve Bank of India (Non-Banking Financial Companies – Know Your Customer) Directions, 2025"
+    version: "Updated as on December 29, 2025"
+    reference: "RBI/DOR/2025-26/361; DOR.AML.REC.No.280/14.01.003/2025-26"
+    dated: "2025-11-28"
+    applies_to: hfc   # via para 5(23) of HFC-MD
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12943"
+    local_file: "data/parsed/text/rbi_md_12943.txt"
+    latest_version_read: true
+  NBFC-CRM:
+    title: "Reserve Bank of India (Non-Banking Financial Companies – Credit Risk Management) Directions, 2025"
+    version: "Updated as on July 01, 2026"
+    reference: "RBI/DOR/2025-26/350; DOR.CRE.REC.No.269/07-02-008/2025-26"
+    dated: "2025-11-28"
+    applies_to: hfc   # via para 5(9) of HFC-MD
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12954"
+    local_file: "data/parsed/text/rbi_md_12954.txt"
+    latest_version_read: true
+  CB-CF:
+    title: "Reserve Bank of India (Commercial Banks – Credit Facilities) Directions, 2025"
+    version: "Updated as on July 15, 2026 (previous version; current is 'Updated as on October 1, 2026', PDF only)"
+    reference: "RBI/DOR/2025-26/154; DOR.CRE.REC.73/07-01-001/2025-26"
+    dated: "2025-11-28"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/NotificationPreVersion.aspx?id=13156&Histid=271"
+    current_version_url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13156"
+    current_version_pdf: "https://rbidocs.rbi.org.in/rdocs/notification/PDFs/154MD.PDF"
+    local_file: "data/parsed/text/prev_13156_271.txt"
+    latest_version_read: false
+  CB-CAP:
+    title: "Reserve Bank of India (Commercial Banks - Prudential Norms on Capital Adequacy) Directions, 2025"
+    version: "Updated as on July 01, 2026 (previous version; current is 'Updated as on October 07, 2026', PDF only)"
+    reference: "RBI/DOR/2025-26/151; DOR.CAP.REC.70/21-01-002/2025-26"
+    dated: "2025-11-28"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/NotificationPreVersion.aspx?id=13159&Histid=270"
+    current_version_url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13159"
+    current_version_pdf: "https://rbidocs.rbi.org.in/rdocs/notification/PDFs/151MD.PDF"
+    local_file: "data/parsed/text/prev_13159_270.txt"
+    latest_version_read: false
+  CB-SA-2027:
+    title: "Reserve Bank of India (Commercial Banks - Capital Charge for Credit Risk – Standardised Approach) Directions, 2026"
+    version: "Effective from April 1, 2027"
+    reference: "RBI/DOR/2026-27/397; DOR.CRE.REC 5/21.06.201/2026-27"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13399"
+    local_file: "data/parsed/text/rbi_md_13399.txt"
+    latest_version_read: true
+  CB-RBC:
+    title: "Reserve Bank of India (Commercial Banks - Responsible Business Conduct) Directions, 2025"
+    version: "Updated as on October 1, 2026"
+    reference: "RBI/2025-26/170; DOR.MCS.REC.No.89/01-01-032/2025-26"
+    dated: "2025-11-28"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13140"
+    local_file: "data/parsed/text/rbi_md_13140.txt"
+    latest_version_read: true
+  CB-KYC:
+    title: "Reserve Bank of India (Commercial Banks – Know Your Customer) Directions, 2025"
+    version: "Updated as on October 1, 2026"
+    reference: "RBI/DOR/2025-26/169; DOR.AML.REC.No.88/14.01.002/2025-26"
+    dated: "2025-11-28"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13141"
+    local_file: "data/parsed/text/rbi_md_13141.txt"
+    latest_version_read: true
+  CB-CRM:
+    title: "Reserve Bank of India (Commercial Banks – Credit Risk Management) Directions, 2025"
+    version: "Updated as on October 01, 2026"
+    reference: "RBI/DOR/2025-26/157; DOR.CRE.REC.76/07-02-001/2025-26"
+    dated: "2025-11-28"
+    applies_to: bank
+    url: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13153"
+    local_file: "data/parsed/text/rbi_md_13153.txt"
+    latest_version_read: true
+  CB-CF-CURRENT:
+    title: "Reserve Bank of India (Commercial Banks – Credit Facilities) Directions, 2025"
+    version: "Updated as on October 1, 2026 (current; PDF saved by the team on 2026-11-12)"
+    reference: "RBI/DOR/2025-26/154; DOR.CRE.REC.73/07-01-001/2025-26"
+    applies_to: bank
+    url: "https://rbidocs.rbi.org.in/rdocs/notification/PDFs/154MD.PDF"
+    local_file: "data/parsed/text/154MD.txt"
+    latest_version_read: true
+  CB-CAP-CURRENT:
+    title: "Reserve Bank of India (Commercial Banks - Prudential Norms on Capital Adequacy) Directions, 2025"
+    version: "Updated as on October 07, 2026 (current; PDF saved by the team on 2026-11-12)"
+    reference: "RBI/DOR/2025-26/151; DOR.CAP.REC.70/21-01-002/2025-26"
+    applies_to: bank
+    url: "https://rbidocs.rbi.org.in/rdocs/notification/PDFs/151MD.PDF"
+    local_file: "data/parsed/text/151MD.txt"
+    latest_version_read: true
+  HFC-ANNEX-V:
+    title: "Reserve Bank of India (Housing Finance Companies) Directions, 2025 - Annex V: Valuation of Properties – Empanelment of Valuers"
+    version: "Annex to the version updated as on October 01, 2026 (PDF saved by the team on 2026-11-12)"
+    reference: "RBI/DoR/2025-26/365"
+    applies_to: hfc
+    url: "https://rbidocs.rbi.org.in/rdocs/content/pdfs/365MD06022026_AN5.pdf"
+    local_file: "data/parsed/text/365MD06022026_AN5.txt"
+    latest_version_read: true
+
+rules:
+
+  # ---------------------------------------------------------------- LOAN TO VALUE
+  - rule_id: HFC-LTV-CAP
+    theme: loan_to_value_cap
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "58"
+    paragraph_id: "HFC-MD/58"
+    applies_to_borrower: individual
+    quote:
+      - "58. No housing finance company shall grant housing loans to individuals:"
+      - "(1) up to ₹30 lakh with LTV ratio exceeding 90 percent,"
+      - "(2) above ₹30 lakh and up to ₹75 lakh with LTV ratio exceeding 80 percent, and,"
+      - "(3) above ₹75 lakh with LTV ratio exceeding 75 per cent"
+    values:
+      bands:
+        - {loan_above: 0,       loan_up_to: 3000000, max_ltv_pct: 90}
+        - {loan_above: 3000000, loan_up_to: 7500000, max_ltv_pct: 80}
+        - {loan_above: 7500000, loan_up_to: null,    max_ltv_pct: 75}
+    effective_date: "2025-11-28"
+    amendments: "No amendment footnote on paragraph 58 in the version updated as on 2026-10-01."
+    status: verified
+
+  - rule_id: HFC-LTV-COMPUTE
+    theme: loan_to_value_computation_and_stamp_duty
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "58 Note (1)"
+    paragraph_id: "HFC-MD/58-Note1"
+    quote:
+      - "(1) The LTV ratio shall be computed as a percentage with total outstanding in the account (viz, “principal + accrued interest + other charges pertaining to the loan” without any netting) in numerator and the realizable value of the residential property mortgaged to the HFC in the denominator."
+      - "The HFC shall not include stamp duty, registration and other documentation charges in the cost of the housing property they finance so that the effectiveness of LTV norms is not diluted."
+      - "in cases where the cost of the house/ dwelling unit does not exceed ₹10 lakh, HFC may add stamp duty, registration and other documentation charges to the cost of the house/ dwelling unit for the purpose of computing LTV ratio."
+    values:
+      numerator: "total outstanding (principal + accrued interest + other charges), no netting"
+      denominator: "realizable value of the residential property mortgaged"
+      stamp_duty_included_by_default: false
+      stamp_duty_addable_if_cost_up_to: 1000000
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-LTV-CAP
+    theme: loan_to_value_cap
+    lender_type: bank
+    source: CB-CF
+    paragraph: "111"
+    paragraph_id: "CB-CF/111"
+    applies_to_borrower: individual
+    quote:
+      - "111. The bank shall abide by the following Loan to Value (LTV) and Risk Weights (RWs) while deciding the quantum of loan to be granted as housing finance:"
+      - |
+        | Category of Loan | LTV Ratio (%) | Risk Weight (%)
+        | (a) Individual Housing Loans | |
+        | Up to ₹30 lakh | ≤ 80 | 35
+        | > 80 and ≤ 90 | 50
+        | Above ₹30 lakh & up to ₹75 lakh | ≤ 80 | 35
+        | Above ₹75 lakh | ≤ 75 | 50
+    values:
+      bands:
+        - {loan_above: 0,       loan_up_to: 3000000, max_ltv_pct: 90}
+        - {loan_above: 3000000, loan_up_to: 7500000, max_ltv_pct: 80}
+        - {loan_above: 7500000, loan_up_to: null,    max_ltv_pct: 75}
+      note: "Table applies to loans sanctioned after June 06, 2017; a proviso gives a separate table for loans sanctioned till June 06, 2017."
+    effective_date: "2025-11-28"
+    amendments: "Paragraph 111 carries no amendment footnote in the version updated as on 2026-07-15."
+    link_quote:
+      source: CB-CF-CURRENT
+      quote: "111. The bank shall abide by the following Loan to Value (LTV) and Risk Weights (RWs) while deciding the quantum of loan to be granted as housing finance:"
+    current_version_check: "Paragraph 111 and its table re-read in the current PDF (updated as on October 1, 2026) on 2026-11-12: same bands, LTV ratios and risk weights. Table quote is checked against the July 15, 2026 web version because the PDF table does not extract row by row."
+    status: verified
+
+  - rule_id: BANK-LTV-COMPUTE
+    theme: loan_to_value_computation_and_stamp_duty
+    lender_type: bank
+    source: CB-CF
+    paragraph: "113"
+    paragraph_id: "CB-CF/113"
+    quote:
+      - "113. In order to have uniformity in the practices adopted for deciding the value of the house property while sanctioning housing loans, bank shall not include stamp duty, registration and other documentation charges in the cost of the housing property it finances so that the effectiveness of LTV norms is not diluted."
+      - "Exemption: In cases where the cost of the house / dwelling units does not exceed ₹10 lakh, the bank may add stamp duty, registration and other documentation charges to the cost of the house/dwelling unit for the purpose of calculating LTV ratio."
+    values:
+      stamp_duty_included_by_default: false
+      stamp_duty_addable_if_cost_up_to: 1000000
+    effective_date: "2025-11-28"
+    link_quote:
+      source: CB-CF-CURRENT
+      quote: "Exemption: In cases where the cost of the house / dwelling units does not exceed ₹10 lakh, the bank may add stamp duty, registration and other documentation charges to the cost of the house/dwelling unit for the purpose of calculating LTV ratio."
+    current_version_check: "Paragraph 113 re-read in the current PDF (updated as on October 1, 2026) on 2026-11-12: unchanged."
+    status: verified
+
+  # ---------------------------------------------------------------- RISK WEIGHT
+  - rule_id: HFC-RW
+    theme: risk_weight_by_ltv
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "22, table Sr. No. (3)(b)"
+    paragraph_id: "HFC-MD/22-3b"
+    quote:
+      - "(b)(i) Outstanding Housing loans to individuals up to ₹30 lakh secured by mortgage of immovable property, which are classified as standard assets with LTV Ratio ≤ 80% | 35"
+      - "(b)(ii) Outstanding Housing loans to individuals up to ₹30 lakh secured by mortgage of immovable property, which are classified as standard assets with LTV Ratio > 80% and ≤ 90% | 50"
+      - "(b)(iii) Outstanding Housing loans to individuals above ₹30 lakh and upto ₹75 lakh secured by mortgage of immoveable property which are classified as standard assets with LTV ratio ≤ 75% (loan sanctioned before 01-08-2017) | 35"
+      - "(b)(iv) Outstanding Housing loans to individuals above ₹30 lakh and upto ₹75 lakh secured by mortgage of immoveable property which are classified as standard assets with LTV ratio > 75% and ≤ 80% (loan sanctioned before 01-08-2017) | 50"
+      - "(b)(v) Outstanding Housing loans to individuals above ₹30 lakh and upto ₹75 lakh secured by mortgage of immoveable property which are classified as standard assets with LTV ratio ≤ 80% (loan sanctioned on or after 01-08-2017) | 35"
+      - "(b)(vi) Outstanding Housing loans to individuals above ₹75 lakh secured by mortgage of immoveable property, which are classified as standard assets with LTV ratio ≤ 75% (loan sanctioned before 01-08-2017) | 75"
+      - "(b)(vii) Outstanding Housing loans to individuals above ₹75 lakh secured by mortgage of immoveable property, which are classified as standard assets with LTV ratio ≤ 75% (loan sanctioned on or after 01-08-2017) | 50"
+      - "| c) | Other housing loans | 100"
+    values:
+      condition: "housing loan to an individual, secured by mortgage, classified as standard asset"
+      sanction_cutoff: "2017-08-01"
+      rows:
+        - {loan_above: 0,       loan_up_to: 3000000, ltv_above: 0,  ltv_up_to: 80, sanctioned: any,             risk_weight_pct: 35, item: "(b)(i)"}
+        - {loan_above: 0,       loan_up_to: 3000000, ltv_above: 80, ltv_up_to: 90, sanctioned: any,             risk_weight_pct: 50, item: "(b)(ii)"}
+        - {loan_above: 3000000, loan_up_to: 7500000, ltv_above: 0,  ltv_up_to: 75, sanctioned: before_cutoff,   risk_weight_pct: 35, item: "(b)(iii)"}
+        - {loan_above: 3000000, loan_up_to: 7500000, ltv_above: 75, ltv_up_to: 80, sanctioned: before_cutoff,   risk_weight_pct: 50, item: "(b)(iv)"}
+        - {loan_above: 3000000, loan_up_to: 7500000, ltv_above: 0,  ltv_up_to: 80, sanctioned: on_or_after_cutoff, risk_weight_pct: 35, item: "(b)(v)"}
+        - {loan_above: 7500000, loan_up_to: null,    ltv_above: 0,  ltv_up_to: 75, sanctioned: before_cutoff,   risk_weight_pct: 75, item: "(b)(vi)"}
+        - {loan_above: 7500000, loan_up_to: null,    ltv_above: 0,  ltv_up_to: 75, sanctioned: on_or_after_cutoff, risk_weight_pct: 50, item: "(b)(vii)"}
+      other_housing_loans_pct: 100
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-RW-CURRENT
+    theme: risk_weight_by_ltv
+    lender_type: bank
+    source: CB-CAP
+    paragraph: "55, Table 12"
+    paragraph_id: "CB-CAP/55-T12"
+    quote:
+      - "Lending to individuals meant for acquiring residential property which are fully secured by mortgages on the residential property that is or will be occupied by the borrower, or that is rented, shall be risk weighted as indicated at Tables 11, 12 and 13 below, based on Board approved valuation policy."
+      - |
+        | Table 12: Claims secured by residential property – risk weights for loans sanctioned on or after June 07, 2017
+        | Category of Loan | LTV Ratio (%) | Risk Weight (%)
+        | (a) Individual Housing Loans | |
+        | (i) Up to ₹30 lakh | ≤80 | 35
+        | >80 and ≤90 | 50
+        | (ii) Above ₹30 lakh and up to ₹75 lakh | ≤80 | 35
+        | (iii) Above ₹75 lakh | ≤75 | 50
+    values:
+      sanctioned_on_or_after: "2017-06-07"
+      rows:
+        - {loan_above: 0,       loan_up_to: 3000000, ltv_above: 0,  ltv_up_to: 80, risk_weight_pct: 35}
+        - {loan_above: 0,       loan_up_to: 3000000, ltv_above: 80, ltv_up_to: 90, risk_weight_pct: 50}
+        - {loan_above: 3000000, loan_up_to: 7500000, ltv_above: 0,  ltv_up_to: 80, risk_weight_pct: 35}
+        - {loan_above: 7500000, loan_up_to: null,    ltv_above: 0,  ltv_up_to: 75, risk_weight_pct: 50}
+    effective_date: "2025-11-28"
+    effective_until: "2027-03-31"
+    superseded_by: BANK-RW-2027
+    link_quote:
+      source: CB-CAP-CURRENT
+      quote: "Lending to individuals meant for acquiring residential property which are fully secured by mortgages on the residential property that is or will be occupied by the borrower, or that is rented, shall be risk weighted as indicated at Tables 11, 12 and 13 below, based on Board approved valuation policy."
+    current_version_check: "Paragraph 55 and Table 12 re-read in the current PDF (updated as on October 07, 2026) on 2026-11-12: same rows and risk weights. Table quote is checked against the July 01, 2026 web version."
+    status: verified
+
+  - rule_id: BANK-RW-2027
+    theme: risk_weight_by_ltv
+    lender_type: bank
+    source: CB-SA-2027
+    paragraph: "16(5)(ii), Tables 9 and 10"
+    paragraph_id: "CB-SA-2027/16-5-ii"
+    quote:
+      - "(2) These instructions shall come into effect from April 01, 2027."
+      - "(a) Housing loans to individuals for up to two housing loans (shall include all existing as well as fresh loans, but shall exclude fully repaid loans), which shall be treated as their primary residences, shall attract the following risk weights as per the ceilings of LTV ratio prescribed subject to compliance of qualifying conditions mentioned at paragraph 16(2):"
+      - |
+        | Table 9 - Housing Loans to Individuals – Up to two loans
+        | LTV | ≤ 50% | >50% to ≤ 60% | > 60% to ≤ 80% | > 80% to ≤ 90%
+        | Risk weight (%) | 20 | 25 | 30 | 40
+      - |
+        | Table 10 - Housing Loans to Individuals – Third loan onward
+        | LTV | ≤ 50% | >50% to ≤ 60% | > 60% to ≤ 80% | > 80% to ≤ 90%
+        | Risk weight (%) | 30 | 35 | 45 | 60
+    values:
+      condition: "subject to qualifying conditions in paragraph 16(2); no loan size bands"
+      up_to_two_loans:
+        - {ltv_above: 0,  ltv_up_to: 50, risk_weight_pct: 20}
+        - {ltv_above: 50, ltv_up_to: 60, risk_weight_pct: 25}
+        - {ltv_above: 60, ltv_up_to: 80, risk_weight_pct: 30}
+        - {ltv_above: 80, ltv_up_to: 90, risk_weight_pct: 40}
+      third_loan_onward:
+        - {ltv_above: 0,  ltv_up_to: 50, risk_weight_pct: 30}
+        - {ltv_above: 50, ltv_up_to: 60, risk_weight_pct: 35}
+        - {ltv_above: 60, ltv_up_to: 80, risk_weight_pct: 45}
+        - {ltv_above: 80, ltv_up_to: 90, risk_weight_pct: 60}
+    effective_date: "2027-04-01"
+    supersedes: BANK-RW-CURRENT
+    status: verified
+
+  # ---------------------------------------------------------------- VALUATION
+  - rule_id: HFC-VALUATION
+    theme: valuation_of_property
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "215"
+    paragraph_id: "HFC-MD/215"
+    quote:
+      - "215. The HFC is required to put in place a Board approved valuation policy for putting in place a system/ procedure for realistic valuation of properties/ fixed assets and also for empanelment of valuers in accordance with the details contained in Annex V."
+    values:
+      board_approved_valuation_policy_required: true
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: HFC-VALUATION-ANNEX-V
+    theme: valuation_of_property
+    lender_type: hfc
+    source: HFC-ANNEX-V
+    paragraph: "Annex V, 1.2, 1.3, 1.5, 1.6 and 1.8"
+    paragraph_id: "HFC-MD/Annex-V"
+    quote:
+      - "1.2. The valuation shall be done by professionally qualified independent valuers i.e. the valuer should not have a direct or indirect interest. However, valuation of properties by the internal technical valuers of housing finance companies is permissible subject to the internal technical valuer having qualifications similar to those prescribed under the Companies (Registered Valuers and Valuation) Rules, 2017."
+      - "Further, where the value of the properties has been substantially impaired by any event, these are to be immediately revalued and appropriately factored in to capital adequacy computation."
+      - "1.5. HFCs shall obtain minimum two valuation reports, at least one of them being from an independent valuer, in case the loan amount is ₹50 lakh or above (or such any other lower value as may be decided by the Board of the company) and below ₹75 lakh. The lower of the two valuations shall be considered by the HFC for deciding upon the loan amount."
+      - "1.6. In case the loan amount is ₹75 lakh or above, HFCs shall necessarily obtain minimum two independent valuation reports and the lower of the two shall be considered by the HFC for deciding upon the loan amount."
+      - "1.8. In respect of financing of any initial transaction of the purchase of a property, the value of the property for the purposes of arriving at the Loan to Value ratio (LTV) should not exceed the documented transaction value as per the agreement to sale, sale deed etc."
+    values:
+      independent_valuer_required: true
+      internal_technical_valuer_allowed_if_qualified: true
+      two_valuation_reports_if_loan_at_least: 5000000
+      two_independent_valuation_reports_if_loan_at_least: 7500000
+      use_lower_of_two_valuations: true
+      ltv_value_capped_at_documented_transaction_value: true
+      fresh_valuation: "frequency set by the Board; annual for NPAs as described in 1.3; immediate revaluation where value is substantially impaired"
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-VALUATION
+    theme: valuation_of_property
+    lender_type: bank
+    source: CB-CRM
+    paragraph: "70"
+    paragraph_id: "CB-CRM/70"
+    quote:
+      - "(1) A bank shall have a Board approved policy in place for valuation of properties including collaterals accepted for their exposures."
+      - "(2) The valuation shall be done by professionally qualified independent valuers i.e. the valuer shall not have a direct or indirect interest."
+      - "(3) A bank shall obtain minimum two Independent valuation reports for properties valued at ₹50 crore or above."
+    values:
+      board_approved_valuation_policy_required: true
+      independent_valuer_required: true
+      two_valuations_if_property_value_at_least: 500000000
+    effective_date: "2025-11-28"
+    note: "No paragraph on when a fresh valuation of a mortgaged house is required was found in paragraphs 69 to 73."
+    status: verified
+
+  # ---------------------------------------------------------------- PREPAYMENT
+  - rule_id: HFC-PREPAY-HOUSING
+    theme: prepayment_charges
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "163"
+    paragraph_id: "HFC-MD/163"
+    quote:
+      - "163. The HFC shall not charge pre-payment levy or penalty on pre-closure of housing loans under the following situations:"
+      - "(1) Where the housing loan is on floating interest rate basis and pre-closed from any source."
+      - "(2) Where the housing loan is on fixed interest rate basis and the loan is preclosed by the borrower out of their own sources."
+      - "Note: The expression “own sources” for the purpose means any source other than by borrowing from a bank/ HFC/ NBFC and/or a financial institution."
+    values:
+      floating_rate_any_source_charge_allowed: false
+      fixed_rate_own_sources_charge_allowed: false
+      fixed_rate_other_sources: "not prohibited by paragraph 163"
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: HFC-PREPAY-FLOATING-INDIVIDUAL
+    theme: prepayment_charges
+    lender_type: hfc
+    source: NBFC-RBC
+    paragraph: "33 and 34(1), applied to HFCs by paragraph 164 of the HFC Directions"
+    paragraph_id: "NBFC-RBC/34-1"
+    quote:
+      - "33. In case of existing loans sanctioned or renewed on or before December 31, 2025, an NBFC shall not levy pre-payment charges on any floating rate term loan sanctioned for purposes other than business to individual borrowers, with or without co-obligant(s)."
+      - "(1) For all floating rate loans granted for purposes other than business to individuals, with or without co-obligant(s), an NBFC shall not levy pre-payment charges."
+      - "(3) The Directions at paragraphs 34(1) and 34(2) above shall be applicable irrespective of the source of funds used for pre-payment of loans, either in part or in full, and without any minimum lock-in period."
+    link_quote:
+      source: HFC-MD
+      quote: "164. HFCs shall comply with the provisions of paragraph 33 to 34 of Reserve Bank of India (Non-Banking Financial Companies – Responsible Business Conduct) Directions, 2025."
+    values:
+      floating_rate_individual_non_business_charge_allowed: false
+      para_34_applies_to_loans_sanctioned_or_renewed_on_or_after: "2026-01-01"
+      para_33_applies_to_loans_sanctioned_or_renewed_on_or_before: "2025-12-31"
+    effective_date: "2026-01-01"
+    status: verified
+
+  - rule_id: BANK-PREPAY-FLOATING-INDIVIDUAL
+    theme: prepayment_charges
+    lender_type: bank
+    source: CB-RBC
+    paragraph: "352 and 353(1)"
+    paragraph_id: "CB-RBC/353-1"
+    quote:
+      - "352. In case of existing floating rate term loans sanctioned before December 31, 2025 for purposes other than business to individual borrowers with or without co-obligant(s), a bank shall not charge pre-payment charges."
+      - "353. A bank shall adhere to the following directions regarding levy of pre-payment charges on loans and advances (term loans as well as demand loans) sanctioned or renewed on or after January 01, 2026."
+      - "(1) For all floating rate loans granted for purposes other than business to individuals, with or without co-obligant(s), a bank shall not levy pre-payment charges"
+      - "(5) In cases other than those mentioned at paragraphs 353(1) and 353(2) above, pre-payment charges, if any, shall be as per the approved policy of the bank."
+    values:
+      floating_rate_individual_non_business_charge_allowed: false
+      other_cases: "as per the approved policy of the bank (paragraph 353(5))"
+      para_353_applies_to_loans_sanctioned_or_renewed_on_or_after: "2026-01-01"
+    effective_date: "2026-01-01"
+    status: verified
+
+  # ---------------------------------------------------------------- RATE RESET
+  - rule_id: HFC-RATE-RESET
+    theme: interest_rate_reset_communication
+    lender_type: hfc
+    source: NBFC-RBC
+    paragraph: "31(1) and 31(6), applied to HFCs by paragraph 176(3) of the HFC Directions"
+    paragraph_id: "NBFC-RBC/31"
+    quote:
+      - "31. The following instructions shall be applicable to the existing as well as new personal loans with effect from January 1, 2024."
+      - "(1) At the time of sanction, an NBFC shall clearly communicate to the borrowers about the possible impact of change in benchmark interest rate on the loan leading to changes in EMI and / or tenor or both. Subsequently, any increase in the EMI / tenor or both on account of the above shall be communicated to the borrower immediately through appropriate channels."
+      - "(6) An NBFC shall share / make accessible to the borrowers, through appropriate channels, a statement at the end of each quarter"
+    link_quote:
+      source: HFC-MD
+      quote: "(3) Reset of Floating Interest Rate on Equated Monthly Instalments (EMI) based Personal Loans (paragraph 31 to 32)."
+    values:
+      communicate_impact_at_sanction: true
+      communicate_increase_in_emi_or_tenor: "immediately"
+      statement_frequency: "end of each quarter"
+    effective_date: "2024-01-01"
+    status: verified
+
+  - rule_id: BANK-RATE-RESET
+    theme: interest_rate_reset_communication
+    lender_type: bank
+    source: CB-RBC
+    paragraph: "349(1) and 349(6)"
+    paragraph_id: "CB-RBC/349"
+    quote:
+      - "349. The following instructions shall be applicable to the existing as well as new personal loans with effect from January 1, 2024."
+      - "(1) At the time of sanction, the bank shall clearly communicate to the borrower about the possible impact of change in benchmark interest rate on the loan leading to changes in EMI and / or tenor or both. Subsequently, any increase in the EMI / tenor or both on account of the above shall be communicated to the borrower immediately through appropriate channels."
+      - "(6) A bank shall share / make accessible to the borrower, through appropriate channels, a statement at the end of each quarter"
+    values:
+      communicate_impact_at_sanction: true
+      communicate_increase_in_emi_or_tenor: "immediately"
+      statement_frequency: "end of each quarter"
+    effective_date: "2024-01-01"
+    status: verified
+
+  # ---------------------------------------------------------------- KFS AND BORROWER DISCLOSURE
+  - rule_id: HFC-KFS
+    theme: key_facts_statement
+    lender_type: hfc
+    source: NBFC-RBC
+    paragraph: "29(1) and 29(2), applied to HFCs by paragraph 175 of the HFC Directions"
+    paragraph_id: "NBFC-RBC/29"
+    quote:
+      - "29. The following instructions shall be applicable in case of all new retail and MSME term loans sanctioned on or after October 1, 2024, including fresh loans to existing customers, by an NBFC."
+      - "(1) An NBFC shall provide a KFS to all prospective borrowers to help them take an informed view before executing the loan contract, as per the standardised format given in the Annex I. The KFS shall be written in a language understood by such borrowers. Contents of KFS shall be explained to the borrower and an acknowledgement shall be obtained that they have understood the same."
+      - "(2) The KFS shall be provided with a unique proposal number and shall have a validity period of at least three working days for loans having tenor of seven days or more, and a validity period of one working day for loans having tenor of less than seven days."
+    link_quote:
+      source: HFC-MD
+      quote: "175. HFCs shall comply with the provisions of paragraph 29 of Reserve Bank of India (Non-Banking Financial Companies – Responsible Business Conduct) Directions, 2025"
+    values:
+      kfs_before_executing_loan_contract: true
+      borrower_acknowledgement_required: true
+      validity_working_days_if_tenor_7_days_or_more: 3
+      validity_working_days_if_tenor_under_7_days: 1
+      applies_to_loans_sanctioned_on_or_after: "2024-10-01"
+    effective_date: "2024-10-01"
+    status: verified
+
+  - rule_id: BANK-KFS
+    theme: key_facts_statement
+    lender_type: bank
+    source: CB-RBC
+    paragraph: "348(1) and 348(2)"
+    paragraph_id: "CB-RBC/348"
+    quote:
+      - "348. The following instructions shall be applicable in all new retail and MSME term loans sanctioned on or after October 1, 2024, including fresh loans to existing customers, by a bank."
+      - "(1) The bank shall provide a KFS to all prospective borrowers to help them take an informed view before executing the loan contract, as per the standardised format given in the Annex XIII. The KFS shall be written in a language understood by such borrowers. Contents of KFS shall be explained to the borrower and an acknowledgement shall be obtained that they have understood the same."
+      - "(2) The KFS shall be provided with a unique proposal number and shall have a validity period of at least three working days for loans having tenor of seven days or more, and a validity period of one working day for loans having tenor of less than seven days."
+    values:
+      kfs_before_executing_loan_contract: true
+      borrower_acknowledgement_required: true
+      validity_working_days_if_tenor_7_days_or_more: 3
+      validity_working_days_if_tenor_under_7_days: 1
+      applies_to_loans_sanctioned_on_or_after: "2024-10-01"
+    effective_date: "2024-10-01"
+    status: verified
+
+  - rule_id: HFC-BORROWER-DISCLOSURE
+    theme: disclosure_to_borrower
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "131"
+    paragraph_id: "HFC-MD/131"
+    quote:
+      - "131. The HFC shall transparently disclose to the borrower all the following information:"
+      - "(1) fees/ charges payable for processing the loan application;"
+      - "(2) the amount of fees refundable if loan amount is not sanctioned/ disbursed,"
+      - "(3) pre-payment options and charges, if any,"
+      - "(4) penal charges for delayed repayment, if any,"
+      - "(5) conversion charges for switching loan from fixed to floating rates or vice-versa,"
+      - "(6) existence of any interest reset clause and any other matter which affects the interest of the borrower."
+    values:
+      items_to_disclose: 6
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: HFC-MITC
+    theme: disclosure_to_borrower
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "165"
+    paragraph_id: "HFC-MD/165"
+    quote:
+      - "the HFC shall additionally obtain a document containing the other most important terms and conditions (MITC) of such loan (i.e., other than the details included in KFS) in all cases in the suggestive format as per the format given in Annex IV."
+      - "Duplicate copy duly executed between the HFC and the borrower should be handed over to the borrower under acknowledgement."
+    values:
+      mitc_document_required: true
+      copy_to_borrower_under_acknowledgement: true
+    effective_date: "2025-11-28"
+    note: "No matching MITC paragraph was found for banks in the bank Directions read."
+    status: verified
+
+  - rule_id: BANK-BORROWER-DISCLOSURE
+    theme: disclosure_to_borrower
+    lender_type: bank
+    source: CB-RBC
+    paragraph: "327"
+    paragraph_id: "CB-RBC/327"
+    quote:
+      - "the bank shall transparently disclose to the borrower all information about fees / charges payable for processing the loan application, the amount of fees refundable if loan amount is not sanctioned / disbursed, pre-payment options and charges, if any, penalty for delayed repayments if any, conversion charges for switching loan from fixed to floating rates or vice versa, existence of any interest reset clause and any other matter which affects the interest of the borrower."
+      - "Further, the bank shall inform ‘all-in-cost’ to the customer to enable her / him to compare the rates and charges with other sources of finance."
+    values:
+      all_in_cost_to_be_informed: true
+    effective_date: "2025-11-28"
+    status: verified
+
+  # ---------------------------------------------------------------- GUARANTOR
+  - rule_id: HFC-GUARANTOR-DISCLOSURE
+    theme: guarantor_disclosure
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "158"
+    paragraph_id: "HFC-MD/158"
+    quote:
+      - "158. When a person is considering being a guarantor to a loan, they should be informed about:"
+      - "(1) their liability as guarantor;"
+      - "(2) the amount of liability they will be committing themselves to the company;"
+      - "(3) circumstances in which the HFC will call on them to pay up their liability;"
+      - "(4) whether the HFC has recourse to their other monies in the company if he/ she fail to pay up as a guarantor;"
+      - "(5) whether their liabilities as a guarantor are limited to a specific quantum or are they unlimited;"
+      - "(6) time and circumstances in which their liabilities as a guarantor will be discharged as also the manner in which the HFC will notify them about this; and"
+      - "(7) In case the guarantor refuses to comply with the demand made by the creditor/ lender, despite having sufficient means to make payment of the dues, such guarantor would also be treated as a wilful defaulter."
+    values:
+      items_to_inform: 7
+      timing: "when a person is considering being a guarantor (i.e. before the guarantee is given)"
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: HFC-GUARANTOR-ADVERSE-CHANGE
+    theme: guarantor_disclosure
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "159"
+    paragraph_id: "HFC-MD/159"
+    quote:
+      - "159. The HFC shall keep them informed of any material adverse change/s in the financial position of the borrower to whom he/ she stands as a guarantor."
+    values:
+      ongoing_duty: true
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-GUARANTOR-DISCLOSURE
+    theme: guarantor_disclosure
+    lender_type: bank
+    source: null
+    paragraph: null
+    paragraph_id: null
+    quote: []
+    values: {}
+    status: unverified
+    unverified_reason: >-
+      No paragraph on what a loan guarantor must be told was found in the Commercial Banks Directions read
+      (Responsible Business Conduct, Credit Risk Management, Credit Facilities as at July 15, 2026, Know Your Customer).
+      The word 'guarantor' appears there only for bank guarantees, related parties and export credit.
+      The rule may sit in a document not yet read. The checker must report this check as unknown for banks.
+
+  # ---------------------------------------------------------------- KYC
+  - rule_id: HFC-KYC-CDD
+    theme: kyc_customer_due_diligence
+    lender_type: hfc
+    source: NBFC-KYC
+    paragraph: "23, applied to HFCs by paragraph 5(23) of the HFC Directions"
+    paragraph_id: "NBFC-KYC/23"
+    quote:
+      - "23. For undertaking CDD, the NBFC shall obtain the following from an individual while establishing an account-based relationship or while dealing with the individual who is a beneficial owner, authorised signatory or the power of attorney holder related to any legal entity:"
+      - "(2) the proof of possession of Aadhaar number where the NBFC can carry out offline verification; or"
+      - "(3) the proof of possession of Aadhaar number where the NBFC cannot carry out the offline verification or any OVD or the equivalent e-document thereof containing the details of their identity and address; or"
+      - "(4) the KYC Identifier with an explicit consent to download records from CKYCR; and"
+      - "(5) the PAN or the equivalent e-document thereof or Form No. 60 as defined in Income-tax Rules, 1962; and"
+    link_quote:
+      source: HFC-MD
+      quote: "(23) Reserve Bank of India (Non-Banking Financial Companies – Know Your Customer) Directions, 2025."
+    values:
+      identity_and_address: "one of: Aadhaar number (in the cases listed), proof of possession of Aadhaar, an OVD, or KYC Identifier"
+      pan_or_form_60_required: true
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-KYC-CDD
+    theme: kyc_customer_due_diligence
+    lender_type: bank
+    source: CB-KYC
+    paragraph: "23"
+    paragraph_id: "CB-KYC/23"
+    quote:
+      - "23. For undertaking CDD, the bank shall obtain the following from an individual while establishing an account-based relationship or while dealing with the individual who is a beneficial owner, authorised signatory or the power of attorney holder related to any legal entity:"
+      - "(2) the proof of possession of Aadhaar number where the bank can carry out offline verification; or"
+      - "(3) the proof of possession of Aadhaar number where the bank cannot carry out the offline verification or any OVD or the equivalent e-document thereof containing the details of their identity and address; or"
+      - "(4) the KYC Identifier with an explicit consent to download records from CKYCR; and"
+      - "(5) PAN or the equivalent e-document thereof or Form No. 60 as defined in Income-tax Rules, 1962; and"
+    values:
+      identity_and_address: "one of: Aadhaar number (in the cases listed), proof of possession of Aadhaar, an OVD, or KYC Identifier"
+      pan_or_form_60_required: true
+    effective_date: "2025-11-28"
+    status: verified
+
+  # ---------------------------------------------------------------- RELATED PARTY
+  - rule_id: HFC-RELATED-PARTY
+    theme: related_party_lending
+    lender_type: hfc
+    source: NBFC-CRM
+    paragraph: "13G and 13I, applied to HFCs by paragraph 5(9) of the HFC Directions"
+    paragraph_id: "NBFC-CRM/13G"
+    quote:
+      - "13G. Credit Facilities to related parties can be extended by an NBFC in terms of their credit policy. However, such loans, including personal loans to directors or a KMP, shall be subject to a materiality threshold as per the credit policy, which shall not be higher than the following ceilings:"
+      - |
+        | Category of NBFCs | Materiality Threshold
+        | Upper Layer and Top Layer | ₹10 crore
+        | Middle Layer | ₹5 crore
+        | Base Layer | ₹1 crore
+      - "13I. All loans above the prescribed materiality threshold shall be sanctioned by the Board of the NBFC."
+      - "13J. Directors, KMP, or Specified employees shall recuse themselves from deliberations and decision on loan proposals, or contracts and arrangements, involving themselves or their related parties."
+    link_quote:
+      source: HFC-MD
+      quote: "(9) Reserve Bank of India (Non-Banking Financial Companies – Credit Risk Management) Directions, 2025."
+    values:
+      materiality_threshold_ceiling:
+        upper_and_top_layer: 100000000
+        middle_layer: 50000000
+        base_layer: 10000000
+      above_threshold_sanction_by: "Board (or a Board committee other than the Audit Committee, if delegated)"
+      recusal_required: true
+    effective_date: "2026-04-01"
+    amendments: "Inserted with effect from April 01, 2026 by the NBFC Credit Risk Management Amendment Directions, 2026 dated January 05, 2026."
+    status: verified
+
+  - rule_id: BANK-RELATED-PARTY-DIRECTORS
+    theme: related_party_lending
+    lender_type: bank
+    source: CB-CRM
+    paragraph: "14"
+    paragraph_id: "CB-CRM/14"
+    quote:
+      - "14. In terms of Section 20(1)(b) of the BR Act, 1949, a bank is prohibited from entering into any commitment for granting any loans or advances to or on behalf of any of its directors, or any firm in which any of its directors is interested as partner, manager, employee or guarantor,"
+      - "or any individual in respect of whom any of its directors is a partner or guarantor."
+    values:
+      loan_to_own_director_prohibited: true
+      loan_to_individual_whose_partner_or_guarantor_is_a_director_prohibited: true
+    effective_date: "2025-11-28"
+    note: "Exceptions are listed in paragraph 15A(2) and following; read them before relying on this rule for an edge case."
+    status: verified
+
+  - rule_id: BANK-RELATED-PARTY-THRESHOLD
+    theme: related_party_lending
+    lender_type: bank
+    source: CB-CRM
+    paragraph: "42I and 42K"
+    paragraph_id: "CB-CRM/42I"
+    quote:
+      - |
+        | Asset Size of the bank (in ₹ crore) | Materiality Threshold Ceilings
+        | > 10,00,000 | ₹25 crore
+        | ≥ 1,00,000 to up to 10,00,000 | ₹10 crore
+        | Less than 100,000 | ₹5 crore
+      - "42K. All loans above the prescribed materiality threshold shall be sanctioned either by the Board or by the ‘Committee on Lending to Related Parties’ of the bank."
+      - "42L. Directors, KMP, or ‘specified employees’ shall recuse themselves from deliberations and decision on loan proposals, or contracts and arrangements, involving themselves or their related parties."
+    values:
+      materiality_threshold_ceiling_by_bank_asset_size_crore:
+        - {asset_size_above: 1000000, ceiling: 250000000}
+        - {asset_size_from: 100000, asset_size_up_to: 1000000, ceiling: 100000000}
+        - {asset_size_below: 100000, ceiling: 50000000}
+      above_threshold_sanction_by: "Board or Committee on Lending to Related Parties"
+      recusal_required: true
+    effective_date: "2026-04-01"
+    amendments: "Inserted with effect from April 01, 2026 by the Commercial Banks Credit Risk Management Amendment Directions, 2026 dated January 05, 2026."
+    status: verified
+
+  # ---------------------------------------------------------------- GRIEVANCE
+  - rule_id: HFC-GRIEVANCE
+    theme: grievance_redressal
+    lender_type: hfc
+    source: HFC-MD
+    paragraph: "142 to 144"
+    paragraph_id: "HFC-MD/144"
+    quote:
+      - "142. If a complaint has been received in writing from a customer, the HFC shall endeavour to send him/ her an acknowledgement/ response within a week."
+      - "143. After examining the matter, the HFC shall send the customer its final response or explain why it needs more time to respond and shall endeavour to do so within six weeks of receipt of a complaint"
+      - "144. The HFC shall publicise its grievance redressal procedure (e-mail id and other contact details at which the complaints can be lodged, turnaround time for resolving the issue, matrix for escalation, etc.) for lodging the complaints by the aggrieved borrower and ensure specifically that it is made available on its website."
+      - "in case the complainant does not receive response from the company within a period of one month or is dissatisfied with the response received, the complainant may approach the Complaint Redressal Cell of National Housing Bank (NHB)"
+    values:
+      acknowledgement_within_days: 7
+      final_response_within_weeks: 6
+      escalation_to_nhb_after_months: 1
+      escalation_body: "Complaint Redressal Cell of National Housing Bank"
+    effective_date: "2025-11-28"
+    status: verified
+
+  - rule_id: BANK-GRIEVANCE
+    theme: grievance_redressal
+    lender_type: bank
+    source: CB-RBC
+    paragraph: "346"
+    paragraph_id: "CB-RBC/346"
+    quote:
+      - "shall also lay down an appropriate grievance redressal mechanism within the organisation to resolve disputes arising in this regard. Such a mechanism shall ensure that all disputes arising out of the decisions of the bank’s functionaries are heard and disposed of at least at the next higher level."
+    values:
+      grievance_mechanism_required: true
+      disputes_heard_at: "at least the next higher level"
+    effective_date: "2025-11-28"
+    note: >-
+      Paragraph 346 sets up the mechanism but does not list the details a borrower must be given.
+      The notice board list in Chapter IV names 'Grievance redressal mechanism' and the Integrated Ombudsman Scheme,
+      but its paragraph number was not pinned down, so no record is written for it.
+    status: verified

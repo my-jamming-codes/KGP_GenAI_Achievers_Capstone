@@ -1,0 +1,80 @@
+{
+  "application_id": "HL-2041",
+  "status": "new",
+  "assigned_to": "officer.kiran",
+  "assigned_by": "processor.dev",
+  "due_date": "2026-11-20",
+  "case_date": "2026-11-12",
+  "tabs": {
+    "Applicant": {
+      "applicant_name": "Asha Verma",
+      "pan": "ABCPV1234F",
+      "aadhaar": "2345 6789 0123",
+      "phone": "98765 43210",
+      "email": "asha.verma@example.com",
+      "address": "14 Lake View Road, Pune 411001",
+      "borrower_type": "individual",
+      "borrower_is_mse": false
+    },
+    "Co-applicant and Guarantor": {
+      "co_applicant_name": "None",
+      "guarantor_present": false,
+      "guarantor_name": "",
+      "guarantor_pan": "",
+      "guarantor_relationship": "",
+      "guarantor_disclosure": null
+    },
+    "Employment and Income": {
+      "employer": "Northwind Systems Pvt Ltd",
+      "employment_type": "Salaried",
+      "declared_monthly_income": 150000,
+      "salary_slip_monthly_income": 150000,
+      "years_in_current_job": 6
+    },
+    "Property": {
+      "property_address": "Flat 302, Maple Residency (synthetic)",
+      "property_type": "Ready built flat",
+      "property_cost": 5500000,
+      "property_value": 5500000,
+      "stamp_duty_registration": 0,
+      "valuation_reports": 1,
+      "independent_valuation_reports": 1
+    },
+    "Loan request": {
+      "lender_name": "Sunrise Home Finance Ltd",
+      "lender_type": "Housing finance company",
+      "hfc_layer": "middle",
+      "loan_amount": 4000000,
+      "tenure_months": 240,
+      "rate_type": "floating",
+      "interest_rate_pct": 8.6,
+      "proposed_sanction_date": "2026-11-18",
+      "housing_loan_number": 1,
+      "prepayment_charge_levied": false,
+      "prepayment_charge_scope": null,
+      "rate_reset_impact_communicated": "yes"
+    },
+    "Bank and Liabilities": {
+      "salary_account_bank": "Demo Bank",
+      "account_number_last4": "4821",
+      "existing_emi_total": 12000,
+      "other_loans": "Car loan",
+      "credit_card_outstanding": 18000
+    },
+    "Documents": {
+      "pan_or_form60": "provided",
+      "identity_address_proof": "provided",
+      "kfs_provided": "yes",
+      "mitc_signed": "yes",
+      "sale_agreement_on_file": "yes",
+      "valuation_report_on_file": "yes"
+    },
+    "Declarations": {
+      "borrower_declaration_signed": "yes",
+      "related_party": "none",
+      "board_sanction": null,
+      "officer_note": ""
+    }
+  },
+  "verification": {}
+}

@@ -1,0 +1,14 @@
+{"id": "Q001", "strategy": "A", "type": "lookup", "trace_id": "eb3906c462bf", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['90']"}
+{"id": "Q004", "strategy": "A", "type": "lookup", "trace_id": "0507c5113a46", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "A", "type": "lookup", "trace_id": "b5187dad589a", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q015", "strategy": "A", "type": "lookup", "trace_id": "865d636492ed", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['unverified', 'not verified', 'unknown', 'not found', 'cannot confirm', 'could not find', 'no verified']"}
+{"id": "Q016", "strategy": "A", "type": "scenario", "trace_id": "2603d0650959", "category": "reasoning error", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q020", "strategy": "A", "type": "scenario", "trace_id": "e1abd585b92b", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q024", "strategy": "A", "type": "scenario", "trace_id": "134e054492ca", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met"}
+{"id": "Q040", "strategy": "A", "type": "scenario", "trace_id": "0f60549124ae", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q041", "strategy": "A", "type": "scenario", "trace_id": "33c70f3158e5", "category": "hallucination", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q061", "strategy": "A", "type": "amendment", "trace_id": "d00568494665", "category": "hallucination", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q001", "strategy": "C", "type": "lookup", "trace_id": "51c86638c3e5", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['90']"}
+{"id": "Q004", "strategy": "C", "type": "lookup", "trace_id": "f61869d04b91", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "C", "type": "lookup", "trace_id": "efdb15c51323", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q015", "strategy": "C", "type": "lookup", "trace_id": "c1a65189bd1c", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['unverified', 'not verified', 'unknown', 'not found', 'cannot confirm', 'could not find', 'no verified']"}

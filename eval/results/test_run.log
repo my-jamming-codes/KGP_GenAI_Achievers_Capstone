@@ -1,0 +1,139 @@
+A Q001 lookup         BAD steps=5 critic=0 answer lacks any of ['90']
+A Q003 lookup         ok  steps=5 critic=0 
+A Q004 lookup         BAD steps=5 critic=0 no citation of ['HFC-MD/22']
+A Q005 lookup         ok  steps=5 critic=0 
+A Q007 lookup         ok  steps=5 critic=0 
+A Q008 lookup         ok  steps=5 critic=0 
+A Q009 lookup         ok  steps=5 critic=0 
+A Q011 lookup         ok  steps=5 critic=0 
+A Q012 lookup         ok  steps=5 critic=0 
+A Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
+A Q015 lookup         ok  steps=3 critic=0 
+A Q016 scenario       BAD steps=8 critic=4 ltv_cap: got needs_information, expected met
+A Q018 scenario       ok  steps=8 critic=4 
+A Q019 scenario       ok  steps=8 critic=4 
+A Q020 scenario       BAD steps=8 critic=3 ltv_cap: got needs_information, expected met
+A Q021 scenario       ok  steps=8 critic=2 
+A Q023 scenario       ok  steps=8 critic=5 
+A Q024 scenario       BAD steps=8 critic=6 ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met
+A Q025 scenario       ok  steps=8 critic=4 
+A Q026 scenario       ok  steps=8 critic=7 
+A Q028 scenario       ok  steps=8 critic=2 
+A Q029 scenario       ok  steps=8 critic=2 
+A Q030 scenario       ok  steps=5 critic=0 
+A Q031 scenario       ok  steps=9 critic=3 
+A Q033 scenario       ok  steps=5 critic=0 
+A Q034 scenario       ok  steps=8 critic=1 
+A Q035 scenario       ok  steps=8 critic=4 
+A Q036 scenario       ok  steps=8 critic=1 
+A Q038 scenario       ok  steps=8 critic=2 
+A Q039 scenario       ok  steps=5 critic=0 
+A Q040 scenario       BAD steps=8 critic=1 ltv_cap: got needs_information, expected met
+A Q041 scenario       BAD steps=8 critic=2 risk_weight: got needs_information, expected met
+A Q043 scenario       ok  steps=5 critic=0 
+A Q044 scenario       ok  steps=8 critic=1 
+A Q045 scenario       ok  steps=8 critic=1 
+A Q046 entity_variant ok  steps=8 critic=1 
+A Q048 entity_variant ok  steps=8 critic=1 
+A Q049 entity_variant ok  steps=8 critic=1 
+A Q050 entity_variant ok  steps=5 critic=0 
+A Q052 entity_variant ok  steps=8 critic=1 
+A Q053 entity_variant ok  steps=8 critic=1 
+A Q054 entity_variant ok  steps=5 critic=0 
+A Q056 entity_variant ok  steps=5 critic=0 
+A Q057 entity_variant ok  steps=5 critic=0 
+A Q058 entity_variant ok  steps=5 critic=0 
+A Q060 entity_variant ok  steps=5 critic=0 
+A Q061 amendment      BAD steps=8 critic=1 risk_weight: got needs_information, expected met
+A Q063 amendment      ok  steps=5 critic=0 
+A Q064 amendment      ok  steps=8 critic=1 
+A Q065 amendment      ok  steps=8 critic=1 
+A Q067 amendment      ok  steps=5 critic=0 
+A Q068 amendment      ok  steps=8 critic=1 
+A Q069 amendment      ok  steps=8 critic=1 
+A Q071 refusal        ok  steps=1 critic=0 
+A Q073 refusal        ok  steps=1 critic=0 
+A Q074 refusal        ok  steps=1 critic=0 
+A Q075 refusal        ok  steps=1 critic=0 
+A Q077 refusal        ok  steps=8 critic=5 
+A Q078 refusal        ok  steps=1 critic=0 
+A Q079 refusal        ok  steps=1 critic=0 
+C Q001 lookup         BAD steps=5 critic=0 answer lacks any of ['90']
+C Q003 lookup         ok  steps=5 critic=0 
+C Q004 lookup         BAD steps=5 critic=0 no citation of ['HFC-MD/22']
+C Q005 lookup         ok  steps=5 critic=0 
+C Q007 lookup         ok  steps=5 critic=0 
+C Q008 lookup         ok  steps=5 critic=0 
+C Q009 lookup         ok  steps=5 critic=0 
+C Q011 lookup         ok  steps=5 critic=0 
+C Q012 lookup         ok  steps=5 critic=0 
+C Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
+C Q015 lookup         ok  steps=3 critic=0 
+C Q016 scenario       ok  steps=8 critic=3 
+C Q018 scenario       ok  steps=8 critic=3 
+C Q019 scenario       ok  steps=8 critic=5 
+C Q020 scenario       ok  steps=8 critic=3 
+C Q021 scenario       ok  steps=8 critic=3 
+C Q023 scenario       ok  steps=8 critic=6 
+C Q024 scenario       ok  steps=8 critic=5 
+C Q025 scenario       ok  steps=8 critic=4 
+C Q026 scenario       BAD steps=6 critic=7 ltv_cap: got needs_information, expected not_applicable; prepayment_charge: got needs_information, expected me
+C Q028 scenario       ok  steps=8 critic=1 
+C Q029 scenario       ok  steps=8 critic=2 
+C Q030 scenario       ok  steps=8 critic=1 
+C Q031 scenario       ok  steps=9 critic=3 
+C Q033 scenario       ok  steps=5 critic=0 
+C Q034 scenario       ok  steps=8 critic=1 
+C Q035 scenario       ok  steps=8 critic=2 
+C Q036 scenario       ok  steps=5 critic=0 
+C Q038 scenario       ok  steps=8 critic=1 
+C Q039 scenario       ok  steps=8 critic=1 
+C Q040 scenario       ok  steps=5 critic=0 
+C Q041 scenario       ok  steps=5 critic=0 
+C Q043 scenario       ok  steps=5 critic=0 
+C Q044 scenario       ok  steps=8 critic=1 
+C Q045 scenario       ok  steps=5 critic=0 
+C Q046 entity_variant ok  steps=8 critic=1 
+C Q048 entity_variant ok  steps=8 critic=1 
+C Q049 entity_variant ok  steps=8 critic=1 
+C Q050 entity_variant ok  steps=5 critic=0 
+C Q052 entity_variant ok  steps=8 critic=1 
+C Q053 entity_variant ok  steps=8 critic=1 
+C Q054 entity_variant ok  steps=5 critic=0 
+C Q056 entity_variant ok  steps=5 critic=0 
+C Q057 entity_variant ok  steps=5 critic=0 
+C Q058 entity_variant ok  steps=5 critic=0 
+C Q060 entity_variant ok  steps=5 critic=0 
+C Q061 amendment      ok  steps=5 critic=0 
+C Q063 amendment      ok  steps=5 critic=0 
+C Q064 amendment      ok  steps=5 critic=0 
+C Q065 amendment      ok  steps=8 critic=1 
+C Q067 amendment      ok  steps=5 critic=0 
+C Q068 amendment      ok  steps=8 critic=1 
+C Q069 amendment      ok  steps=8 critic=1 
+C Q071 refusal        ok  steps=1 critic=0 
+C Q073 refusal        ok  steps=1 critic=0 
+C Q074 refusal        ok  steps=1 critic=0 
+C Q075 refusal        ok  steps=1 critic=0 
+C Q077 refusal        ok  steps=8 critic=6 
+C Q078 refusal        ok  steps=1 critic=0 
+C Q079 refusal        ok  steps=1 critic=0 
+
+strategy  accuracy  first-pass  citation  retrieval miss  reasoning error  tool call error  hallucination
+A         0.85      0.488       0.975     2               2                0                5            
+          by type: {'lookup': '8/11', 'scenario': '19/24', 'entity_variant': '11/11', 'amendment': '6/7', 'refusal': '7/7'}
+          Q001 trace 8d6498b05354 [reasoning error] answer lacks any of ['90']
+          Q004 trace fad196de9d99 [retrieval miss] no citation of ['HFC-MD/22']
+          Q013 trace 03223c2db418 [retrieval miss] no citation of ['NBFC-KYC/23']
+          Q016 trace 7d92291026e8 [reasoning error] ltv_cap: got needs_information, expected met
+          Q020 trace ef0ad7641a66 [hallucination] ltv_cap: got needs_information, expected met
+          Q024 trace 01c913e7184e [hallucination] ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met
+          Q040 trace ca1e90774678 [hallucination] ltv_cap: got needs_information, expected met
+          Q041 trace c3ddf8387a6c [hallucination] risk_weight: got needs_information, expected met
+          Q061 trace 50e1c9512fe9 [hallucination] risk_weight: got needs_information, expected met
+C         0.933     0.465       0.975     2               1                1                0            
+          by type: {'lookup': '8/11', 'scenario': '23/24', 'entity_variant': '11/11', 'amendment': '7/7', 'refusal': '7/7'}
+          Q001 trace bd9bf56b6260 [reasoning error] answer lacks any of ['90']
+          Q004 trace 4c2a2fed9fb7 [retrieval miss] no citation of ['HFC-MD/22']
+          Q013 trace 5b35d8f4a257 [retrieval miss] no citation of ['NBFC-KYC/23']
+          Q026 trace 6818322f5293 [tool call error] ltv_cap: got needs_information, expected not_applicable; prepayment_charge: got needs_information, e
