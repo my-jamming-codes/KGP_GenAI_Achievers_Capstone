@@ -32,7 +32,7 @@ gold + eval ─► measures the whole loop; tests ─► checks each part
 | --- | --- |
 | `README.md` | How to install, build the index, run the app, run Docker and run the evaluation |
 | `requirements.txt` | Python packages: LangGraph, Streamlit, Qdrant client, fastembed, rank-bm25, Pydantic, openai and others |
-| `.env.example` | Template for the settings: model endpoint, key, model name, budgets, limits. Copied to `.env`, which git never tracks |
+| `.env` | Optional settings: model endpoint, key, model name, certificate paths, budgets, limits. Not tracked by git |
 | `Dockerfile` | Builds the app image (Python 3.11 with the code and the saved index) |
 | `docker-compose.yml` | Starts two containers: the app (port 8501 by default; set `APP_PORT` to change it) and the Qdrant vector database |
 | `.dockerignore`, `.gitignore` | Keep secrets, caches and large generated files out of the image and out of git |

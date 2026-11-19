@@ -1,1 +1,1 @@
-{"corpus_version": "a64d829a84ef", "chunks": 40890, "documents": 1076, "embed_model": "qllama/bge-small-en-v1.5", "embed_provider": "ollama", "embed_signature": "ollama:qllama/bge-small-en-v1.5", "by_source_format": {"pdf": 118, "html": 958}}
+{"corpus_version": "a64d829a84ef", "chunks": 40890, "documents": 1076, "embed_model": "bge-small-en-v1.5", "embed_provider": "ollama", "embed_signature": "ollama:bge-small-en-v1.5", "by_source_format": {"pdf": 118, "html": 958}}
