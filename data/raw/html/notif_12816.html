@@ -1,0 +1,1627 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Notifications | Official Website of Reserve Bank of India </title>
+    <meta name="description" content="Notifications - Reserve Bank of India" />
+    <meta name="keyword" content="RBI Notifications" />
+
+    <meta name="author " content="Reserve Bank of India" />
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="/js/libs/modernizr-2.5.3.min.js"></script>
+
+</head>
+<body onload="SetTreeStyles()">
+    <form method="post" action="./NotificationUser.aspx?Id=12816&amp;Mode=0" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTkyNjU3NzAzN2RkQgmRo0318k5Gfq5w5ECYQ/xrQnCXX1ezt/NyS1ZhOjA=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="B1534F13" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAz0n+dkB8EzeBIbNmzUJUV2lK+XrsQEVyjeDxQ0A4GYXFBwzdjZXczwplb2HKGyLlrNyH2BRDHW7ZJm+s8yUnNgi6wX7g7V+51d5y/uZ409MaU74zTCJ05u4w6h9ODXzwxkOnLtYme9ze2BdjTwJgskP6t93AkC4GhUEhJREhdaXBugERoe+4YdP6+Dm7i9UwLINzYr5zRLekLCkqLwgivbfcX9ZaEV78oETjPwNTvjRyaLpyghhgB3dOM81YQT2c/gumm1K6hTqwRBA59047MMjBc6ytv97yCmsAnJv+j67A==" />
+</div>
+        <input type="hidden" name="hdnYear" id="hdnYear" />
+        <input type="hidden" name="hdnMonth" id="hdnMonth" value="0" />
+        
+<link href="/JQuery/css/jquery-ui-1.8.18.custom2.css" rel="stylesheet" type="text/css" />
+<link href="/includes/print.css" rel="stylesheet" media="print" type="text/css" />
+
+<link href="/Styles/960.css?v=1.0" rel="stylesheet" type="text/css" />
+<link href="/Includes1/rbi.css?v=5.0" rel="Stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/libs/jquery.min.js"></script>
+<script type="text/javascript" src="/JQuery/ui/jquery.ui.revampRBI.js"></script>
+<script type="text/javascript" src="/js/ImgSaveDisable.js"></script>
+
+<script type="text/javascript">
+  
+//Redirect to mobile site start
+    function detectmob() {
+        if (screen.width <= 599 || screen.Height <= 975) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if (detectmob()) {
+       window.location.href = "https://m.rbi.org.in" + window.location.pathname;
+		
+       
+    }
+
+	//Redirect to mobile site End
+    $(document).ready(function () {
+        Search();
+	SearchLastUpdateDate(); //Fetch Last Date Page
+    });
+
+
+
+  // Fetch Last Date Page
+
+    function SearchLastUpdateDate() {
+        var strFilterComments = new RegExp("^[a-zA-Z0-9 =_:.&?'%,()-–]+$");
+	var url=window.location.href;
+	if(url.indexOf("WSSViewDetail.aspx")>0 || url.indexOf("PublicationReportDetails.aspx")>0)
+	{
+		url=url.substring(url,url.indexOf("?"));
+	}
+        var param = { keyWord1: url.slice(url.lastIndexOf('/') + 1) };
+	param.keyWord1=param.keyWord1.replaceAll("%20"," ");
+	if(param.keyWord1.indexOf("#")>0)
+	{
+		param.keyWord1=param.keyWord1.substring(param.keyWord1,param.keyWord1.indexOf("#"));
+	}
+        if (!strFilterComments.test(param.keyWord1)) {            
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "/Home.aspx/GetLastUpdateDate_new",
+                data: JSON.stringify(param),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataFilter: function (data) { return data; },
+                success: function (data) {
+                    if (data.d.length > 0) {
+                        $('#lblGetLastUpdateDate').text(data.d);
+                    }
+                    else {
+                        response([{ label: "No results found", value: ""}]);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+
+        }
+    }
+    // Fetch Last Date Page
+
+
+
+    function Search() {
+        highlightTextAutocomplete();
+        $(".autoSuggest").autocomplete({
+
+
+            source: function (request, response) {
+                var param = { keyWord: document.getElementById('txtSearch').value };
+
+                $.ajax({
+                    url: "/Home.aspx/GetKeywords",
+                    data: JSON.stringify(param),
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataFilter: function (data) { return data; },
+                    success: function (data) {
+
+                        if (data.d.length > 0) {
+                            response($.map(data.d, function (item) {
+                                return {
+                                    value: RemoveSpecialChars(item)
+
+                                }
+                            }))
+                        }
+                        else {
+                            response([{ label: "No results found", value: ""}]);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
+            },
+
+            
+            minLength: 3
+
+        });
+    }
+
+    function highlightTextAutocomplete() {
+
+        var oldFn = $.ui.autocomplete.prototype._renderItem;
+
+        $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+
+            var t = String(item.value).replace(
+                new RegExp(this.term, "gi"),
+                "<span class='ui-state-highlight'>$&</span>");
+            if (item.value != "") {
+                return $("<li class='borderAutocomplete'></li>")
+                  .data("item.autocomplete", item)
+                  .append("<a role='link'>" + t + "</a>")
+                  .appendTo(ul);
+            }
+
+            else {
+                return $("<li></li>")
+                  .data("item.autocomplete", item)
+                  .append("")
+                  .appendTo(ul);
+            }
+        };
+    }
+
+
+    function RemoveSpecialChars(inputText) {
+        var filteredString = inputText.replace(/[\*\^\'\!\@\$\.\#\(\)\-\?\<\>\;\"\&\+\{\}\:]/g, '');
+        
+        return filteredString;
+    }
+    
+
+    function LoadSearchData(id, key) {
+        if (id == "txtSearch") {
+            if (key == 13) {
+                validateSearchText();
+                return false;
+            }
+        }
+        else validateSearchText();
+        return true;
+    }
+    function validateSearchText() {
+        if (validation()) {
+            var strloc = new String(document.location.href.toString());
+            if (strloc.indexOf("SearchResults.aspx") == -1) {//             
+                window.open("/scripts/SearchResults.aspx?search=" + document.getElementById("txtSearch").value,"_self");
+            }
+            else window.open("/scripts/SearchResults.aspx?search=" + document.getElementById("txtSearch").value,"_self");
+        }
+    }
+    function validation() {
+        strSearch = trim(document.getElementById('txtSearch').value);
+        if (strSearch == "") { alert('Please enter the search text'); return false; }
+        else {
+           
+            var strFilterChars = new RegExp("^[0-9a-zA-Z ]*$");
+            if (!strFilterChars.test(strSearch)) { alert("Please remove special characters from search text"); return false; }
+        }
+        return true;
+    }
+    function trim(value) {
+        value = value.replace(/^\s+/, '');
+        value = value.replace(/\s+$/, '');
+        return value;
+    }
+
+</script>
+
+    <style type="text/css">
+    .blink_msm1 
+{
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 3s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blinker;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+.blink_NewWebsite {
+        animation:blinker 1.5s linear 3;
+        color:blue;
+        font-size:1.5em;
+        margin-bottom:0px;
+        }
+    @keyframes blinker
+    {
+        50%{
+            opacity:0;
+        }
+    }
+
+.sr-only {
+position: absolute;
+left: -9999px;
+}
+</style>
+<div class="top_setting">
+    <div class="container_12">
+        <div class="grid_5 top_settings">
+            <a href="#mainsection">Skip to main content </a>
+        </div>
+        <div id="UsrFontCntr_tblThemes" style="float: right" class="grid_4 prefix_3 top_settings">
+            <ul style="margin:0px; padding:0px;">
+               <li class="fonts"> 
+                <a id="UsrFontCntr_LinkBtnSpace" role="button" title="Increase Letter Spacing" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnSpace&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/letspace.png" alt="Increase Letter Spacing" />
+                                <span id="UsrFontCntr_spanBtnSpace" class="sr-only">Not Pressed</span></a>                                
+            </li>
+
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontIncrease" role="button" title="Increase Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontIncrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-increase.gif" alt="Increase Font Size" />
+                    
+                </a>
+            </li>
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontRegular" role="button" title="Regular Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontRegular&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-reset.gif" alt="Regular Font Size" />
+                    
+                </a>
+            </li>
+            <li class="fonts">
+                <a id="UsrFontCntr_LinkBtnFontDecrease" role="button" title="Decrease Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontDecrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-decrease.gif" alt="Decrease Font Size" />
+                    
+                </a>
+            </li></ul>
+		<ul style="margin:0px;padding:0px;">
+            <li class="black">
+                <a id="UsrFontCntr_LinkBtnAccessibilty" role="button" title="Apply Dark Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/dark-theme.gif" alt="Apply Dark Theme" />
+                    
+                </a>
+            </li>
+            <li class="white">
+                <a id="UsrFontCntr_LinkBtnUndoAccessibilty" role="button" title="Apply Normal Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnUndoAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/bright-theme.gif" alt="Apply Normal Theme" />
+                     
+                </a>
+            </li>
+            <li class="white">
+            <a id="UsrFontCntr_LinkBtnGreyScale" role="button" title="Apply Grey Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnGreyScale&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/graytheme.gif" alt="Apply Grey Theme" />
+                                
+                                </a></li>
+
+            </ul>
+		<div>
+		     <a href="#" onclick="javascript:window.print();" id="A1" title="Print This Page" style="text-decoration:none;" >
+                <img src="/images/print-icon.png" alt="Print this page" class="print" />
+		</a></div>
+            <div style="float: right">
+                <label style="margin-right: 6px;">
+                    Change Language</label>
+			
+			<a href="#" onclick="SetLink();" class="link1" title="Change language to Hindi">हिंदी</a>
+			</div>
+                   
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+   
+</div>
+<div class="container_12">
+    <div class="grid_4" role="banner">
+        <div class="logo">
+            <a href="/home.aspx" >
+                <img src="/images/rbi-company-logo.jpg" alt="Logo of Official website of Reserve Bank of India" /></a></div>
+    </div>
+    <div class="grid_5" align="right" role="search" style="float: right">
+        <label for="searchbox" class="search_label">
+            Search the Website</label>
+        <input name="UsrFontCntr$txtSearch" type="text" maxlength="103" id="txtSearch" class="search_box autoSuggest" title="Search the Website" aria-label="Search the Website" onkeydown="return LoadSearchData(&#39;txtSearch&#39;,event.keyCode);" placeHolder="Search" />
+        <button id="btnSearch" onclick="return LoadSearchData('btnSearch',event.keyCode);"
+            type="button" class="search_button">
+            Search</button>
+    </div>
+	<div class="grid_2" align="CENTER" role="" style="float: right">
+        <div class="logo" >
+           
+            <img src="../images/BBBP_Logo_4.png" alt="Beti Bachao Beti Padhao Logo" style="width:47%;">
+        </div>
+    	</div>
+    <div class="clearfix">
+    </div>
+</div>
+<!--  NAVIGATION START-->
+<nav role="navigation" aria-label="Main">
+       <div class="menu"><div class="centermenu">
+<ul class="menu">
+  <li><a href="https://rbi.org.in/home.aspx">Home</a></li>
+<li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-Sub1">About Us ▼</a>
+ <ul class="submenu1" id="Ab-Sub1" >
+	 <li><a href="/scripts/AboutUsDisplay.aspx">About Us</a></li>
+     <li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-org">Organisation & Functions <span aria-hidden="true">▶</span></a>
+		 <ul class="submenu1" id="Ab-org">             
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=OrganizationStructure.htm">Organisation Structure</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=Depts.htm">Departments</a></li>
+            <li><a href="Regionaloffices.aspx">Offices</a></li>
+			<li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-tra">Training Establishment <span aria-hidden="true">▶</span></a>                
+				<ul class="submenu1" id="Ab-tra">
+                    <li ><a href="https://cab.rbi.org.in" target="_blank" id="CBOverview">College of Agricultural Banking</a></li>
+                    <li ><a href="/scripts/rbsc.aspx" id="CBNotifications">Reserve Bank Staff College</a></li>
+					<li ><a href="https://cos.rbi.org.in/" id="CBSupervisors">College of Supervisors</a></li>
+                </ul>
+            </li>
+            <li><a href="/scripts/OccasionalPublications.aspx?head=RBI%27s%20Functions%20and%20Working">RBI's Functions and Working</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=PastGovernors.htm">Governors</a></li>
+			<li><a href="/scripts/AboutUsDisplay.aspx?pg=deputygovernors.htm">Deputy Governors</a></li>
+			<li><a href="/scripts/AboutUsDisplay.aspx?pg=ExecutiveDirectors.htm">Executive Directors</a></li>
+        </ul>		
+	 </li>
+<li><a href="AboutUsDisplay.aspx?pg=MediaKit.htm">Media Kit</a></li>
+	 <li><a href="CommunicationPolicy.aspx">Communication Policy of RBI</a></li>
+	
+     <li>
+        <a href="#" aria-expanded="false" role="button" aria-controls="Ab-soi">Sources of Information <span aria-hidden="true">▶</span></a>
+        <ul class="submenu1" id="Ab-soi">
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#AP">Annual Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#HP">Half-yearly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#QP">Quarterly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#MP">Monthly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#WP">Weekly Publications</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#OP">Occasional Publications</a></li>
+            <li><a href="/scripts/SDDSview.aspx">SDDS</a></li>
+            <li><a href="/scripts/BS_NSDPDisplay.aspx">NSDP</a></li>
+            <li><a href="/scripts/Statistics.aspx">Data Releases</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#PS">Publications available on Subscription</a></li>
+            <li><a href="/scripts/AboutUsDisplay.aspx?pg=AllPublications.htm#GI">General Information</a></li>	  
+        </ul>
+     </li>  
+	 <li><a href="/scripts/Project1.aspx">RBI History</a></li>
+	 <li><a href="#" aria-expanded="false" role="button" aria-controls="Ab-mus">Museum <span aria-hidden="true">▶</span></a>
+		<ul class="submenu1" id="Ab-mus">
+			<li><a href="https://therbimuseum.rbi.org.in/">The RBI Museum</a></li>
+			<li><a href="/scripts/ic_museum.aspx">RBI Monetary Museum</a></li>
+         </ul>
+	 </li>
+</ul>
+</li>
+  <li>
+    <a href="#" aria-expanded="false" role="button" aria-controls="No-Sub1">Notifications ▼</a>
+    <ul class="submenu1" id="No-Sub1">
+      <li><a href="/scripts/NotificationUser.aspx">Notifications </a></li>
+             <li><a href="/scripts/BS_ViewMasterDirections.aspx">Master Directions </a></li>
+             <li><a href="/scripts/BS_ViewMasterCirculardetails.aspx">Master Circulars </a></li> 
+	     <li><a href="/scripts/Fs_AmendmentDirections.aspx">Amendment Directions </a></li> 
+	     <li><a href="#" aria-expanded="false" role="button" aria-controls="No-draft">Draft Notifications/Guidelines <span aria-hidden="true">▶</span></a>
+		<ul class="submenu1" id="No-draft">
+			<li><a href="/scripts/DraftNotificationsGuildelines.aspx">Draft Notifications/Guidelines</a></li>
+			<li><a href="/scripts/BS_ViewREwiseDraftDirections.aspx">Draft Directions (RE-wise)</a></li> 
+         	</ul>
+	     </li>
+
+            
+             <li><a href="/scripts/BS_CircularIndexDisplay.aspx">Index To RBI Circulars </a></li> 
+             <li><a href="/scripts/BS_ViewListofstandalonecirculars.aspx">Standalone Circulars </a></li>
+             <li><a href="/scripts/NotificationUserWithdrawnCircular.aspx">Circulars Withdrawn </a></li>
+
+      
+    </ul>
+  </li>
+
+  <li><a href="/scripts/BS_PressReleaseDisplay.aspx">Press Releases</a></li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Sp-Sub1">Speeches & Media Interactions ▼</a>
+	<ul class="submenu1" id="Sp-Sub1">
+	  <li><a href="/scripts/BS_ViewSpeeches.aspx">Speeches</a></li>
+      <li><a href="/scripts/BS_ViewInterviews.aspx">Media Interactions</a></li>
+      <li><a href="/scripts/Lectures.aspx">Memorial Lectures</a></li>
+      <li><a href="/scripts/BS_ViewPodcast.aspx">Podcasts</a></li>
+	</ul>
+  </li>
+  <li><a href="#"  aria-expanded="false" role="button" aria-controls="Pu-Sub1">Publications ▼</a>
+		<ul class="submenu1" id="Pu-Sub1">
+			<li><a href="/scripts/Publications.aspx?publication=Biennial">Biennial</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Annual">Annual</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=HalfYearly">Half-Yearly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Quarterly">Quarterly</a></li>
+		    <li><a href="/scripts/Publications.aspx?publication=Bimonthly">Bi-monthly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Monthly">Monthly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Weekly">Weekly</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Occasional">Occasional</a></li>
+            <li><a href="/scripts/Publications.aspx?publication=Reports">Reports</a></li>
+		    <li><a href="/scripts/OccasionalPublications.aspx?head=Working Papers">Working Papers</a></li>
+		</ul>
+	</li>				  
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Le-Sub1">Legal Framework ▼</a>
+	<ul class="submenu1" id="Le-Sub1">
+	   <li><a href="/scripts/Act.aspx">Act </a></li>
+       <li><a href="/scripts/Rules.aspx">Rules </a></li>
+       <li><a href="/scripts/Regulations.aspx">Regulations </a></li> 
+       <li class="last"><a href="/scripts/Schemes.aspx">Schemes </a></li>
+	   </ul>
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="Re-Sub1">Research ▼</a>
+		<ul class="submenu1" id="Re-Sub1">
+			<li><a href="/Scripts/ExternalResearchSchemes.aspx">External Research Schemes</a></li>
+			<li><a href="/Scripts/OccasionalPapers.aspx">RBI Occasional Papers</a></li>
+			<li><a href="/Scripts/OccasionalPublications.aspx?head=Working%20Papers">Working Papers</a></li>
+			<li><a href="/Scripts/BS_ViewBulletin.aspx">RBI Bulletin</a></li>
+			<li><a href="/Scripts/Project1.aspx">History</a></li>
+			<li><a href="/Scripts/Occas_DRG_Studies.aspx">DRG Studies</a></li>
+			<li><a href="/Scripts/KLEMS.aspx">KLEMS</a></li>
+			<li class="last"><a href="/Scripts/StateStatisticsFinances.aspx">State Statistics and Finances</a></li>
+        </ul>
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="St-Sub1">Statistics ▼</a>
+		<ul class="submenu1" id="St-Sub1">
+		  <li><a href="/scripts/Statistics.aspx">Data Releases</a></li>
+          <li><a href="https://data.rbi.org.in" target="_blank">Database on Indian Economy</a></li>
+          <li><a href="/scripts/FS_PDS.aspx">Public Debt Statistics</a></li>
+		</ul> 
+  </li>
+  <li><a href="#" aria-expanded="false" role="button" aria-controls="St-Sub1">Regulatory Reporting ▼</a>
+		<ul class="submenu1">
+			<li><a href="/scripts/BS_Listofallreturns.aspx">List of Returns</a></li>
+			<li><a href="/scripts/DataDefinition.aspx">Data Definition</a></li>
+			<li><a href="/scripts/ValidationRules.aspx">Validation rules/ Taxonomy</a></li>
+			<li><a href="/scripts/ReportingPlaform.aspx">List of RBI Reporting Portals</a></li>
+			<li class="last"><a href="/scripts/ReportingFAQ.aspx">FAQs of RBI Reporting Portals</a></li>
+		</ul>
+   </li>
+</ul>
+</div></div>
+</nav>
+<div class="container_12" >
+    <section>
+        <div class="grid_12" >
+            <div id="dialogAlert" title="" tabindex="-1"  style="text-align: center; display: none;">
+                <p id="AM_Message" tabindex="-1" style="color: #444; font-size: 15px; margin: 20px 0; min-height: 40px;"></p>
+            </div>
+        </div>
+    </section>
+</div>
+<!--  NAVIGATION END-->
+<!--HEADER END-->
+<input type="submit" name="UsrFontCntr$btn" value="" id="btn" style="visibility: hidden; height: 0px; width: 0px;" />
+
+<script type="text/javascript">
+    function SetLink() {
+        //a.href = "https://www.rbi.org.in/hindi/Home.aspx";
+        var txt="This will lead you to Hindi (हिन्दी) language website. Are you sure you want to switch to this language?"
+        if(window.confirm(txt)==true){
+            //document.cookie = 'preferLang' + '=;secure; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
+            window.location.replace("https://www.rbi.org.in/hindi/");
+        }
+        else return false;
+        
+    }
+
+
+
+
+	const allMenuItems = document.querySelectorAll("nav ul li");
+	
+	allMenuItems.forEach(item => {
+		item.addEventListener("focusin", (event) => {	
+			const MenuText =event.target.textContent;
+			const allMenuItems1 = document.querySelectorAll(".hasSubmenu");
+			allMenuItems1.forEach(item1 => {
+				if (MenuText === 'Press Releases')
+				{	
+					
+					item1.classList.remove('focused');
+					rollback(item1)
+					item1.classList.remove('open');
+				}
+			});
+			
+		});
+	});
+
+
+const menuItems = document.querySelectorAll(".hasSubmenu");
+menuItems.forEach(item => {
+	item.addEventListener("mouseenter", (event) => {
+		item.className="hasSubmenu open focused"
+		expandThis(item);
+	});
+	item.addEventListener("mouseleave", (event) => {		
+		rollback(item)
+		item.className="hasSubmenu"
+	});
+	item.addEventListener("focusin", (event) => {		
+		const allMenuItems = document.querySelectorAll("nav ul li");
+		allMenuItems.forEach(item1 => {
+			item1.classList.remove('focused');
+			if(item!==item1)
+			rollback(item1)
+			item1.classList.remove('open');	
+		});							
+		item.classList.add('focused');
+	});
+	item.addEventListener("focusout", (event) => {
+		
+		if(!item.className.includes('focused')){
+		
+		rollback(item)
+		item.className="hasSubmenu"
+		}
+		item.classList.remove('focused');
+		item.classList.remove('open');
+	});
+
+    item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+		if(item.className.includes("hasSubmenu open")){
+			rollback(item)
+			item.className="hasSubmenu"
+		}
+		else{
+          	item.className="hasSubmenu open focused"
+		var ele=item.querySelectorAll("a")[0];
+		
+		expandThis(item);	
+		}
+				
+        }
+	
+    });
+	
+});
+function expandThis(menu){
+ var $targetul = $(menu).children("ul:eq(0)")
+				    if ($targetul.queue().length <= 1) 
+				        if (this.istopheader)
+					$targetul.css({ left: $(this).children('a').eq(0).position().left, top: $mainmenu.position().top + this._dimensions.h - 2 })
+				            
+				    if (document.all && !window.XMLHttpRequest) 
+				        $mainmenu.find('ul').css({ overflow: (this.istopheader) ? 'hidden' : 'visible' })
+					
+					
+				    $targetul.dequeue().stop(true, true).slideDown(droplinemenu.animateduration.over)
+}
+const menuItemsf = document.querySelectorAll("nav .midmenu ul li");
+
+menuItemsf.forEach(item => {
+    item.addEventListener("keydown", (event) => {
+	
+	if(item.className.includes("last") ){
+		 if (pressedKeys['shift'] && event.key === "Tab"){}else{
+		var lastItem = document.getElementsByClassName('hasSubmenu open');
+		rollback(lastItem[0])
+		lastItem[0].className="hasSubmenu";
+		}
+	}
+	
+	});
+	
+	});
+	
+
+function rollback(menu){
+ var $targetul = $(menu).children("ul:eq(0)")
+$targetul.dequeue().stop(true, true).slideUp(droplinemenu.animateduration.out);
+}
+ 
+
+function setLetterSpace(val) {
+    
+	
+    if (false) {
+                    document.body.setAttribute("style", "letter-spacing:1px; line-height:20px; word-spacing:2px;");
+       
+    }
+    else {
+                    document.body.removeAttribute("style");
+    }
+    return false;
+
+    
+    }
+   
+
+// Toggle submenu
+    document.querySelectorAll('.menu li > a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const submenu = this.nextElementSibling;
+
+            if (submenu && submenu.classList.contains('submenu1')) {linkMessage();
+                e.preventDefault();
+                e.stopPropagation();
+
+                const parentLi = this.parentElement;
+
+                // Close sibling menus ONLY (not entire menu)
+                closeSiblings(parentLi);   
+ 
+
+               
+ 
+                const isExpanded=link.getAttribute('aria-expanded') ==='true';
+                link.setAttribute('aria-expanded',!isExpanded);
+                submenu.hidden=isExpanded;
+                
+                submenu.setAttribute('aria-hidden', isExpanded);
+                setTimeout(()=>{
+                    // Toggle current submenu
+                    submenu.classList.toggle('show', !isExpanded);
+            },50);
+
+        }
+        });
+    });
+
+    //  Close only sibling menus (important fix)
+    function closeSiblings(currentLi) {
+        const siblings = currentLi.parentElement.children;
+
+        Array.from(siblings).forEach(li => {
+            if (li !== currentLi) {
+            const submenus = li.querySelectorAll('.submenu1');
+        submenus.forEach(menu => menu.classList.remove('show'));
+    }
+    });
+    }
+
+    //  Click outside → close all
+    document.addEventListener('click', function () {
+		
+        document.querySelectorAll('.menu li > a').forEach(menu => {
+		if(menu.hasAttribute('aria-expanded')){
+            menu.setAttribute('aria-expanded','false');
+	}
+	
+    });
+
+    document.querySelectorAll('.submenu1').forEach(menu => {
+        menu.setAttribute('aria-hidden','true');
+    menu.classList.remove('show');
+	
+
+    });
+    });
+
+    //  Prevent closing when clicking inside menu
+    document.querySelector('.menu').addEventListener('click', function (e) {linkMessage();
+        e.stopPropagation();
+    });
+
+
+    //  Keyboard support
+    document.querySelectorAll('.menu li > a').forEach(link => {
+        link.addEventListener('keydown', function (e) {
+            const submenu = this.nextElementSibling;
+
+            if ((e.key === 'Enter' || e.key === ' ') && submenu) {
+                e.preventDefault();
+
+                const parentLi = this.parentElement;
+                closeSiblings(parentLi);
+
+
+                const isExpanded=link.getAttribute('aria-expanded') ==='true';
+                link.setAttribute('aria-expanded',!isExpanded);
+                submenu.hidden=isExpanded;
+                submenu.setAttribute('aria-hidden', isExpanded);
+                setTimeout(()=>{
+                    // Toggle current submenu
+                    submenu.classList.toggle('show', !isExpanded);
+            },50);
+
+
+           
+        }
+
+          if (e.key === 'Escape') {
+        document.querySelectorAll('.submenu').forEach(menu => {
+            menu.classList.remove('show');
+    });
+    this.blur();
+    }
+    });
+    });
+    // When focusing main menu items → close other submenus
+    document.querySelectorAll('.menu > li > a').forEach(item => {
+        item.addEventListener('focus', function() {
+
+            document.querySelectorAll('.submenu1').forEach(menu => {
+                
+                if (menu !== this.nextElementSibling) {
+              
+
+            document.querySelectorAll('.menu li > a').forEach(menu => {
+                if(menu.hasAttribute('aria-expanded'))
+                menu.setAttribute('aria-expanded','false');
+		
+            document.querySelectorAll('.submenu1').forEach(menu => {
+                menu.setAttribute('aria-hidden','true');
+            
+            menu.classList.remove('show');
+            
+
+
+        });
+
+	
+    });
+
+    }
+    });
+
+    });
+    });
+
+    //  Close submenu when focus leaves it (TAB navigation)
+    document.querySelectorAll('.menu li').forEach(li => {
+        li.addEventListener('focusout', function (e) {
+            // Check if focus is still inside this <li>
+            if (!li.contains(e.relatedTarget)) {
+                const submenu = li.querySelector('.submenu1');
+                if (submenu) {
+                    submenu.classList.remove('show');
+                    if(li.querySelector('a').hasAttribute('aria-expanded'))
+                        li.querySelector('a').setAttribute('aria-expanded','false');
+	
+
+                    submenu.setAttribute('aria-hidden','true');
+                }
+            }
+        });
+    });
+</script>
+        <div>
+            <div role="main" class="container_12">
+                <a id="mainsection" name="mainsection"></a>
+
+                <nav aria-label="Breadcrumb" class="grid_12 breadcrumbs">
+                    <ul>
+                        <li><a href="../Home.aspx">Home</a></li>
+                        <span id="lblNav"><li><a href="NotificationUser.aspx">Notifications</a></li></span>
+                    </ul>
+
+                </nav>
+                <div class="clear">
+                </div>
+                
+                <div id="pnlDetails" class="grid_11 omega right_blue_border">
+	
+                    <div>
+                        <div id="NotificationUser" class="text1">
+
+
+                            <h1 class="page_title">Notifications</h1>
+                            <div id="example-min">
+                                <div id="doublescroll">
+                                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        
+                                        <table class="tablebg" width="100%"><tr><td class="tableheader"><a id='APDF_09MC01042025579866A57486476EBBEAB63366EB95B7' target="_blank" href="https://rbidocs.rbi.org.in/rdocs/notification/PDFs/09MC01042025579866A57486476EBBEAB63366EB95B7.PDF" aria-labelledby='APDF_09MC01042025579866A57486476EBBEAB63366EB95B7 SPDF_09MC01042025579866A57486476EBBEAB63366EB95B7'>
+   <img alt='PDF - Master Circular - Prudential Norms on Capital Adequacy - Primary (Urban) Co-operative Banks (UCBs)' style='padding: 8px;' src="../Images/pdf.gif" border="0" align="absmiddle"></a> (<span id='SPDF_09MC01042025579866A57486476EBBEAB63366EB95B7' aria-hidden="true">1503 kb</span>)</td></tr><tr><td align="center" class="tableheader"><b>Master Circular - Prudential Norms on Capital Adequacy - Primary (Urban) Co-operative Banks (UCBs)</b></td></tr><tr class="tablecontent2"><td><table width="100%" border="0" align="center" class="td" style="background: url(https://www.rbi.org.in/scripts/images/Withdrawn04122025.jpg);background-repeat: no-repeat;background-position: top;">  <tr><td><p>RBI/2025-26/09<br>  DOR.CAP.REC.03/09.18.201/2025-26</p>  <p align="right">April 01, 2025</p>  <p>All Primary (Urban) Co-operative Banks</p>  <p>Dear Sir / Madam,</p>  <p class="head">Master Circular - Prudential Norms on Capital Adequacy - Primary (Urban) Co-operative Banks (UCBs)</p>  <p>Please refer to our <a href="https://www.rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=12654" target="_blank" class="links">Master Circular DOR.CAP.REC.5/09.18.201/2024-25 dated April 01, 2024</a> on the captioned subject.</p>  <p>2. The enclosed <a href="#MC" class="links">Master Circular</a> consolidates and updates all the instructions / guidelines on the subject issued up to March 31, 2025 as listed in the <a href="#APP" class="links">Appendix</a>.</p>  <p>Yours faithfully</p>  <p>(Usha Janakiraman)<br>Chief General Manager-in-Charge</p>  <p>Encl: As above</p><hr>  <p class="head" align="center"><a id="MC"></a>Master Circular</p>  <p class="head" align="center">Prudential Norms on Capital Adequacy - Primary (Urban) Co-operative Banks (UCBs)</p>  <table width="80%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">    <tr>      <td colspan="2" align="center"><span class="head">Contents</span></td>    </tr>    <tr>      <td width="9%" align="center"><span class="head">Sl. No.</span></td>      <td width="91%" align="center"><span class="head">Subject</span></td>    </tr>    <tr>      <td align="center">1.</td>      <td><a href="#1" class="links">Introduction</a></td>    </tr>    <tr>      <td align="center">2.</td>      <td><a href="#2" class="links">Statutory Requirements</a></td>    </tr>    <tr>      <td align="center">3.</td>      <td><a href="#3" class="links">Net Worth</a></td>    </tr>    <tr>      <td align="center">4.</td>      <td><a href="#4" class="links">Capital Adequacy Norms</a></td>    </tr>    <tr>      <td align="center">5.</td>      <td><a href="#5" class="links">Capital for Market Risk</a></td>    </tr>    <tr>      <td align="center">6.</td>      <td><a href="#6" class="links">Share linking to Borrowings</a></td>    </tr>    <tr>      <td align="center">7.</td>      <td><a href="#7" class="links">Refund of Share Capital</a></td>    </tr>    <tr>      <td align="center">8.</td>      <td><a href="#8" class="links">Measures for protection of investors in regulatory capital instruments specified in Annex 3 and Annex 4</a></td>    </tr>    <tr>      <td align="center">9.</td>      <td><a href="#9" class="links">Returns</a></td>    </tr>    <tr>      <td align="center">10.</td>      <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A1.pdf" target="_blank" class="links">Annex 1 - Computation of Net Worth by UCBs</a></td>    </tr>    <tr>      <td align="center">11.</td>      <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A2.pdf" target="_blank" class="links">Annex 2 - Risk Weights for computation of CRAR</a></td>    </tr>    <tr>      <td align="center">12.</td>      <td><a href="#A_3" class="links">Annex 3 - Guidelines on issuance of Preference Shares</a></td>    </tr>    <tr>      <td align="center">13.</td>      <td><a href="#A_4" class="links">Annex 4 - Guidelines on issuance of Debt Capital Instruments</a></td>    </tr>    <tr>      <td align="center">14.</td>      <td><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A5.pdf" target="_blank" class="links">Annex 5 - Proforma for Returns</a></td>    </tr>    <tr>      <td align="center">15.</td>      <td><a href="#APP" class="links">Appendix</a></td>    </tr>  </table>  <p align="center" class="head">Prudential Norms on Capital Adequacy – Primary (Urban) Co-operative Banks (UCBs)</p>  <p class="head"><a id="1"></a>1. Introduction</p>  <p>Capital acts as a buffer in times of crisis or poor performance by a bank. Sufficiency of capital also instills depositors' confidence. As such, adequacy of capital is one of the pre-conditions for licensing of a new bank as well as its continuance in business.</p>  <p class="head"><a id="2"></a>2. Statutory Requirements</p>  <p>In terms of the provisions contained in Section 11 of Banking Regulation Act (AACS), no co-operative bank shall commence or carry on banking business unless the aggregate value of its paid-up capital and reserves is not less than one lakh of rupees. In addition, under Section 22(3)(d) of the above Act, the Reserve Bank prescribes the minimum entry point capital (entry point norms) from time to time, for setting-up of a new Primary (Urban) Cooperative Bank.</p>  <p class="head"><a id="3"></a>3. Net Worth</p>  <p>UCBs shall have minimum net worth as under:</p>  <ul>    <li>      <p>Tier 1<sup data-toggle="tooltip" title="Tier 1 - All unit UCBs and salary earners’ UCBs (irrespective of deposit size), and all other UCBs having deposits up to ₹100 crore; Tier 2 - UCBs with deposits more than ₹100 crore and up to ₹1000 crore; Tier 3 - UCBs with deposits more than ₹1000 crore and up to ₹10,000 crore; Tier 4 - UCBs with deposits more than ₹10,000 crore"><a href="#F1" class="links">1</a></sup> UCBs operating in a single district shall have minimum net worth of ₹2 crore.</p>    </li>    <li>      <p>All other UCBs (of all tiers) shall have minimum net worth of ₹5 crore.</p>    </li>    <li>      <p>UCBs which currently do not meet the minimum net worth requirement, as above, shall achieve the minimum net worth of ₹2 crore or ₹5 crore (as applicable) in a phased manner. Such UCBs shall achieve at least 50 per cent of the applicable minimum net worth on or before March 31, 2026 and the entire stipulated minimum net worth on or before March 31, 2028.</p>    </li>    </ul>  <p>The computation of “Net worth” in this context is provided in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A1.pdf" target="_blank" class="links">Annex 1</a>.</p>  <p class="head"><a id="4"></a>4. Capital Adequacy Norms</p>  <p>UCBs shall maintain minimum Capital to Risk Weighted Assets Ratio (CRAR) as under:</p>  <ul>    <li>      <p>Tier 1 UCBs shall maintain, as hitherto, a minimum CRAR of 9 per cent of Risk Weighted Assets (RWAs) on an ongoing basis.</p>    </li>    <li>      <p>Tier 2 to 4 UCBs shall maintain a minimum CRAR of 12 per cent of RWAs on an ongoing basis.</p>    </li>    <li>      <p>UCBs in Tier 2 to 4, which do not currently meet the revised CRAR of 12 per cent of RWAs, shall achieve the same in a phased manner. Such UCBs shall achieve the CRAR of at least 10 per cent by March 31, 2024, 11 per cent by March 31, 2025, and 12 per cent by March 31, 2026. </p>    </li>    </ul>  <p>The computation of CRAR will be as under:</p>  <div align="center"><img src="https://www.rbi.org.in/scripts/images/09MC01042025_1.jpg"></div>  <p>The capital funds (eligible total capital) for capital adequacy purposes shall consist of Tier I and Tier II capital as defined below. The total of Tier II capital shall be limited to a maximum of 100 per cent of total Tier I capital for the purpose of compliance with CRAR norms.</p>  <p>Risk weights for different categories of exposures of banks are outlined in <span class="links"><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A2.pdf" target="_blank" class="links">Annex 2</a></span>.</p>  <p class="head">4.1 Tier I Capital</p>  <p>Tier I shall comprise the following:</p>  <p>(i) Paid-up share capital<sup data-toggle="tooltip" title="UCBs are permitted to raise share capital, as hitherto, by way of (i) issue of shares to persons within their area of operation, in accordance with the provisions of their bye-laws, and (ii) issue of additional shares to the existing members."><a href="#F2" class="links">2</a></sup> collected from regular members having voting rights.</p>  <p>(ii) Contributions received from associate / nominal members where the bye- laws permit allotment of shares to them and provided there are restrictions on withdrawal of such shares, as applicable to regular members.</p>  <p>(iii) Contribution / non-refundable admission fees collected from the nominal and associate members which is held separately as 'reserves' under an appropriate head since these are not refundable.</p>  <p>(iv) Perpetual Non-Cumulative Preference Shares (PNCPS) which comply with the regulatory requirements as specified in <a href="#A_3" class="links">Annex 3</a>.</p>  <p>(v) Free Reserves as per the audited accounts. Reserves, if any, created to meet outside liabilities should not be included in the Tier I Capital. Free reserves shall exclude all reserves / provisions which are created to meet anticipated loan losses, losses on account of fraud etc., depreciation in investments and other assets and other outside liabilities. For example, the amount held under the head “Building Fund” will be treated as part of free reserve<sup data-toggle="tooltip" title="In terms of circular DOR.CAP.REC.No.30/09.18.201/2024-25 dated July 30, 2024, as a one-time measure, balances in Dividend Equalisation Fund (DEF) could be transferred to general reserves/free reserves and treated as Tier I Capital."><a href="#F3" class="links">3</a></sup>. Similarly, “Bad and Doubtful Debt Reserve” complying with all the terms and instructions issued vide <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12716&Mode=0" target="_blank" class="links">circular DOR.CAP.REC.No.27/09.18.201/2024-25 dated August 02, 2024</a>, shall also be treated as free reserves.</p>  <p>(vi) Capital Reserves representing surplus arising out of sale proceeds of assets.</p>  <p>(vii) Perpetual Debt Instruments (PDIs) which comply with the regulatory requirements as specified in <a href="#A_4" class="links">Annex 4</a>.</p>  <p>(viii) Any surplus (net) in Profit and Loss Account i.e., balance after appropriation towards dividend payable, education fund, other funds whose utilisation is defined, asset loss, if any, etc.</p>  <p>(ix) Outstanding amount in Special Reserve created under Section 36(1) (viii) of the Income Tax Act, 1961.</p>  <p>(x) Revaluation reserves, arising out of change in the carrying amount of a bank’s property consequent upon its revaluation, may be reckoned as Tier I capital at a discount of 55 per cent, subject to meeting the following conditions:</p>  <ul>    <li>      <p>the bank is able to sell the property readily at its own will and there is no legal impediment in selling the property;</p>    </li>    <li>      <p>the revaluation reserves are presented/disclosed separately under “Reserve Fund and Other Reserves” in the Balance Sheet;</p>    </li>    <li>      <p>revaluations are realistic, in accordance with applicable accounting standards;</p>    </li>    <li>      <p>valuations are obtained, from two independent valuers, at least once in every three years;</p>    </li>    <li>      <p>where the value of the property has been substantially impaired by any event, these are to be immediately revalued and appropriately factored into capital adequacy computations;</p>    </li>    <li>      <p>the external auditor(s) of the bank have not expressed a qualified opinion on the revaluation of the property;</p>    </li>    <li>      <p>the instructions on valuation of properties and other specific requirements as mentioned in <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A1.pdf" target="_blank" class="links">Annex 1</a> (Guidelines on Valuation of Properties – Empanelment of Valuers) to the <a href="https://rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=12525" target="_blank" class="links">Master Circular DOR.CRE.REC.No.27/07.10.002/2023-24 dated July 25, 2023</a> on Management of Advances – UCBs, as amended from time to time, are strictly adhered to. </p>    </li>    </ul>  <p>Revaluation reserves which do not qualify as Tier I capital shall also not qualify as Tier II capital. The bank may choose to reckon revaluation reserves in Tier I capital or Tier II capital at its discretion, subject to fulfilment of all the conditions specified above.</p>  <p class="head">Note :</p>  <p>(i) Amount of intangible assets, losses in current year and those brought forward from previous periods, deficit in NPA provisions, income wrongly recognized on non-performing assets, provision required for liability devolved on bank, etc. will be deducted from Tier I Capital.</p>  <p>(ii) For a Fund to be included in the Tier I Capital, the Fund should satisfy two criteria viz., the Fund should be created as an appropriation of net profit and should be a free reserve and not a specific reserve. However, if the same has been created not by appropriation of profit but by a charge on the profit then this Fund is in effect a provision and hence will be eligible for being reckoned only as Tier II capital as defined below and subject to a limit of 1.25% of risk weight assets provided it is not attributed to any identified potential loss or diminution in value of an asset or a known liability.</p>  <p>(iii) Outstanding Innovative Perpetual Debt Instruments (IPDI) which were issued in terms of Annex to <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=4782&Mode=0" target="_blank" class="links">circular UCB.PCB.Cir.No.39/09.16.900/08-09 dated January 23, 2009</a> shall also be eligible to be reckoned as Tier I capital subject to the ceilings prescribed in Annexes to this Master Circular. It may be noted that the Annex to circular dated January 23, 2009 has since been repealed vide <a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12251&Mode=0" target="_blank" class="links">circular No. DOR.CAP.REC.92/09.18.201/2021-22 dated March 08, 2022</a>, and with effect from March 08, 2022, amount issued through PDI by conversion of existing deposits as part of revival plan/ financial reconstruction of the UCBs (in terms of circular dated January 23, 2009) shall comply with the <a href="#A_4" class="links">Annex 4</a> of this Master Circular.</p>  <p class="head">4.2 Tier II Capital</p>  <p>Tier II capital shall comprise the following:</p>  <p class="head">4.2.1 General Provisions and Loss Reserves</p>  <p>These would include such provisions of general nature appearing in the books of the bank which are not attributed to any identified potential loss or a diminution in value of an asset or a known liability. Adequate care must be taken to ensure that sufficient provisions have been made to meet all known losses and foreseeable potential losses before considering any amount of general provision as part of Tier II capital as indicated above. To illustrate: General provision for Standard Assets, excess provision on transfer of stressed loans etc. could be considered for inclusion under this category. Such provisions which are considered for inclusion in Tier II capital will be admitted up to 1.25% of total risk weighted assets.</p>  <p>As per the extant instructions, provisions made for NPAs as per prudential norms are deducted from the amount of Gross NPAs to arrive at the amount of Net NPAs. The prudential treatment of different type of provisions and its treatment for capital adequacy purposes is given below:</p>  <p>(a) Additional General Provisions (Floating Provisions)</p>  <p>Additional general provisions (floating provisions) for bad debts i.e., provisions not earmarked for any specific loan impairments (NPAs) may be used either for netting off of gross NPAs or for inclusion in Tier II capital within the overall ceiling of 1.25% of total risk weighted assets but cannot be used on both counts.</p>  <p>(b) Additional Provisions for NPAs at higher than prescribed rates</p>  <p>In cases where banks make specific provision for NPAs in excess of what is prescribed under the prudential norms, the total specific provision may be deducted from the amount of Gross NPAs while reporting the amount of Net NPAs. The additional specific provision made by the bank will not be reckoned as Tier II capital.</p>  <p>(c) Excess Provisions on transfer of stressed loans to Asset Reconstruction Companies (ARC)</p>  <p>In terms of instructions issued vide <a href="https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12166" target="_blank" class="links">Reserve Bank of India (Transfer of Loan Exposures) Directions, 2021 dated September 24, 2021</a> and as amended from time to time, excess provisions on transfer of stressed loans to ARC, until reversal, shall continue to be shown under 'provisions' and would be considered as Tier II capital within the overall ceiling of 1.25% of risk weighed assets.</p>  <p>(d) Provisions for Diminution in Fair Value</p>  <p>Provisions for diminution in the fair value of restructured accounts, both in respect of standard assets and NPAs, are permitted to be netted from the relative loan asset and will not be reckoned as Tier II capital.</p>  <p class="head">4.2.2 Investment Fluctuation Reserve</p>  <p>Balances in the Investment Fluctuation Reserve, created in terms of <a href="https://rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12473" target="_blank" class="links">Master Direction – Reserve Bank of India (Classification, Valuation and Operation of Investment Portfolio of Primary (Urban) Co-operative Banks) Directions, 2023 dated April 1, 2023</a>, shall be eligible for inclusion in Tier II capital.</p>  <p class="head">4.2.3 Tier II capital instruments</p>  <p> UCBs may issue the following instruments to augment their Tier II capital:</p>  <p>a) Upper Tier II instruments - Perpetual Cumulative Preference Shares (PCPS), Redeemable Non-Cumulative Preference Shares (RNCPS) and Redeemable Cumulative Preference Shares (RCPS) which comply with the regulatory requirements as specified in <a href="#A_3" class="links">Annex 3</a>.</p>  <p>b) Lower Tier II instruments - Long Term Subordinated Bonds (LTSB) which comply with the regulatory requirements as specified in <a href="#A_4" class="links">Annex 4</a>.</p>  <p>Note: Outstanding Long Term (Subordinated) Deposits (LTD) which were issued in terms of Annex-II to the <a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=4370&Mode=0" target="_blank" class="links">circular UBD.PCB.Cir.No.4 /09.18.201/08-09 dated July 15, 2008</a>, and subsequent amendments thereto, shall also be eligible to be reckoned as Tier II capital subject to the ceilings prescribed in <a href="#A_4" class="links">Annex 4</a> to this Master Circular. It may be noted that the circular dated July 15, 2008 has since been repealed vide <a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12251&Mode=0" target="_blank" class="links">circular No. DOR.CAP.REC.92/09.18.201/2021-22 dated March 08, 2022</a>.</p>  <p class="head"><a id="5"></a>5. Capital for Market Risk</p>  <p>5.1 Market risk is defined as the risk of losses in on-balance sheet and off- balance sheet positions arising from movements in market prices. The market risk positions, which are subject to capital charge are as under:</p>  <ul>    <li>      <p>The risks pertaining to interest rate related instruments and equities in the trading book; and</p>    </li>    <li>      <p>Foreign exchange risk (including open position in precious metals) throughout the bank (both banking and trading books).</p>    </li>    </ul>  <p>5.2 As an initial step towards prescribing capital requirement for market risks, UCBs were advised to assign an additional risk weight of 2.5 per cent on investments. These additional risk weights are clubbed with the risk weights prescribed for credit risk in respect of investment portfolio of UCBs as per <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A2.pdf" target="_blank" class="links">Annex 2</a>, and banks are not required to provide for the same separately. Further, UCBs are advised to assign a risk weight of 100% on the open position limits on foreign exchange and gold, and to build up investment fluctuation reserve as per extant instructions.</p>  <p>5.3 UCBs having AD Category I licence are required to provide capital for market risk in terms of <a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=5495&Mode=0" target="_blank" class="links">circular UBD.BPD(PCB)Cir.No.42/09.11.600/2009-10 dated February 8, 2010</a>.</p>  <p class="head"><a id="6"></a>6. Share linking to Borrowings</p>  <p>Borrowings from UCBs (except in the case of advances against fixed deposits) shall be linked to shareholdings of the borrowing members as below:</p>  <p>(i) 5 per cent of the borrowings, if the borrowings are on unsecured basis.</p>  <p>(ii) 2.5 per cent of the borrowings, in case of secured borrowings.</p>  <p>(iii) In case of secured borrowings by Micro and Small Enterprises (MSEs), 2.5 per cent of the borrowings, of which 1 per cent is to be collected initially and the balance of 1.5 per cent is to be collected in the course of next 2 years.</p>  <p>The above share linking norms may be applicable for member's shareholdings up to the limit of 5 per cent of the total paid up share capital of the bank. Where a member is already holding 5 per cent of the total paid up share capital of a UCB, it would not be necessary for him / her to subscribe to any additional share capital on account of the application of extant share linking norms. In other words, a borrowing member may be required to hold shares for an amount that may be computed as per the extant share linking norms or for an amount that is 5 per cent of the total paid up share capital of the bank, whichever is lower.</p>  <p>Share-linking to borrowing norms shall be discretionary for UCBs which meet the minimum regulatory CRAR applicable and a Tier 1 CRAR of 5.5 per cent as per the latest audited financial statements and the last CRAR as assessed by RBI during statutory inspection. Such UCBs shall have a Board-approved policy on share-linking to borrowing norms which shall be implemented in a transparent, consistent and non-discriminatory manner. The policy may be reviewed by the Board at the beginning of the accounting year. UCBs, which do not maintain the minimum CRAR applicable and Tier I CRAR of 5.5 per cent, shall continue to be guided by the norms on share-linking to borrowing as specified above.</p>  <p>Perpetual Non-Cumulative Preference Shares (PNCPS) held by members / subscribers, may be treated as shares for the purpose of compliance with the extant share linking to borrowing norms.</p>  <p class="head"><a id="7"></a>7. Refund of share capital</p>  <p>In terms of Section 12 (2) (ii) read with Section 56 of the BR Act, a co-operative bank shall not withdraw or reduce its share capital, except to the extent and subject to such conditions as the Reserve Bank may specify in this behalf. Accordingly, it has been decided to permit UCBs to refund the share capital to their members, or nominees / heirs of deceased members, on demand<sup data-toggle="tooltip" title="Subject to the member fulfilling all the eligibility conditions for refund."><a href="#F4" class="links">4</a></sup>, subject to the following conditions:</p>  <p>a) The bank complies with the minimum applicable regulatory CRAR, both as per the latest audited financial statements and the last CRAR as assessed by RBI during statutory inspection.</p>  <p>b) Such refund does not result in the CRAR of the bank falling below the minimum regulatory CRAR applicable to the bank.</p>  <p>For the purpose of computing CRAR as above, accretion to capital funds after the balance sheet date<sup data-toggle="tooltip" title="Capital funds shall be as per audited data."><a href="#F5" class="links">5</a></sup>, other than by way of profits, may be taken into account. Any reduction in capital funds, including by way of losses, during the aforesaid period shall also be considered.</p>  <p class="head"><a id="8"></a>8. Measures for protection of investors in regulatory capital instruments specified in <a href="#A_3" class="links">Annex 3</a> and <a href="#A_4" class="links">Annex 4</a></p>  <p>For the purpose of enhancing investor education on the risk characteristics of regulatory capital instruments, UCBs, which issue regulatory capital instruments specified in <a href="#A_3" class="links">Annex 3</a> and <a href="#A_4" class="links">Annex 4</a> shall adhere to the following conditions:</p>  <p>a) For floating rate instruments, banks should not use its Fixed Deposit rate as benchmark.</p>  <p>b) A specific sign-off, as quoted below, from the investors, for having understood the features and risks of the instruments, may be incorporated in the common application form of the proposed issue:</p>  <blockquote>    <p>"By making this application, I / we acknowledge that I / we have understood the terms and conditions of the issue of [Name of the share/security] being issued by [Name of the bank] as disclosed in the Prospectus and Offer Document".</p>    </blockquote>  <p>c) UCBs shall ensure that all the publicity material / offer document, application form and other communication with the investor should clearly state in bold letters (Arial font, size 14, equivalent size in English / Vernacular version) how a PNCPS / PCPS / RNCPS / RCPS / PDI / LTSB, as the case may be, is different from a fixed deposit, and that these instruments are not covered by deposit insurance.</p>  <p>d) The procedure for transfer to legal heirs in the event of death of the subscriber of the instrument should also be specified.</p>  <p class="head"><a id="9"></a>9. Returns</p>  <p>Banks should furnish to the respective Regional Offices annual return indicating (i) capital funds, (ii) conversion of off-balance sheet / non-funded exposures, (iii) calculation of risk weighted assets, and (iv) calculation of capital funds and risk assets ratio. The format of the return is given in the <a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/09MC01042025_A5.pdf" target="_blank" class="links">Annex 5</a>. The returns should be signed by two officials who are authorized to sign the statutory returns submitted to Reserve Bank.</p><hr>  <p class="head" align="right"><a id="A_3"></a>Annex 3</p>  <p class="head" align="center">Guidelines on Issuance of Preference Shares</p>  <p class="head">A. Perpetual Non-Cumulative Preference Shares (PNCPS) eligible for inclusion in Tier I capital</p>  <p>UCBs are permitted to issue Perpetual Non-Cumulative Preference Shares (PNCPS) at face value to their members or any other person residing within their area of operation, with the prior approval of Reserve Bank of India (RBI). The UCBs shall submit the application seeking permission, together with the Prospectus / Offer Document / Information Memorandum, to the concerned Regional Office (RO) of the RBI. A certificate from a Chartered Accountant to the effect that the terms of the offer document are in compliance with these instructions shall also be submitted along with the application. The amounts raised through PNCPS shall comply with the following terms and conditions to qualify for inclusion as Tier I capital.</p>  <p class="head">2. Terms of Issue</p>  <p class="head">2.1 Limits</p>  <p>The outstanding amount of PNCPS and Perpetual Debt Instruments (PDI) along with outstanding Innovative Perpetual Debt Instruments (IPDI) shall not exceed 35 per cent of total Tier I capital at any point of time. The above limit will be based on the amount of Tier I capital after deduction of goodwill and other intangible assets, but before deduction of equity investment in subsidiaries, if any. PNCPS issued in excess of the overall ceiling of 35 per cent, shall be eligible for inclusion under Upper Tier II capital, subject to limits prescribed for Tier II capital. However, investors' rights and obligations would remain unchanged.</p>  <p class="head">2.2 Amount</p>  <p>The amount of PNCPS to be raised shall be decided by the Board of Directors of banks.</p>  <p class="head">2.3 Maturity</p>  <p>The PNCPS shall be perpetual.</p>  <p class="head">2.4 Options</p>  <p>a. PNCPS shall not be issued with a 'put option' or 'step up option'.</p>  <p>b. PNCPS may be issued with a call option, subject to following conditions:</p>  <ol type="i">    <li>      <p>The call option on the instrument is permissible after the instrument has run for at least ten years; and</p>    </li>    <li>      <p>Call option shall be exercised only with the prior approval of Department of Regulation (DoR), RBI. While considering the proposals received from banks for exercising the call option, the RBI would, among other things, take into consideration the bank’s CRAR position both at the time of exercise of the call option and after exercise of the call option. </p>    </li>    </ol>  <p class="head">2.5 Classification in the Balance Sheet</p>  <p>These instruments shall be classified as 'Capital' and shown separately in the Balance Sheet.</p>  <p class="head">2.6 Dividend</p>  <p>The rate of dividend payable to the investors will be a fixed rate or a floating rate referenced to a market determined rupee interest benchmark rate.</p>  <p class="head">2.7 Payment of Dividend</p>  <p>2.7.1 The payment of dividend by the bank shall be subject to availability of distributable surplus out of current year’s profits, and if:</p>  <ol start="1" type="i">    <li>      <p>the CRAR is above the minimum regulatory requirement prescribed by RBI</p>    </li>    <li>      <p>the impact of such payment does not result in bank's CRAR falling below or remaining below the minimum regulatory requirement prescribed by RBI</p>    </li>    <li>      <p>the balance sheet as at the end of the previous year does not show any accumulated loss</p>    </li>    </ol>  <p>2.7.2 The dividend shall <u>not</u> be cumulative, i.e., dividend missed in a year shall not be paid in subsequent years even if adequate profit is available and the level of CRAR conforms to the regulatory minimum. When dividend is paid at a rate lesser than the prescribed rate, the unpaid amount will not be paid in future years, even if adequate profit is available and the level of CRAR conforms to the regulatory minimum.</p>  <p>2.7.3 All instances of non-payment of dividend / payment of dividend at a rate less than that specified should be reported by the issuing UCB to the concerned RO of Department of Supervision (DoS), RBI.</p>  <p class="head">2.8 Seniority of Claim</p>  <p>The claims of the investors in PNCPS shall be senior to the claims of investors in equity shares and subordinated to the claims of all other creditors and the depositors.</p>  <p class="head">2.9 Voting Rights</p>  <p>The investors in PNCPS shall not be eligible for any voting rights.</p>  <p class="head">2.10 Discount</p>  <p>The PNCPS shall not be subjected to a progressive discount for capital adequacy purposes since these are perpetual.</p>  <p class="head">2.11 Other Conditions</p>  <p>2.11.1 PNCPS shall be fully paid-up, unsecured, and free of any restrictive clauses.</p>  <p>2.11.2 UCBs shall also comply with the terms and conditions, if any, stipulated by other regulatory authorities in regard to issue of the PNCPS, provided they are not in conflict with the terms and conditions specified in these guidelines. Any instance of conflict shall be brought to the notice of DoR of RBI for seeking confirmation of the eligibility of the instrument for inclusion in Tier I capital.</p>  <p class="head">2.12 Compliance with Reserve Requirements</p>  <p>2.12.1 The total amount raised by the bank by issue of PNCPS shall not be reckoned as liability for calculation of net demand and time liabilities for the purpose of reserve requirements and, as such, will not attract CRR / SLR requirements.</p>  <p>2.12.2 However, the amount collected from members / prospective investors and held pending allotment of the PNCPS, shall be reckoned as liability for the purpose of calculating the net demand and time liabilities and shall, accordingly, attract reserve requirements. Such amounts shall not be reckoned for calculation of capital funds.</p>  <p class="head">2.13 Reporting Requirements</p>  <p>UCBs issuing PNCPS shall submit a report to the concerned RO of DoS, RBI, giving details of the capital raised, including the terms and conditions of issue together with a copy of the Prospectus / Offer Document, soon after the issue is completed.</p>  <p class="head">2.14 Investments in PNCPS and Advances for Purchase of PNCPS</p>  <p>UCBs shall not grant any loan or advance to any person for purchasing their own PNCPS or the PNCPS of other banks. Further, UCBs shall not invest in PNCPS of other banks and shall not grant advances against the security of the PNCPS issued by them or other banks.</p>  <p class="head">B. Perpetual Cumulative Preference Shares (PCPS) / Redeemable Non-Cumulative Preference Shares (RNCPS) / Redeemable Cumulative Preference Shares (RCPS) for inclusion in Upper Tier II capital</p>  <p>UCBs are permitted to issue Perpetual Cumulative Preference Shares (PCPS) / Redeemable Non-Cumulative Preference Shares (RNCPS) / Redeemable Cumulative Preference Shares (RCPS), at face value, to their members or any other person residing within their area of operation, with the prior approval of the RBI. The UCBs shall submit the application seeking permission, together with the Prospectus / Offer Document / Information Memorandum to the concerned Regional Office (RO) of the RBI. A certificate from a Chartered Accountant to the effect that the terms of the offer document are in compliance with these instructions shall also be submitted along with the application. These three instruments, collectively referred to as Tier II preference shares, shall comply with the following terms and conditions, to qualify for inclusion as Upper Tier II capital.</p>  <p class="head">2. Terms of issue</p>  <p class="head">2.1 Limits</p>  <p>The outstanding amount of these instruments along with other components of Tier II capital shall not exceed 100 per cent of Tier I capital at any point of time. The above limit shall be based on the amount of Tier I capital after deduction of goodwill and other intangible assets, but before deduction of equity investment in subsidiaries, if any.</p>  <p class="head">2.2 Amount</p>  <p>The amount to be raised may be decided by the Board of Directors of banks.</p>  <p class="head">2.3 Maturity</p>  <p>The Tier II preference shares could be either perpetual (PCPS) or dated (RNCPS and RCPS) instruments with a minimum maturity of 10 years.</p>  <p class="head">2.4 Options</p>  <p>2.4.1 These instruments shall not be issued with a 'put option' or 'step up option'.</p>  <p>2.4.2 These instruments may be issued with a call option, subject to following conditions:</p>  <ol type="a">    <li>      <p>The call option on the instrument is permissible after the instrument has run for at least ten years; and</p>    </li>    <li>      <p>Call option shall be exercised only with the prior approval of DoR, RBI. While considering the proposals received from banks for exercising the call option, the RBI would, among other things, take into consideration the bank's CRAR position both at the time of exercise of the call option and after exercise of the call option. </p>    </li>    </ol>  <p class="head">2.5 Classification in the Balance Sheet</p>  <p>These instruments will be classified as 'Borrowings' and shown separately in the Balance sheet.</p>  <p class="head">2.6 Coupon</p>  <p>The coupon payable to the investors may be either at a fixed rate or at a floating rate referenced to a market determined rupee interest benchmark rate.</p>  <p class="head">2.7 Payment of Coupon</p>  <p>2.7.1 The coupon payable on these instruments will be treated as interest and accordingly debited to P& L Account. However, it will be payable only if:</p>  <ol type="a">    <li>      <p>the bank’s CRAR is above the minimum regulatory requirement prescribed by RBI</p>    </li>    <li>      <p>the impact of such payment does not result in bank’s CRAR falling below or remaining below the minimum regulatory requirement.</p>    </li>    <li>      <p>the bank should not have a net loss. For this purpose, the net loss is defined as either (i) the accumulated loss at the end of the previous financial year or (ii) the loss incurred during the current financial year. </p>    </li>    </ol>  <p>2.7.2 In the case of PCPS and RCPS, the unpaid / partly unpaid coupon will be treated as a liability. The interest amount due and remaining unpaid may be allowed to be paid in later years subject to the bank complying with the above requirements.</p>  <p>2.7.3 In the case of RNCPS, deferred coupon will not be paid in future years, even if adequate profit is available and the level of CRAR conforms to the regulatory minimum. The bank can however pay a coupon at a rate lesser than the specified rate, if adequate profit is available and the level of CRAR conforms to the regulatory minimum, subject to conformity with para 2.7.1.</p>  <p>2.7.4 All instances of non-payment of interest or payment of interest at a rate lesser than the specified rate should be reported by the issuing UCB to the concerned RO of DoS, RBI.</p>  <p class="head">2.8 Redemption / Repayment of Redeemable Tier II Preference Shares</p>  <p>RNCPS and RCPS shall not be redeemable at the initiative of the holder. Redemption of these instruments at maturity shall be made only with the prior approval of the DoR, RBI subject, inter alia, to the following conditions:</p>  <ol type="a">    <li>      <p>the bank’s CRAR is above the minimum regulatory requirement prescribed by RBI</p>    </li>    <li>      <p>the impact of such payment does not result in bank’s CRAR falling below or remaining below the minimum regulatory requirement. </p>    </li>    </ol>  <p class="head">2.9 Seniority of Claim</p>  <p>The claims of the investors in these instruments shall be senior to the claims of investors in instruments eligible for inclusion in Tier I capital and subordinate to the claims of all other creditors including those in lower Tier II capital and the depositors. Amongst the investors of various instruments included in Upper Tier II capital, the claims shall rank pari passu with each other.</p>  <p class="head">2.10 Voting Rights</p>  <p>The investors in Tier II preference shares shall not be eligible for any voting rights.</p>  <p class="head">2.11 Progressive Discount for the purpose of computing CRAR</p>  <p>The Redeemable Preference Shares (both cumulative and non-cumulative) shall be subjected to progressive discount for capital adequacy purposes over the last five years of their tenor, as under:</p>  <table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">    <tr class="head">      <td width="66%" align="center">Remaining Maturity of Instruments</td>      <td width="34%" align="center">Rate of Discount (%)</td>    </tr>    <tr>      <td>Less than one year</td>      <td align="center">100</td>    </tr>    <tr>      <td>One year and more but less than two years</td>      <td align="center">80</td>    </tr>    <tr>      <td>Two years and more but less than three years</td>      <td align="center">60</td>    </tr>    <tr>      <td>Three years and more but less than four years</td>      <td align="center">40</td>    </tr>    <tr>      <td>Four years and more but less than five years</td>      <td align="center">20</td>    </tr>  </table>  <p class="head">2.12 Other Conditions</p>  <p>2.12.1 The Tier II preference shares shall be fully paid-up, unsecured, and free of any restrictive clauses.</p>  <p>2.12.2 UCBs shall also comply with the terms and conditions, if any, stipulated by other regulatory authorities in regard to issue of the Tier II preference shares, provided they are not in conflict with any terms and conditions specified in these guidelines. Any instance of conflict shall be brought to the notice of DoR of RBI for seeking confirmation of the eligibility of the instrument for inclusion in Tier II capital.</p>  <p class="head">2.13 Compliance with Reserve Requirements</p>  <p>2.13.1 The total amount raised by a bank through the issue of these instruments shall be reckoned as liability for the calculation of net demand and time liabilities for the purpose of reserve requirements and, as such, will attract CRR / SLR requirements.</p>  <p>2.13.2 The amount collected from members / prospective investors and held pending allotment shall not be reckoned for calculation of capital funds until the allotment process is over.</p>  <p class="head">2.14 Reporting Requirements</p>  <p>UCBs issuing these instruments shall submit a report to the concerned RO of DoS, RBI, giving details of the capital raised, including the terms and conditions of issue together with a copy of the Prospectus / Offer Document soon after the issue is completed.</p>  <p class="head">2.15 Investments in Tier II preference shares and advances for purchase of Tier II preference shares</p>  <p>UCBs shall not grant any loan or advance to any person for purchasing their own Tier II preference shares or Tier II preference shares of other banks. UCBs shall not invest in Tier II preference shares issued by other banks and shall not grant advances against the security of Tier II preference shares issued by them or other banks.</p><hr>  <p class="head" align="right"><a id="A_4"></a>Annex 4</p>  <p class="head" align="center">Guidelines on issuance of Debt Capital Instruments</p>  <p class="head">A. Perpetual Debt Instrument (PDI) eligible for inclusion in Tier I Capital</p>  <p>UCBs may issue Perpetual Debt Instruments (PDI) as bonds or debentures to their members or any other person residing within their area of operation, with the prior approval of RBI. The UCBs shall submit the application seeking permission, together with the Prospectus / Offer Document / Information Memorandum to the concerned Regional Office (RO) of the RBI. A certificate from a Chartered Accountant to the effect that the terms of the offer document are in compliance with these instructions shall also be submitted along with the application. PDI can also be issued through conversion of a portion of existing deposits of the Institutional Depositors as a part of revival plan / financial reconstruction of the UCB with consent of depositors as per applicable regulatory instructions. The amounts raised through PDI shall comply with the following terms and conditions to qualify for inclusion as Tier I capital.</p>  <p class="head">2. Terms of Issue</p>  <p class="head">2.1 Limit</p>  <ol type="i">    <li>      <p>The amount of PDI reckoned for Tier I capital shall not exceed 15 per cent of total Tier I capital<sup data-toggle="tooltip" title="Reference is invited to para 2.1 of Annex 3 as per which the outstanding amount of PNCPS and Perpetual Debt Instruments (PDI) along with outstanding Innovative Perpetual Debt Instruments (IPDI) shall not exceed 35 per cent of total Tier-I capital at any point of time"><a href="#F8" class="links">8</a></sup>. The outstanding Innovative Perpetual Debt Instruments (IPDI)<sup data-toggle="tooltip" title="Issued in terms of circular UCB.PCB.Cir.No.39/09.16.900/08-09 dated January 23, 2009 on Financial Restructuring of UCBs."><a href="#F9" class="links">9</a></sup> shall also be covered in the aforementioned ceiling of 15 per cent and reckoned for capital purposes as hitherto. PDI in excess of the above limits shall be eligible for inclusion under Tier II capital, subject to the limits prescribed for Tier II capital. However, investors' rights and obligations would remain unchanged.</p>    </li>    <li>      <p>The aforesaid ceiling of 15 per cent for PDI can be exceeded with prior RBI approval, if PDI are issued as part of revival plan / financial reconstruction of UCBs.</p>    </li>    <li>      <p>The eligible amount shall be computed with reference to the amount of Tier I capital as on March 31 of the previous year, after deduction of goodwill, DTA and other intangible assets, but before deduction of equity investment in subsidiaries, if any. </p>    </li>  </ol>  <p class="head">2.2 Amount</p>  <p>The amount of PDI to be raised may be decided by the Board of Directors of banks.</p>  <p class="head">2.3 Maturity</p>  <p>These instruments shall be perpetual.</p>  <p class="head">2.4 Options</p>  <p>2.4.1 The PDI shall not be issued with a 'put option' or ‘step-up’ option.</p>  <p>2.4.2 However, PDI may be issued with a call option subject to following conditions:</p>  <ol type="a">    <li>      <p>The call option on the instrument is permissible after the instrument has run for at least ten years; and</p>    </li>    <li>      <p>Call option shall be exercised only with the prior approval of Department of Regulation (DoR), RBI. While considering the proposals received from banks for exercising the call option, the RBI would, among other things, take into consideration the bank’s CRAR position both at the time of exercise of the call option and after exercise of the call option.</p>    </li>    </ol>  <p class="head">2.5 Classification</p>  <p>PDI shall be classified as 'Borrowings' and shown separately in the Balance Sheet.</p>  <p class="head">2.6 Rate of interest</p>  <p>The interest payable to the investors may be either at a fixed rate or at a floating rate referenced to a market determined rupee interest benchmark rate.</p>  <p class="head">2.7 Lock-in-Clause</p>  <p>2.7.1 PDI shall be subjected to a lock-in-clause in terms of which the issuing bank shall not be liable to pay interest, if</p>  <ol type="i">    <li>      <p>the bank's CRAR is below the minimum regulatory requirement prescribed by RBI; or</p>    </li>    <li>      <p>the impact of such payment results in bank's CRAR falling below or remaining below the minimum regulatory requirement prescribed by RBI;</p>    </li>    </ol>  <p>2.7.2 However, UCBs may pay interest with the prior approval of the DoR, RBI when the impact of such payment may result in net loss or increase the net loss, provided the CRAR meets the regulatory norm. For this purpose, net loss is defined as either (i) the accumulated loss at the end of the previous financial year or (ii) the loss incurred during the current financial year.</p>  <p>2.7.3 The interest shall <u>not</u> be cumulative.</p>  <p>2.7.4 All instances of invocation of the lock-in-clause should be reported by the issuing UCB to the concerned RO of DoS, RBI.</p>  <p class="head">2.8 Seniority of claim</p>  <p>The claims of the investors of PDI shall be superior to the claims of investors in equity shares and PNCPS but subordinated to the claims of all other creditors and the depositors. Among investors in PDI and outstanding Innovative Perpetual Debt Instruments (IPDI<sup data-toggle="tooltip" title="IPDI issued in terms of circular no.UBD.PCB.Cir.No.39/09.16.900/08-09 on ‘Financial restructuring of UCBs’ dated January 23, 2009."><a href="#F10" class="links">10</a></sup>), the claims shall rank pari passu with each other.</p>  <p class="head">2.9 Discount</p>  <p>The PDI shall not be subjected to a progressive discount for capital adequacy purposes since these are perpetual.</p>  <p class="head">2.10 Other conditions</p>  <p>2.10.1 PDI shall be fully paid-up, unsecured and free of any restrictive clauses.</p>  <p>2.10.2 UCBs shall also comply with the terms and conditions, if any, stipulated by other regulatory authorities in regard to issue of the PDI, provided they are not in conflict with the terms and conditions specified in these guidelines. Any instance of conflict shall be brought to the notice of the DoR of RBI for seeking confirmation of the eligibility of the instrument for inclusion in Tier I capital.</p>  <p class="head">2.11 Compliance with Reserve Requirements</p>  <p>The total amount raised by a UCB through the issue of PDI shall not be reckoned as liability for calculation of net demand and time liabilities for the purpose of reserve requirements and, as such, will not attract CRR / SLR requirements. However, the amount collected from members / prospective investors and pending issue of PDI, shall be reckoned as liability for the purpose of calculating the net demand and time liabilities and shall, accordingly, attract reserve requirements. Such amounts pending issue of PDI, shall not be reckoned for calculation of capital funds.</p>  <p class="head">2.12 Reporting Requirements</p>  <p>UCBs issuing PDI shall submit a report to the concerned RO of DoS, RBI giving details of the amount raised, including the terms and conditions of issue together with a copy of the Prospectus / Offer Document, soon after the issue is completed.</p>  <p class="head">2.13 Investments in PDI and Advances for Purchase of PDI</p>  <p>UCBs shall not grant any loan or advance to any person for purchasing their PDI or PDI of other banks. UCBs shall not invest in PDI issued by other banks (except when the PDI are issued as a part of revival plan of a UCB as mentioned in Para 1 above) and shall not grant advances against the security of PDI issued by them or other banks.</p>  <p class="head">B. Long Term Subordinated Bonds (LTSB) eligible for inclusion in Lower Tier II capital</p>  <p>UCBs are permitted to issue LTSB to their members, or any other person residing within their area of operation. The amounts raised through LTSB shall comply with the following terms and conditions to be eligible for inclusion in Lower Tier II capital.</p>  <p class="head">2. Terms of Issue</p>  <p class="head">2.1 Eligibility</p>  <p>2.1.1 Banks fulfilling the following criteria as per their latest audited financial statements are permitted to issue LTSB without seeking specific permission of RBI in this regard:</p>  <ol type="i">    <li>      <p>The CRAR shall be at least one percentage point above the minimum CRAR applicable to a UCB.</p>    </li>    <li>      <p>Gross NPA less than 7% and net NPA not more than 3%.</p>    </li>    <li>      <p>Net profit for at least three out of the preceding four years subject to the bank not having incurred net loss in the immediate preceding year.</p>    </li>    <li>      <p>No default in maintenance of CRR/SLR during the preceding year.</p>    </li>    <li>      <p>The bank has at least two professional directors on its Board.</p>    </li>    <li>      <p>Core Banking Solution (CBS) fully implemented.</p>    </li>    <li>      <p>No monetary penalty has been imposed on the bank for violation of RBI directives / guidelines during the two financial years preceding the year in which the LTSB are being issued.</p>    </li>    </ol>  <p>2.1.2 Prior permission of the RBI is required for banks which do not comply with the above criteria. The UCBs shall submit the application seeking permission, together with the Prospectus / Offer Document / Information Memorandum to the concerned Regional Office of the RBI. A certificate from a Chartered Accountant to the effect that the terms of the offer document are in compliance with these instructions shall also be submitted along with the application.</p>  <p class="head">2.2 Limit</p>  <p>The amount of LTSB eligible to be reckoned as Tier II capital shall be limited to 50 per cent of total Tier I capital. The outstanding Long Term (Sub-ordinated) Deposits (LTDs) shall also be covered in the aforementioned ceiling of 50 per cent and reckoned for capital purposes as hitherto. These instruments, together with other components of Tier II capital shall not exceed 100 per cent of Tier I capital. The aforementioned limit shall be based on the amount of Tier I capital after deduction of goodwill and other intangible assets, but before the deduction of equity investments in subsidiaries, if any.</p>  <p class="head">2.3 Amount</p>  <p>The amount to be raised may be decided by the Board of Directors of banks.</p>  <p class="head">2.4 Maturity</p>  <p>LTSB shall be issued with a minimum maturity of ten years.</p>  <p class="head">2.5 Options</p>  <p>2.5.1 The LTSB shall not be issued with a 'put option' or ‘step-up’ option.</p>  <p>2.5.2 However, LTSB may be issued with a call option subject to following conditions:</p>  <ol type="a">    <li>      <p>The call option on the instrument is permissible after the instrument has run for at least ten years; and</p>    </li>    <li>      <p>Call option shall be exercised only with the prior approval of Department of Regulation (DoR), RBI. While considering the proposals received from banks for exercising the call option, the RBI would, among other things, take into consideration the bank’s CRAR position both at the time of exercise of the call option and after exercise of the call option. </p>    </li>    </ol>  <p class="head">2.6 Classification in the Balance Sheet</p>  <p>These instruments will be classified as 'Borrowings' and shown separately in the Balance Sheet.</p>  <p class="head">2.7 Interest Rate</p>  <p>LTSB may bear a fixed rate of interest or a floating rate of interest referenced to a market determined rupee interest benchmark rate.</p>  <p class="head">2.8 Redemption / Repayment</p>  <p>Redemption / repayment at maturity shall be made only with the prior approval of the DoR, RBI.</p>  <p class="head">2.9 Seniority of Claims</p>  <p>LTSB will be subordinated to the claims of depositors and other creditors but would rank senior to the claims of investors in instruments eligible for inclusion in Tier I capital and holders of preference shares (both Tier I & Tier II). Among investors of instruments included in Lower Tier II capital (i.e., including outstanding LTDs, if any), the claims shall rank pari passu with each other.</p>  <p class="head">2.10 Progressive Discount</p>  <p>These Bonds shall be subjected to a progressive discount for capital adequacy purposes in the last five years of their tenor, as under:</p>  <table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">    <tr class="head">      <td width="66%" align="center">Remaining Maturity of Instruments</td>      <td width="34%" align="center">Rate of Discount (%)</td>    </tr>    <tr>      <td>Less than one year</td>      <td align="center">100</td>    </tr>    <tr>      <td>One year and more but less than two years</td>      <td align="center">80</td>    </tr>    <tr>      <td>Two years and more but less than three years</td>      <td align="center">60</td>    </tr>    <tr>      <td>Three years and more but less than four years</td>      <td align="center">40</td>    </tr>    <tr>      <td>Four years and more but less than five years</td>      <td align="center">20</td>    </tr>  </table>  <p class="head">2.11 Other conditions</p>  <p>2.11.1 LTSB shall be fully paid-up, unsecured, and free of any restrictive clauses.</p>  <p>2.11.2 UCBs shall also comply with the terms and conditions, if any, stipulated by other regulatory authorities in regard to issue of the LTSB, provided they are not in conflict with the terms and conditions specified in these guidelines. Any instance of conflict shall be brought to the notice of the DoR of RBI for seeking confirmation of the eligibility of the instrument for inclusion in Tier II capital.</p>  <p class="head">2.12 Reserve Requirement</p>  <p>The total amount raised through the issue of LTSB shall be reckoned as liability for the calculation of net demand and time liabilities for the purpose of reserve requirements and, as such, will attract CRR / SLR requirements. The amount collected by the UCB from members / prospective investors and held by it pending issue of LTSB, shall not be reckoned for calculation of capital funds.</p>  <p class="head">2.13 Reporting Requirements</p>  <p>UCBs issuing LTSB shall submit a report to the concerned RO of DoS, RBI giving details of the amount raised, including the terms and conditions of issue together with a copy of Prospectus / Offer Document, soon after the issue is completed.</p>  <p class="head">2.14 Investments in LTSB and advances for purchase of LTSB</p>  <p>UCBs shall not grant any loan or advance to any person for purchasing their LTSB or LTSB of other banks. UCBs shall not invest in LTSB issued by other banks nor shall they grant advances against the security of LTSB issued by them or other banks.</p><hr>  <p class="head" align="right"><a id="APP"></a>Appendix</p>  <p class="head" align="center">List of Circulars consolidated in the Master Circular</p>  <table width="95%" border="0" align="center" cellpadding="0" cellspacing="1" class="tablebg">    <tr class="head">      <td width="6%" align="center">Sl No.</td>      <td width="34%" align="center">Circular</td>      <td width="11%" align="center">Date</td>      <td width="49%" align="center">Subject</td>    </tr>    <tr>      <td align="center">1</td>      <td><a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12716&Mode=0" target="_blank" class="links">DOR.CAP.REC.No.27/09.18.201/2024-25</a></td>      <td align="center">02.08.2024</td>      <td>Prudential Treatment of Bad and Doubtful Debt Reserve by Co-operative Banks</td>    </tr>    <tr>      <td align="center">2</td>      <td><a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12714&Mode=0" target="_blank" class="links">DOR.CAP.REC.No.30/09.18.201/2024-25</a></td>      <td align="center">30.07.2024</td>      <td>Guidelines on treatment of Dividend Equalisation Fund (DEF) – Primary (Urban) Co-operative Banks (UCBs)</td>    </tr>    <tr>      <td align="center">3</td>      <td><a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12418&Mode=0" target="_blank" class="links">DOR.CAP.REC.No.86/09.18.201/2022-23</a></td>      <td align="center">01.12.2022</td>      <td>Revised Regulatory Framework for Urban Co-operative Banks (UCBs) – Net Worth and Capital Adequacy</td>    </tr>    <tr>      <td align="center">4</td>      <td><a href="https://www.rbi.org.in/scripts/NotificationUser.aspx?Id=12384&Mode=0" target="_blank" class="links">DOR.STR.REC.67/21.06.201/2022-23</a></td>      <td align="center">07.09.2022</td>      <td>Review of Prudential Norms – Risk Weights for Exposures guaranteed by Credit Guarantee Schemes (CGS)</td>    </tr>    <tr>      <td align="center">5</td>      <td>Part D of Annex of <a href="https://rbi.org.in/scripts/FS_Notification.aspx?Id=12376&fn=2755&Mode=0" target="_blank" class="links">DOR.MRG.REC.64/00-00-005/2022-23</a></td>      <td align="center">11.08.2022</td>      <td>Bilateral Netting of Qualified Financial Contracts - Amendments to Prudential Guidelines</td>    </tr>    <tr>      <td align="center">6</td>      <td>Annex 2 of <a href="https://rbi.org.in/scripts/FS_Notification.aspx?Id=12262&fn=2755&Mode=0" target="_blank" class="links">DOR.CAP.REC.No.97/21.06.201/2021-22</a></td>      <td align="center">31.03.2022</td>      <td>Bilateral Netting of Qualified Financial Contracts - Amendments to Prudential Guidelines</td>    </tr>    <tr>      <td align="center">7</td>      <td><a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12251&Mode=0" target="_blank" class="links">DOR.CAP.REC.92/09.18.201/2021-22</a></td>      <td align="center">08.03.2022</td>      <td>Issue and regulation of share capital and securities - Primary (Urban) Co-operative Banks.</td>    </tr>    <tr>      <td align="center">8</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=8913&Mode=0" target="_blank" class="links">UBD.CO.BPD.PCB.Cir.No.67/09.50.001/2013-14</a></td>      <td align="center">30.05.2014</td>      <td>Deferred Tax Liability on Special Reserve created under Section 36(1) (viii) of the Income Tax Act, 1961 -UCBs.</td>    </tr>    <tr>      <td align="center">9</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=8713&Mode=0" target="_blank" class="links">UBD BPD(PCB) Cir No. 45/13.05.000/2013-14</a></td>      <td align="center">28.01.2014</td>      <td>Housing Sector: New Sub- Sector CRE-Residential Housing (CRE-RH) Segment within CRE Sector & Rationalisation of Provisioning and Risk Weight.</td>    </tr>    <tr>      <td align="center">10</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=8572&Mode=0" target="_blank" class="links">UBD. BPD PCB Cir No. 37/09.22.010/2013-14</a></td>      <td align="center">14.11.2013</td>      <td>Advances guaranteed by Credit Risk Guarantee Fund Trust for Low Income Housing (CRGFTLIH) – Risk Weights and Provisioning.</td>    </tr>    <tr>      <td align="center">11</td>      <td>Para 2 of <a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=8025&Mode=0" target="_blank" class="links">UBP BPD (SCB) Cir. No.4/16.20.000/2012-13</a></td>      <td align="center">10.06.2013</td>      <td>Ready Forward Contracts in Corporate Debt Securities.</td>    </tr>    <tr>      <td align="center">12</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=5495&Mode=0" target="_blank" class="links">UBD.BPD.(PCB)Cir.No.42/09.11.600/2009-10</a></td>      <td align="center">08.02.2010</td>      <td>Prudential guidelines on capital charge for market risks.</td>    </tr>    <tr>      <td align="center">13</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=5419&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.30/09.14.000/2008-09</a></td>      <td align="center">16.12.2009</td>      <td>Prudential treatment of different types of provisions in respect of loan portfolios.</td>    </tr>    <tr>      <td align="center">14</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=5057&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.73/09.14.000/2008-09</a></td>      <td align="center">29.06.2009</td>      <td>Prudential treatment of different types of provisions in respect of loan portfolios.</td>    </tr>    <tr>      <td align="center">15</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=4674&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.29/09.11.600/2008-09</a></td>      <td align="center">01.12.2008</td>      <td>Review of Prudential Norms- Provision for Standard Assets & Risk weights for exposures to commercial real estate and NBFCs.</td>    </tr>    <tr>      <td align="center">16</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=4235&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.53/13.05.000/07-08</a></td>      <td align="center">16.06.08</td>      <td>Claims secured by residential property - change in limits for risk weights.</td>    </tr>    <tr>      <td align="center">17</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=4032&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.31/09.11.600/07-08</a></td>      <td align="center">29.01.08</td>      <td>Prudential Norms for Capital Adequacy - Risk Weight for Educational Loans.</td>    </tr>    <tr>      <td align="center">18</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=3481&Mode=0" target="_blank" class="links">UBD.PCB.CirNo.40/13.05.000/2006-07</a></td>      <td align="center">04.05.07</td>      <td>Annual Policy Statement for the Year 2007-08 - residential housing loans- reduction of risk weight.</td>    </tr>    <tr>      <td align="center">19</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=3470&Mode=0" target="_blank" class="links">UBD(PCB).Cir.No.39/13.05.000</a></td>      <td align="center">30.04.07</td>      <td>Annual Policy Statement for 2007-08-Loans against Gold / Silver ornaments-reduction of risk weight.</td>    </tr>    <tr>      <td align="center">20</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=3284&Mode=0" target="_blank" class="links">UBD(PCB).Cir.No.30/09.11.600/06-07</a></td>      <td align="center">19.02.07</td>      <td>Third Quarter Review of the Annual Statement on Monetary Policy for the year 2006-07 - Provisioning requirement for Standard Assets.</td>    </tr>    <tr>      <td align="center">21</td>      <td>Para 1 (c) of <a href="https://rbi.org.in/scripts/FS_Notification.aspx?Id=3068&fn=2755&Mode=0" target="_blank" class="links">UBD.BPD.Cir.No:7/09.29.000/2006-07</a></td>      <td align="center">18.08.06</td>      <td>'When Issued' Transactions in Central Government Securities - Accounting and Related Aspects.</td>    </tr>    <tr>      <td align="center">22</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2883&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.55/09.11.600/05-06</a></td>      <td align="center">01.06.06</td>      <td>Annual Policy Statement for the Year 2006-07 - Risk weight on exposure to commercial real estate.</td>    </tr>    <tr>      <td align="center">23</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2830&Mode=0" target="_blank" class="links">UBD.PCB).BPD.Cir.No.46/13.05.000/2005-06</a></td>      <td align="center">19.04.06</td>      <td>Bills Discounted under LC - Risk Weight and Exposure Norms.</td>    </tr>    <tr>      <td align="center">24</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2423&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.9/13.05.00/05-06</a></td>      <td align="center">09.08.05</td>      <td>Risk Weight for Capital Market Exposure.</td>    </tr>    <tr>      <td align="center">25</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2422&Mode=0" target="_blank" class="links">UBD.PCB.Cir.No.8/09.116.00/05-06</a></td>      <td align="center">09.08.05</td>      <td>Prudential Norms on Capital Adequacy - Risk Weight on Housing Finance / commercial real estate exposures.</td>    </tr>    <tr>      <td align="center">26</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2196&Mode=0" target="_blank" class="links">UBD.DS.Cir/No.44/13.05.00/04-05</a></td>      <td align="center">15.04.05</td>      <td>Maximum Limit on Advances - Exposures to individuals / group of borrowers.</td>    </tr>    <tr>      <td align="center">27</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2091&Mode=0" target="_blank" class="links">UBD.PCB.Cir.33/09.116.00/2004</a></td>      <td align="center">05.01.05</td>      <td>Risk Weight on Housing Finance and Consumer Credit.</td>    </tr>    <tr>      <td align="center">28</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=2001&Mode=0" target="_blank" class="links">UBD.PCB.Cir.26/09.140.00/2004-05</a></td>      <td align="center">01.11.04</td>      <td>Prudential Norms - State Government Guaranteed Exposures.</td>    </tr>    <tr>      <td align="center">29</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=1660&Mode=0" target="_blank" class="links">UBD.No.BPD.PCB.Cir.52/09.116.00/2003-04</a></td>      <td align="center">15.06.04</td>      <td>Risk Weight for Exposure to Public Financial Institutions (PFIs).</td>    </tr>    <tr>      <td align="center">30</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=10878&Mode=0" target="_blank" class="links">UBD.No.BPD.PCB.Cir.37/13.05.00/03-04</a></td>      <td align="center">16.03.04</td>      <td>Discounting / Rediscounting of Bills by Banks.</td>    </tr>    <tr>      <td align="center">31</td>      <td><a href="https://rbi.org.in/scripts/NotificationUser.aspx?Id=1487&Mode=0" target="_blank" class="links">UBD.No.BPD.PCB.Cir.34/13.05.00/2003-04</a></td>      <td align="center">11.02.04</td>      <td>Maximum Limit on Advances - Limits on Credit Exposure to Individual / Group of borrowers computation of capital funds.</td>    </tr>    <tr>      <td align="center">32</td>      <td>UBD.No.POT.PCB.CIR.18/09.22.01/2002- 03</td>      <td align="center">30.09.02</td>      <td>Risk Weight on Housing Finance.</td>    </tr>    <tr>      <td align="center">33</td>      <td>UBD.No.POT.PCB.Cir.No.45/09.116.00/ 2000</td>      <td align="center">25.04.01</td>      <td>Application of Capital Adequacy Norms to Urban (Primary) Co-operative Banks.</td>    </tr>    <tr>      <td align="center">34</td>      <td>ACD.Plan.1310/PR.36-72/3</td>      <td align="center">24.11.1972</td>      <td>Share Linking to Borrowings in Primary (Urban) Co-operative Banks</td>    </tr>  </table><hr>  <p class="footnote"><a id="F1"></a><sup>1</sup> Tier 1 - All unit UCBs and salary earners’ UCBs (irrespective of deposit size), and all other UCBs having deposits up to ₹100 crore;<br>Tier 2 - UCBs with deposits more than ₹100 crore and up to ₹1000 crore;<br>Tier 3 - UCBs with deposits more than ₹1000 crore and up to ₹10,000 crore;<br>Tier 4 - UCBs with deposits more than ₹10,000 crore</p>  <p class="footnote"><a id="F2"></a><sup>2</sup> UCBs are permitted to raise share capital, as hitherto, by way of (i) issue of shares to persons within their area of operation, in accordance with the provisions of their bye-laws, and (ii) issue of additional shares to the existing members.</p>  <p class="footnote"><a id="F3"></a><sup>3</sup> In terms of <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12714&Mode=0" target="_blank" class="links">circular DOR.CAP.REC.No.30/09.18.201/2024-25 dated July 30, 2024</a>, as a one-time measure, balances in Dividend Equalisation Fund (DEF) could be transferred to general reserves/free reserves and treated as Tier I Capital.</p>  <p class="footnote"><a id="F4"></a><sup>4</sup> Subject to the member fulfilling all the eligibility conditions for refund.</p>  <p class="footnote"><a id="F5"></a><sup>5</sup> Capital funds shall be as per audited data.</p>  <p class="footnote"><a id="F8"></a><sup>8</sup> Reference is invited to para 2.1 of <a href="#A_3" class="links">Annex 3</a> as per which the outstanding amount of PNCPS and Perpetual Debt Instruments (PDI) along with outstanding Innovative Perpetual Debt Instruments (IPDI) shall not exceed 35 per cent of total Tier-I capital at any point of time</p>  <p class="footnote"><a id="F9"></a><sup>9</sup> Issued in terms of <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=4782&Mode=0" target="_blank" class="links">circular UCB.PCB.Cir.No.39/09.16.900/08-09 dated January 23, 2009</a> on Financial Restructuring of UCBs.</p>  <p class="footnote"><a id="F10"></a><sup>10</sup> IPDI issued in terms of <a href="https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=4782&Mode=0" target="_blank" class="links">circular no.UBD.PCB.Cir.No.39/09.16.900/08-09 on ‘Financial restructuring of UCBs’ dated January 23, 2009</a>.</p></td></tr></table></td></tr></table>
+                                    </table>
+                                </div>
+                                <br />
+                                <div align="right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+</div>
+                <div class="grid_1 archives alpha">
+                    <span id="DateSettree_lbltree"><div class="grid_subtree archives alpha" id="treeYearMonth_PR"><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2026">2026</a></h2><div class="accordionContent month" id="2026"><ul class="accordionlist"><li><a href="#" id="20260" onclick='GetYearMonth("2026","0")'>All Months</a></li><li><a href="#" id="20261" onclick='GetYearMonth("2026","1")'>January</a></li><li><a href="#" id="20262" onclick='GetYearMonth("2026","2")'>February</a></li><li><a href="#" id="20263" onclick='GetYearMonth("2026","3")'>March</a></li><li><a href="#" id="20264" onclick='GetYearMonth("2026","4")'>April</a></li><li><a href="#" id="20265" onclick='GetYearMonth("2026","5")'>May</a></li><li><a href="#" id="20266" onclick='GetYearMonth("2026","6")'>June</a></li><li><a href="#" id="20267" onclick='GetYearMonth("2026","7")'>July</a></li><li><a href="#" id="20268" onclick='GetYearMonth("2026","8")'>August</a></li><li><a href="#" id="20269" onclick='GetYearMonth("2026","9")'>September</a></li><li><a href="#" id="202610" onclick='GetYearMonth("2026","10")'>October</a></li><li><a href="#" id="202611" onclick='GetYearMonth("2026","11")'>November</a></li><li><a href="#" id="202612" onclick='GetYearMonth("2026","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2025">2025</a></h2><div class="accordionContent month" id="2025"><ul class="accordionlist"><li><a href="#" id="20250" onclick='GetYearMonth("2025","0")'>All Months</a></li><li><a href="#" id="20251" onclick='GetYearMonth("2025","1")'>January</a></li><li><a href="#" id="20252" onclick='GetYearMonth("2025","2")'>February</a></li><li><a href="#" id="20253" onclick='GetYearMonth("2025","3")'>March</a></li><li><a href="#" id="20254" onclick='GetYearMonth("2025","4")'>April</a></li><li><a href="#" id="20255" onclick='GetYearMonth("2025","5")'>May</a></li><li><a href="#" id="20256" onclick='GetYearMonth("2025","6")'>June</a></li><li><a href="#" id="20257" onclick='GetYearMonth("2025","7")'>July</a></li><li><a href="#" id="20258" onclick='GetYearMonth("2025","8")'>August</a></li><li><a href="#" id="20259" onclick='GetYearMonth("2025","9")'>September</a></li><li><a href="#" id="202510" onclick='GetYearMonth("2025","10")'>October</a></li><li><a href="#" id="202511" onclick='GetYearMonth("2025","11")'>November</a></li><li><a href="#" id="202512" onclick='GetYearMonth("2025","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2024">2024</a></h2><div class="accordionContent month" id="2024"><ul class="accordionlist"><li><a href="#" id="20240" onclick='GetYearMonth("2024","0")'>All Months</a></li><li><a href="#" id="20241" onclick='GetYearMonth("2024","1")'>January</a></li><li><a href="#" id="20242" onclick='GetYearMonth("2024","2")'>February</a></li><li><a href="#" id="20243" onclick='GetYearMonth("2024","3")'>March</a></li><li><a href="#" id="20244" onclick='GetYearMonth("2024","4")'>April</a></li><li><a href="#" id="20245" onclick='GetYearMonth("2024","5")'>May</a></li><li><a href="#" id="20246" onclick='GetYearMonth("2024","6")'>June</a></li><li><a href="#" id="20247" onclick='GetYearMonth("2024","7")'>July</a></li><li><a href="#" id="20248" onclick='GetYearMonth("2024","8")'>August</a></li><li><a href="#" id="20249" onclick='GetYearMonth("2024","9")'>September</a></li><li><a href="#" id="202410" onclick='GetYearMonth("2024","10")'>October</a></li><li><a href="#" id="202411" onclick='GetYearMonth("2024","11")'>November</a></li><li><a href="#" id="202412" onclick='GetYearMonth("2024","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2023">2023</a></h2><div class="accordionContent month" id="2023"><ul class="accordionlist"><li><a href="#" id="20230" onclick='GetYearMonth("2023","0")'>All Months</a></li><li><a href="#" id="20231" onclick='GetYearMonth("2023","1")'>January</a></li><li><a href="#" id="20232" onclick='GetYearMonth("2023","2")'>February</a></li><li><a href="#" id="20233" onclick='GetYearMonth("2023","3")'>March</a></li><li><a href="#" id="20234" onclick='GetYearMonth("2023","4")'>April</a></li><li><a href="#" id="20235" onclick='GetYearMonth("2023","5")'>May</a></li><li><a href="#" id="20236" onclick='GetYearMonth("2023","6")'>June</a></li><li><a href="#" id="20237" onclick='GetYearMonth("2023","7")'>July</a></li><li><a href="#" id="20238" onclick='GetYearMonth("2023","8")'>August</a></li><li><a href="#" id="20239" onclick='GetYearMonth("2023","9")'>September</a></li><li><a href="#" id="202310" onclick='GetYearMonth("2023","10")'>October</a></li><li><a href="#" id="202311" onclick='GetYearMonth("2023","11")'>November</a></li><li><a href="#" id="202312" onclick='GetYearMonth("2023","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2022">2022</a></h2><div class="accordionContent month" id="2022"><ul class="accordionlist"><li><a href="#" id="20220" onclick='GetYearMonth("2022","0")'>All Months</a></li><li><a href="#" id="20221" onclick='GetYearMonth("2022","1")'>January</a></li><li><a href="#" id="20222" onclick='GetYearMonth("2022","2")'>February</a></li><li><a href="#" id="20223" onclick='GetYearMonth("2022","3")'>March</a></li><li><a href="#" id="20224" onclick='GetYearMonth("2022","4")'>April</a></li><li><a href="#" id="20225" onclick='GetYearMonth("2022","5")'>May</a></li><li><a href="#" id="20226" onclick='GetYearMonth("2022","6")'>June</a></li><li><a href="#" id="20227" onclick='GetYearMonth("2022","7")'>July</a></li><li><a href="#" id="20228" onclick='GetYearMonth("2022","8")'>August</a></li><li><a href="#" id="20229" onclick='GetYearMonth("2022","9")'>September</a></li><li><a href="#" id="202210" onclick='GetYearMonth("2022","10")'>October</a></li><li><a href="#" id="202211" onclick='GetYearMonth("2022","11")'>November</a></li><li><a href="#" id="202212" onclick='GetYearMonth("2022","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2021">2021</a></h2><div class="accordionContent month" id="2021"><ul class="accordionlist"><li><a href="#" id="20210" onclick='GetYearMonth("2021","0")'>All Months</a></li><li><a href="#" id="20211" onclick='GetYearMonth("2021","1")'>January</a></li><li><a href="#" id="20212" onclick='GetYearMonth("2021","2")'>February</a></li><li><a href="#" id="20213" onclick='GetYearMonth("2021","3")'>March</a></li><li><a href="#" id="20214" onclick='GetYearMonth("2021","4")'>April</a></li><li><a href="#" id="20215" onclick='GetYearMonth("2021","5")'>May</a></li><li><a href="#" id="20216" onclick='GetYearMonth("2021","6")'>June</a></li><li><a href="#" id="20217" onclick='GetYearMonth("2021","7")'>July</a></li><li><a href="#" id="20218" onclick='GetYearMonth("2021","8")'>August</a></li><li><a href="#" id="20219" onclick='GetYearMonth("2021","9")'>September</a></li><li><a href="#" id="202110" onclick='GetYearMonth("2021","10")'>October</a></li><li><a href="#" id="202111" onclick='GetYearMonth("2021","11")'>November</a></li><li><a href="#" id="202112" onclick='GetYearMonth("2021","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2020">2020</a></h2><div class="accordionContent month" id="2020"><ul class="accordionlist"><li><a href="#" id="20200" onclick='GetYearMonth("2020","0")'>All Months</a></li><li><a href="#" id="20201" onclick='GetYearMonth("2020","1")'>January</a></li><li><a href="#" id="20202" onclick='GetYearMonth("2020","2")'>February</a></li><li><a href="#" id="20203" onclick='GetYearMonth("2020","3")'>March</a></li><li><a href="#" id="20204" onclick='GetYearMonth("2020","4")'>April</a></li><li><a href="#" id="20205" onclick='GetYearMonth("2020","5")'>May</a></li><li><a href="#" id="20206" onclick='GetYearMonth("2020","6")'>June</a></li><li><a href="#" id="20207" onclick='GetYearMonth("2020","7")'>July</a></li><li><a href="#" id="20208" onclick='GetYearMonth("2020","8")'>August</a></li><li><a href="#" id="20209" onclick='GetYearMonth("2020","9")'>September</a></li><li><a href="#" id="202010" onclick='GetYearMonth("2020","10")'>October</a></li><li><a href="#" id="202011" onclick='GetYearMonth("2020","11")'>November</a></li><li><a href="#" id="202012" onclick='GetYearMonth("2020","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2019">2019</a></h2><div class="accordionContent month" id="2019"><ul class="accordionlist"><li><a href="#" id="20190" onclick='GetYearMonth("2019","0")'>All Months</a></li><li><a href="#" id="20191" onclick='GetYearMonth("2019","1")'>January</a></li><li><a href="#" id="20192" onclick='GetYearMonth("2019","2")'>February</a></li><li><a href="#" id="20193" onclick='GetYearMonth("2019","3")'>March</a></li><li><a href="#" id="20194" onclick='GetYearMonth("2019","4")'>April</a></li><li><a href="#" id="20195" onclick='GetYearMonth("2019","5")'>May</a></li><li><a href="#" id="20196" onclick='GetYearMonth("2019","6")'>June</a></li><li><a href="#" id="20197" onclick='GetYearMonth("2019","7")'>July</a></li><li><a href="#" id="20198" onclick='GetYearMonth("2019","8")'>August</a></li><li><a href="#" id="20199" onclick='GetYearMonth("2019","9")'>September</a></li><li><a href="#" id="201910" onclick='GetYearMonth("2019","10")'>October</a></li><li><a href="#" id="201911" onclick='GetYearMonth("2019","11")'>November</a></li><li><a href="#" id="201912" onclick='GetYearMonth("2019","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2018">2018</a></h2><div class="accordionContent month" id="2018"><ul class="accordionlist"><li><a href="#" id="20180" onclick='GetYearMonth("2018","0")'>All Months</a></li><li><a href="#" id="20181" onclick='GetYearMonth("2018","1")'>January</a></li><li><a href="#" id="20182" onclick='GetYearMonth("2018","2")'>February</a></li><li><a href="#" id="20183" onclick='GetYearMonth("2018","3")'>March</a></li><li><a href="#" id="20184" onclick='GetYearMonth("2018","4")'>April</a></li><li><a href="#" id="20185" onclick='GetYearMonth("2018","5")'>May</a></li><li><a href="#" id="20186" onclick='GetYearMonth("2018","6")'>June</a></li><li><a href="#" id="20187" onclick='GetYearMonth("2018","7")'>July</a></li><li><a href="#" id="20188" onclick='GetYearMonth("2018","8")'>August</a></li><li><a href="#" id="20189" onclick='GetYearMonth("2018","9")'>September</a></li><li><a href="#" id="201810" onclick='GetYearMonth("2018","10")'>October</a></li><li><a href="#" id="201811" onclick='GetYearMonth("2018","11")'>November</a></li><li><a href="#" id="201812" onclick='GetYearMonth("2018","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2017">2017</a></h2><div class="accordionContent month" id="2017"><ul class="accordionlist"><li><a href="#" id="20170" onclick='GetYearMonth("2017","0")'>All Months</a></li><li><a href="#" id="20171" onclick='GetYearMonth("2017","1")'>January</a></li><li><a href="#" id="20172" onclick='GetYearMonth("2017","2")'>February</a></li><li><a href="#" id="20173" onclick='GetYearMonth("2017","3")'>March</a></li><li><a href="#" id="20174" onclick='GetYearMonth("2017","4")'>April</a></li><li><a href="#" id="20175" onclick='GetYearMonth("2017","5")'>May</a></li><li><a href="#" id="20176" onclick='GetYearMonth("2017","6")'>June</a></li><li><a href="#" id="20177" onclick='GetYearMonth("2017","7")'>July</a></li><li><a href="#" id="20178" onclick='GetYearMonth("2017","8")'>August</a></li><li><a href="#" id="20179" onclick='GetYearMonth("2017","9")'>September</a></li><li><a href="#" id="201710" onclick='GetYearMonth("2017","10")'>October</a></li><li><a href="#" id="201711" onclick='GetYearMonth("2017","11")'>November</a></li><li><a href="#" id="201712" onclick='GetYearMonth("2017","12")'>December</a></li></ul></div><h2 class="year"><a href="javascript:void(0);" style="text-decoration:none;" id="divArchiveMain"  onclick="hideshow('divArchiveSub');" style="cursor: pointer;">Archives</a></h2><div  id="divArchiveSub" style="display: none;"><div class="grid_subtree archives alpha" id="treeYearMonth_PR"><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2016">2016</a></h2><div class="accordionContent month" id="2016"><ul class="accordionlist"><li><a href="#" id="20160" onclick='GetYearMonth("2016","0")'>All Months</a></li><li><a href="#" id="20161" onclick='GetYearMonth("2016","1")'>January</a></li><li><a href="#" id="20162" onclick='GetYearMonth("2016","2")'>February</a></li><li><a href="#" id="20163" onclick='GetYearMonth("2016","3")'>March</a></li><li><a href="#" id="20164" onclick='GetYearMonth("2016","4")'>April</a></li><li><a href="#" id="20165" onclick='GetYearMonth("2016","5")'>May</a></li><li><a href="#" id="20166" onclick='GetYearMonth("2016","6")'>June</a></li><li><a href="#" id="20167" onclick='GetYearMonth("2016","7")'>July</a></li><li><a href="#" id="20168" onclick='GetYearMonth("2016","8")'>August</a></li><li><a href="#" id="20169" onclick='GetYearMonth("2016","9")'>September</a></li><li><a href="#" id="201610" onclick='GetYearMonth("2016","10")'>October</a></li><li><a href="#" id="201611" onclick='GetYearMonth("2016","11")'>November</a></li><li><a href="#" id="201612" onclick='GetYearMonth("2016","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2015">2015</a></h2><div class="accordionContent month" id="2015"><ul class="accordionlist"><li><a href="#" id="20150" onclick='GetYearMonth("2015","0")'>All Months</a></li><li><a href="#" id="20151" onclick='GetYearMonth("2015","1")'>January</a></li><li><a href="#" id="20152" onclick='GetYearMonth("2015","2")'>February</a></li><li><a href="#" id="20153" onclick='GetYearMonth("2015","3")'>March</a></li><li><a href="#" id="20154" onclick='GetYearMonth("2015","4")'>April</a></li><li><a href="#" id="20155" onclick='GetYearMonth("2015","5")'>May</a></li><li><a href="#" id="20156" onclick='GetYearMonth("2015","6")'>June</a></li><li><a href="#" id="20157" onclick='GetYearMonth("2015","7")'>July</a></li><li><a href="#" id="20158" onclick='GetYearMonth("2015","8")'>August</a></li><li><a href="#" id="20159" onclick='GetYearMonth("2015","9")'>September</a></li><li><a href="#" id="201510" onclick='GetYearMonth("2015","10")'>October</a></li><li><a href="#" id="201511" onclick='GetYearMonth("2015","11")'>November</a></li><li><a href="#" id="201512" onclick='GetYearMonth("2015","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2014">2014</a></h2><div class="accordionContent month" id="2014"><ul class="accordionlist"><li><a href="#" id="20140" onclick='GetYearMonth("2014","0")'>All Months</a></li><li><a href="#" id="20141" onclick='GetYearMonth("2014","1")'>January</a></li><li><a href="#" id="20142" onclick='GetYearMonth("2014","2")'>February</a></li><li><a href="#" id="20143" onclick='GetYearMonth("2014","3")'>March</a></li><li><a href="#" id="20144" onclick='GetYearMonth("2014","4")'>April</a></li><li><a href="#" id="20145" onclick='GetYearMonth("2014","5")'>May</a></li><li><a href="#" id="20146" onclick='GetYearMonth("2014","6")'>June</a></li><li><a href="#" id="20147" onclick='GetYearMonth("2014","7")'>July</a></li><li><a href="#" id="20148" onclick='GetYearMonth("2014","8")'>August</a></li><li><a href="#" id="20149" onclick='GetYearMonth("2014","9")'>September</a></li><li><a href="#" id="201410" onclick='GetYearMonth("2014","10")'>October</a></li><li><a href="#" id="201411" onclick='GetYearMonth("2014","11")'>November</a></li><li><a href="#" id="201412" onclick='GetYearMonth("2014","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2013">2013</a></h2><div class="accordionContent month" id="2013"><ul class="accordionlist"><li><a href="#" id="20130" onclick='GetYearMonth("2013","0")'>All Months</a></li><li><a href="#" id="20131" onclick='GetYearMonth("2013","1")'>January</a></li><li><a href="#" id="20132" onclick='GetYearMonth("2013","2")'>February</a></li><li><a href="#" id="20133" onclick='GetYearMonth("2013","3")'>March</a></li><li><a href="#" id="20134" onclick='GetYearMonth("2013","4")'>April</a></li><li><a href="#" id="20135" onclick='GetYearMonth("2013","5")'>May</a></li><li><a href="#" id="20136" onclick='GetYearMonth("2013","6")'>June</a></li><li><a href="#" id="20137" onclick='GetYearMonth("2013","7")'>July</a></li><li><a href="#" id="20138" onclick='GetYearMonth("2013","8")'>August</a></li><li><a href="#" id="20139" onclick='GetYearMonth("2013","9")'>September</a></li><li><a href="#" id="201310" onclick='GetYearMonth("2013","10")'>October</a></li><li><a href="#" id="201311" onclick='GetYearMonth("2013","11")'>November</a></li><li><a href="#" id="201312" onclick='GetYearMonth("2013","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2012">2012</a></h2><div class="accordionContent month" id="2012"><ul class="accordionlist"><li><a href="#" id="20120" onclick='GetYearMonth("2012","0")'>All Months</a></li><li><a href="#" id="20121" onclick='GetYearMonth("2012","1")'>January</a></li><li><a href="#" id="20122" onclick='GetYearMonth("2012","2")'>February</a></li><li><a href="#" id="20123" onclick='GetYearMonth("2012","3")'>March</a></li><li><a href="#" id="20124" onclick='GetYearMonth("2012","4")'>April</a></li><li><a href="#" id="20125" onclick='GetYearMonth("2012","5")'>May</a></li><li><a href="#" id="20126" onclick='GetYearMonth("2012","6")'>June</a></li><li><a href="#" id="20127" onclick='GetYearMonth("2012","7")'>July</a></li><li><a href="#" id="20128" onclick='GetYearMonth("2012","8")'>August</a></li><li><a href="#" id="20129" onclick='GetYearMonth("2012","9")'>September</a></li><li><a href="#" id="201210" onclick='GetYearMonth("2012","10")'>October</a></li><li><a href="#" id="201211" onclick='GetYearMonth("2012","11")'>November</a></li><li><a href="#" id="201212" onclick='GetYearMonth("2012","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2011">2011</a></h2><div class="accordionContent month" id="2011"><ul class="accordionlist"><li><a href="#" id="20110" onclick='GetYearMonth("2011","0")'>All Months</a></li><li><a href="#" id="20111" onclick='GetYearMonth("2011","1")'>January</a></li><li><a href="#" id="20112" onclick='GetYearMonth("2011","2")'>February</a></li><li><a href="#" id="20113" onclick='GetYearMonth("2011","3")'>March</a></li><li><a href="#" id="20114" onclick='GetYearMonth("2011","4")'>April</a></li><li><a href="#" id="20115" onclick='GetYearMonth("2011","5")'>May</a></li><li><a href="#" id="20116" onclick='GetYearMonth("2011","6")'>June</a></li><li><a href="#" id="20117" onclick='GetYearMonth("2011","7")'>July</a></li><li><a href="#" id="20118" onclick='GetYearMonth("2011","8")'>August</a></li><li><a href="#" id="20119" onclick='GetYearMonth("2011","9")'>September</a></li><li><a href="#" id="201110" onclick='GetYearMonth("2011","10")'>October</a></li><li><a href="#" id="201111" onclick='GetYearMonth("2011","11")'>November</a></li><li><a href="#" id="201112" onclick='GetYearMonth("2011","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2010">2010</a></h2><div class="accordionContent month" id="2010"><ul class="accordionlist"><li><a href="#" id="20100" onclick='GetYearMonth("2010","0")'>All Months</a></li><li><a href="#" id="20101" onclick='GetYearMonth("2010","1")'>January</a></li><li><a href="#" id="20102" onclick='GetYearMonth("2010","2")'>February</a></li><li><a href="#" id="20103" onclick='GetYearMonth("2010","3")'>March</a></li><li><a href="#" id="20104" onclick='GetYearMonth("2010","4")'>April</a></li><li><a href="#" id="20105" onclick='GetYearMonth("2010","5")'>May</a></li><li><a href="#" id="20106" onclick='GetYearMonth("2010","6")'>June</a></li><li><a href="#" id="20107" onclick='GetYearMonth("2010","7")'>July</a></li><li><a href="#" id="20108" onclick='GetYearMonth("2010","8")'>August</a></li><li><a href="#" id="20109" onclick='GetYearMonth("2010","9")'>September</a></li><li><a href="#" id="201010" onclick='GetYearMonth("2010","10")'>October</a></li><li><a href="#" id="201011" onclick='GetYearMonth("2010","11")'>November</a></li><li><a href="#" id="201012" onclick='GetYearMonth("2010","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2009">2009</a></h2><div class="accordionContent month" id="2009"><ul class="accordionlist"><li><a href="#" id="20090" onclick='GetYearMonth("2009","0")'>All Months</a></li><li><a href="#" id="20091" onclick='GetYearMonth("2009","1")'>January</a></li><li><a href="#" id="20092" onclick='GetYearMonth("2009","2")'>February</a></li><li><a href="#" id="20093" onclick='GetYearMonth("2009","3")'>March</a></li><li><a href="#" id="20094" onclick='GetYearMonth("2009","4")'>April</a></li><li><a href="#" id="20095" onclick='GetYearMonth("2009","5")'>May</a></li><li><a href="#" id="20096" onclick='GetYearMonth("2009","6")'>June</a></li><li><a href="#" id="20097" onclick='GetYearMonth("2009","7")'>July</a></li><li><a href="#" id="20098" onclick='GetYearMonth("2009","8")'>August</a></li><li><a href="#" id="20099" onclick='GetYearMonth("2009","9")'>September</a></li><li><a href="#" id="200910" onclick='GetYearMonth("2009","10")'>October</a></li><li><a href="#" id="200911" onclick='GetYearMonth("2009","11")'>November</a></li><li><a href="#" id="200912" onclick='GetYearMonth("2009","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2008">2008</a></h2><div class="accordionContent month" id="2008"><ul class="accordionlist"><li><a href="#" id="20080" onclick='GetYearMonth("2008","0")'>All Months</a></li><li><a href="#" id="20081" onclick='GetYearMonth("2008","1")'>January</a></li><li><a href="#" id="20082" onclick='GetYearMonth("2008","2")'>February</a></li><li><a href="#" id="20083" onclick='GetYearMonth("2008","3")'>March</a></li><li><a href="#" id="20084" onclick='GetYearMonth("2008","4")'>April</a></li><li><a href="#" id="20085" onclick='GetYearMonth("2008","5")'>May</a></li><li><a href="#" id="20086" onclick='GetYearMonth("2008","6")'>June</a></li><li><a href="#" id="20087" onclick='GetYearMonth("2008","7")'>July</a></li><li><a href="#" id="20088" onclick='GetYearMonth("2008","8")'>August</a></li><li><a href="#" id="20089" onclick='GetYearMonth("2008","9")'>September</a></li><li><a href="#" id="200810" onclick='GetYearMonth("2008","10")'>October</a></li><li><a href="#" id="200811" onclick='GetYearMonth("2008","11")'>November</a></li><li><a href="#" id="200812" onclick='GetYearMonth("2008","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2007">2007</a></h2><div class="accordionContent month" id="2007"><ul class="accordionlist"><li><a href="#" id="20070" onclick='GetYearMonth("2007","0")'>All Months</a></li><li><a href="#" id="20071" onclick='GetYearMonth("2007","1")'>January</a></li><li><a href="#" id="20072" onclick='GetYearMonth("2007","2")'>February</a></li><li><a href="#" id="20073" onclick='GetYearMonth("2007","3")'>March</a></li><li><a href="#" id="20074" onclick='GetYearMonth("2007","4")'>April</a></li><li><a href="#" id="20075" onclick='GetYearMonth("2007","5")'>May</a></li><li><a href="#" id="20076" onclick='GetYearMonth("2007","6")'>June</a></li><li><a href="#" id="20077" onclick='GetYearMonth("2007","7")'>July</a></li><li><a href="#" id="20078" onclick='GetYearMonth("2007","8")'>August</a></li><li><a href="#" id="20079" onclick='GetYearMonth("2007","9")'>September</a></li><li><a href="#" id="200710" onclick='GetYearMonth("2007","10")'>October</a></li><li><a href="#" id="200711" onclick='GetYearMonth("2007","11")'>November</a></li><li><a href="#" id="200712" onclick='GetYearMonth("2007","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2006">2006</a></h2><div class="accordionContent month" id="2006"><ul class="accordionlist"><li><a href="#" id="20060" onclick='GetYearMonth("2006","0")'>All Months</a></li><li><a href="#" id="20061" onclick='GetYearMonth("2006","1")'>January</a></li><li><a href="#" id="20062" onclick='GetYearMonth("2006","2")'>February</a></li><li><a href="#" id="20063" onclick='GetYearMonth("2006","3")'>March</a></li><li><a href="#" id="20064" onclick='GetYearMonth("2006","4")'>April</a></li><li><a href="#" id="20065" onclick='GetYearMonth("2006","5")'>May</a></li><li><a href="#" id="20066" onclick='GetYearMonth("2006","6")'>June</a></li><li><a href="#" id="20067" onclick='GetYearMonth("2006","7")'>July</a></li><li><a href="#" id="20068" onclick='GetYearMonth("2006","8")'>August</a></li><li><a href="#" id="20069" onclick='GetYearMonth("2006","9")'>September</a></li><li><a href="#" id="200610" onclick='GetYearMonth("2006","10")'>October</a></li><li><a href="#" id="200611" onclick='GetYearMonth("2006","11")'>November</a></li><li><a href="#" id="200612" onclick='GetYearMonth("2006","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2005">2005</a></h2><div class="accordionContent month" id="2005"><ul class="accordionlist"><li><a href="#" id="20050" onclick='GetYearMonth("2005","0")'>All Months</a></li><li><a href="#" id="20051" onclick='GetYearMonth("2005","1")'>January</a></li><li><a href="#" id="20052" onclick='GetYearMonth("2005","2")'>February</a></li><li><a href="#" id="20053" onclick='GetYearMonth("2005","3")'>March</a></li><li><a href="#" id="20054" onclick='GetYearMonth("2005","4")'>April</a></li><li><a href="#" id="20055" onclick='GetYearMonth("2005","5")'>May</a></li><li><a href="#" id="20056" onclick='GetYearMonth("2005","6")'>June</a></li><li><a href="#" id="20057" onclick='GetYearMonth("2005","7")'>July</a></li><li><a href="#" id="20058" onclick='GetYearMonth("2005","8")'>August</a></li><li><a href="#" id="20059" onclick='GetYearMonth("2005","9")'>September</a></li><li><a href="#" id="200510" onclick='GetYearMonth("2005","10")'>October</a></li><li><a href="#" id="200511" onclick='GetYearMonth("2005","11")'>November</a></li><li><a href="#" id="200512" onclick='GetYearMonth("2005","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2004">2004</a></h2><div class="accordionContent month" id="2004"><ul class="accordionlist"><li><a href="#" id="20040" onclick='GetYearMonth("2004","0")'>All Months</a></li><li><a href="#" id="20041" onclick='GetYearMonth("2004","1")'>January</a></li><li><a href="#" id="20042" onclick='GetYearMonth("2004","2")'>February</a></li><li><a href="#" id="20043" onclick='GetYearMonth("2004","3")'>March</a></li><li><a href="#" id="20044" onclick='GetYearMonth("2004","4")'>April</a></li><li><a href="#" id="20045" onclick='GetYearMonth("2004","5")'>May</a></li><li><a href="#" id="20046" onclick='GetYearMonth("2004","6")'>June</a></li><li><a href="#" id="20047" onclick='GetYearMonth("2004","7")'>July</a></li><li><a href="#" id="20048" onclick='GetYearMonth("2004","8")'>August</a></li><li><a href="#" id="20049" onclick='GetYearMonth("2004","9")'>September</a></li><li><a href="#" id="200410" onclick='GetYearMonth("2004","10")'>October</a></li><li><a href="#" id="200411" onclick='GetYearMonth("2004","11")'>November</a></li><li><a href="#" id="200412" onclick='GetYearMonth("2004","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2003">2003</a></h2><div class="accordionContent month" id="2003"><ul class="accordionlist"><li><a href="#" id="20030" onclick='GetYearMonth("2003","0")'>All Months</a></li><li><a href="#" id="20031" onclick='GetYearMonth("2003","1")'>January</a></li><li><a href="#" id="20032" onclick='GetYearMonth("2003","2")'>February</a></li><li><a href="#" id="20033" onclick='GetYearMonth("2003","3")'>March</a></li><li><a href="#" id="20034" onclick='GetYearMonth("2003","4")'>April</a></li><li><a href="#" id="20035" onclick='GetYearMonth("2003","5")'>May</a></li><li><a href="#" id="20036" onclick='GetYearMonth("2003","6")'>June</a></li><li><a href="#" id="20037" onclick='GetYearMonth("2003","7")'>July</a></li><li><a href="#" id="20038" onclick='GetYearMonth("2003","8")'>August</a></li><li><a href="#" id="20039" onclick='GetYearMonth("2003","9")'>September</a></li><li><a href="#" id="200310" onclick='GetYearMonth("2003","10")'>October</a></li><li><a href="#" id="200311" onclick='GetYearMonth("2003","11")'>November</a></li><li><a href="#" id="200312" onclick='GetYearMonth("2003","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2002">2002</a></h2><div class="accordionContent month" id="2002"><ul class="accordionlist"><li><a href="#" id="20020" onclick='GetYearMonth("2002","0")'>All Months</a></li><li><a href="#" id="20021" onclick='GetYearMonth("2002","1")'>January</a></li><li><a href="#" id="20022" onclick='GetYearMonth("2002","2")'>February</a></li><li><a href="#" id="20023" onclick='GetYearMonth("2002","3")'>March</a></li><li><a href="#" id="20024" onclick='GetYearMonth("2002","4")'>April</a></li><li><a href="#" id="20025" onclick='GetYearMonth("2002","5")'>May</a></li><li><a href="#" id="20026" onclick='GetYearMonth("2002","6")'>June</a></li><li><a href="#" id="20027" onclick='GetYearMonth("2002","7")'>July</a></li><li><a href="#" id="20028" onclick='GetYearMonth("2002","8")'>August</a></li><li><a href="#" id="20029" onclick='GetYearMonth("2002","9")'>September</a></li><li><a href="#" id="200210" onclick='GetYearMonth("2002","10")'>October</a></li><li><a href="#" id="200211" onclick='GetYearMonth("2002","11")'>November</a></li><li><a href="#" id="200212" onclick='GetYearMonth("2002","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2001">2001</a></h2><div class="accordionContent month" id="2001"><ul class="accordionlist"><li><a href="#" id="20010" onclick='GetYearMonth("2001","0")'>All Months</a></li><li><a href="#" id="20011" onclick='GetYearMonth("2001","1")'>January</a></li><li><a href="#" id="20012" onclick='GetYearMonth("2001","2")'>February</a></li><li><a href="#" id="20013" onclick='GetYearMonth("2001","3")'>March</a></li><li><a href="#" id="20014" onclick='GetYearMonth("2001","4")'>April</a></li><li><a href="#" id="20015" onclick='GetYearMonth("2001","5")'>May</a></li><li><a href="#" id="20016" onclick='GetYearMonth("2001","6")'>June</a></li><li><a href="#" id="20017" onclick='GetYearMonth("2001","7")'>July</a></li><li><a href="#" id="20018" onclick='GetYearMonth("2001","8")'>August</a></li><li><a href="#" id="20019" onclick='GetYearMonth("2001","9")'>September</a></li><li><a href="#" id="200110" onclick='GetYearMonth("2001","10")'>October</a></li><li><a href="#" id="200111" onclick='GetYearMonth("2001","11")'>November</a></li><li><a href="#" id="200112" onclick='GetYearMonth("2001","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn2000">2000</a></h2><div class="accordionContent month" id="2000"><ul class="accordionlist"><li><a href="#" id="20000" onclick='GetYearMonth("2000","0")'>All Months</a></li><li><a href="#" id="20001" onclick='GetYearMonth("2000","1")'>January</a></li><li><a href="#" id="20002" onclick='GetYearMonth("2000","2")'>February</a></li><li><a href="#" id="20003" onclick='GetYearMonth("2000","3")'>March</a></li><li><a href="#" id="20004" onclick='GetYearMonth("2000","4")'>April</a></li><li><a href="#" id="20005" onclick='GetYearMonth("2000","5")'>May</a></li><li><a href="#" id="20006" onclick='GetYearMonth("2000","6")'>June</a></li><li><a href="#" id="20007" onclick='GetYearMonth("2000","7")'>July</a></li><li><a href="#" id="20008" onclick='GetYearMonth("2000","8")'>August</a></li><li><a href="#" id="20009" onclick='GetYearMonth("2000","9")'>September</a></li><li><a href="#" id="200010" onclick='GetYearMonth("2000","10")'>October</a></li><li><a href="#" id="200011" onclick='GetYearMonth("2000","11")'>November</a></li><li><a href="#" id="200012" onclick='GetYearMonth("2000","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1999">1999</a></h2><div class="accordionContent month" id="1999"><ul class="accordionlist"><li><a href="#" id="19990" onclick='GetYearMonth("1999","0")'>All Months</a></li><li><a href="#" id="19991" onclick='GetYearMonth("1999","1")'>January</a></li><li><a href="#" id="19992" onclick='GetYearMonth("1999","2")'>February</a></li><li><a href="#" id="19993" onclick='GetYearMonth("1999","3")'>March</a></li><li><a href="#" id="19994" onclick='GetYearMonth("1999","4")'>April</a></li><li><a href="#" id="19995" onclick='GetYearMonth("1999","5")'>May</a></li><li><a href="#" id="19996" onclick='GetYearMonth("1999","6")'>June</a></li><li><a href="#" id="19997" onclick='GetYearMonth("1999","7")'>July</a></li><li><a href="#" id="19998" onclick='GetYearMonth("1999","8")'>August</a></li><li><a href="#" id="19999" onclick='GetYearMonth("1999","9")'>September</a></li><li><a href="#" id="199910" onclick='GetYearMonth("1999","10")'>October</a></li><li><a href="#" id="199911" onclick='GetYearMonth("1999","11")'>November</a></li><li><a href="#" id="199912" onclick='GetYearMonth("1999","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1998">1998</a></h2><div class="accordionContent month" id="1998"><ul class="accordionlist"><li><a href="#" id="19980" onclick='GetYearMonth("1998","0")'>All Months</a></li><li><a href="#" id="19981" onclick='GetYearMonth("1998","1")'>January</a></li><li><a href="#" id="19982" onclick='GetYearMonth("1998","2")'>February</a></li><li><a href="#" id="19983" onclick='GetYearMonth("1998","3")'>March</a></li><li><a href="#" id="19984" onclick='GetYearMonth("1998","4")'>April</a></li><li><a href="#" id="19985" onclick='GetYearMonth("1998","5")'>May</a></li><li><a href="#" id="19986" onclick='GetYearMonth("1998","6")'>June</a></li><li><a href="#" id="19987" onclick='GetYearMonth("1998","7")'>July</a></li><li><a href="#" id="19988" onclick='GetYearMonth("1998","8")'>August</a></li><li><a href="#" id="19989" onclick='GetYearMonth("1998","9")'>September</a></li><li><a href="#" id="199810" onclick='GetYearMonth("1998","10")'>October</a></li><li><a href="#" id="199811" onclick='GetYearMonth("1998","11")'>November</a></li><li><a href="#" id="199812" onclick='GetYearMonth("1998","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1997">1997</a></h2><div class="accordionContent month" id="1997"><ul class="accordionlist"><li><a href="#" id="19970" onclick='GetYearMonth("1997","0")'>All Months</a></li><li><a href="#" id="19971" onclick='GetYearMonth("1997","1")'>January</a></li><li><a href="#" id="19972" onclick='GetYearMonth("1997","2")'>February</a></li><li><a href="#" id="19973" onclick='GetYearMonth("1997","3")'>March</a></li><li><a href="#" id="19974" onclick='GetYearMonth("1997","4")'>April</a></li><li><a href="#" id="19975" onclick='GetYearMonth("1997","5")'>May</a></li><li><a href="#" id="19976" onclick='GetYearMonth("1997","6")'>June</a></li><li><a href="#" id="19977" onclick='GetYearMonth("1997","7")'>July</a></li><li><a href="#" id="19978" onclick='GetYearMonth("1997","8")'>August</a></li><li><a href="#" id="19979" onclick='GetYearMonth("1997","9")'>September</a></li><li><a href="#" id="199710" onclick='GetYearMonth("1997","10")'>October</a></li><li><a href="#" id="199711" onclick='GetYearMonth("1997","11")'>November</a></li><li><a href="#" id="199712" onclick='GetYearMonth("1997","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1996">1996</a></h2><div class="accordionContent month" id="1996"><ul class="accordionlist"><li><a href="#" id="19960" onclick='GetYearMonth("1996","0")'>All Months</a></li><li><a href="#" id="19961" onclick='GetYearMonth("1996","1")'>January</a></li><li><a href="#" id="19962" onclick='GetYearMonth("1996","2")'>February</a></li><li><a href="#" id="19963" onclick='GetYearMonth("1996","3")'>March</a></li><li><a href="#" id="19964" onclick='GetYearMonth("1996","4")'>April</a></li><li><a href="#" id="19965" onclick='GetYearMonth("1996","5")'>May</a></li><li><a href="#" id="19966" onclick='GetYearMonth("1996","6")'>June</a></li><li><a href="#" id="19967" onclick='GetYearMonth("1996","7")'>July</a></li><li><a href="#" id="19968" onclick='GetYearMonth("1996","8")'>August</a></li><li><a href="#" id="19969" onclick='GetYearMonth("1996","9")'>September</a></li><li><a href="#" id="199610" onclick='GetYearMonth("1996","10")'>October</a></li><li><a href="#" id="199611" onclick='GetYearMonth("1996","11")'>November</a></li><li><a href="#" id="199612" onclick='GetYearMonth("1996","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1995">1995</a></h2><div class="accordionContent month" id="1995"><ul class="accordionlist"><li><a href="#" id="19950" onclick='GetYearMonth("1995","0")'>All Months</a></li><li><a href="#" id="19951" onclick='GetYearMonth("1995","1")'>January</a></li><li><a href="#" id="19952" onclick='GetYearMonth("1995","2")'>February</a></li><li><a href="#" id="19953" onclick='GetYearMonth("1995","3")'>March</a></li><li><a href="#" id="19954" onclick='GetYearMonth("1995","4")'>April</a></li><li><a href="#" id="19955" onclick='GetYearMonth("1995","5")'>May</a></li><li><a href="#" id="19956" onclick='GetYearMonth("1995","6")'>June</a></li><li><a href="#" id="19957" onclick='GetYearMonth("1995","7")'>July</a></li><li><a href="#" id="19958" onclick='GetYearMonth("1995","8")'>August</a></li><li><a href="#" id="19959" onclick='GetYearMonth("1995","9")'>September</a></li><li><a href="#" id="199510" onclick='GetYearMonth("1995","10")'>October</a></li><li><a href="#" id="199511" onclick='GetYearMonth("1995","11")'>November</a></li><li><a href="#" id="199512" onclick='GetYearMonth("1995","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1994">1994</a></h2><div class="accordionContent month" id="1994"><ul class="accordionlist"><li><a href="#" id="19940" onclick='GetYearMonth("1994","0")'>All Months</a></li><li><a href="#" id="19941" onclick='GetYearMonth("1994","1")'>January</a></li><li><a href="#" id="19942" onclick='GetYearMonth("1994","2")'>February</a></li><li><a href="#" id="19943" onclick='GetYearMonth("1994","3")'>March</a></li><li><a href="#" id="19944" onclick='GetYearMonth("1994","4")'>April</a></li><li><a href="#" id="19945" onclick='GetYearMonth("1994","5")'>May</a></li><li><a href="#" id="19946" onclick='GetYearMonth("1994","6")'>June</a></li><li><a href="#" id="19947" onclick='GetYearMonth("1994","7")'>July</a></li><li><a href="#" id="19948" onclick='GetYearMonth("1994","8")'>August</a></li><li><a href="#" id="19949" onclick='GetYearMonth("1994","9")'>September</a></li><li><a href="#" id="199410" onclick='GetYearMonth("1994","10")'>October</a></li><li><a href="#" id="199411" onclick='GetYearMonth("1994","11")'>November</a></li><li><a href="#" id="199412" onclick='GetYearMonth("1994","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1993">1993</a></h2><div class="accordionContent month" id="1993"><ul class="accordionlist"><li><a href="#" id="19930" onclick='GetYearMonth("1993","0")'>All Months</a></li><li><a href="#" id="19931" onclick='GetYearMonth("1993","1")'>January</a></li><li><a href="#" id="19932" onclick='GetYearMonth("1993","2")'>February</a></li><li><a href="#" id="19933" onclick='GetYearMonth("1993","3")'>March</a></li><li><a href="#" id="19934" onclick='GetYearMonth("1993","4")'>April</a></li><li><a href="#" id="19935" onclick='GetYearMonth("1993","5")'>May</a></li><li><a href="#" id="19936" onclick='GetYearMonth("1993","6")'>June</a></li><li><a href="#" id="19937" onclick='GetYearMonth("1993","7")'>July</a></li><li><a href="#" id="19938" onclick='GetYearMonth("1993","8")'>August</a></li><li><a href="#" id="19939" onclick='GetYearMonth("1993","9")'>September</a></li><li><a href="#" id="199310" onclick='GetYearMonth("1993","10")'>October</a></li><li><a href="#" id="199311" onclick='GetYearMonth("1993","11")'>November</a></li><li><a href="#" id="199312" onclick='GetYearMonth("1993","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1992">1992</a></h2><div class="accordionContent month" id="1992"><ul class="accordionlist"><li><a href="#" id="19920" onclick='GetYearMonth("1992","0")'>All Months</a></li><li><a href="#" id="19921" onclick='GetYearMonth("1992","1")'>January</a></li><li><a href="#" id="19922" onclick='GetYearMonth("1992","2")'>February</a></li><li><a href="#" id="19923" onclick='GetYearMonth("1992","3")'>March</a></li><li><a href="#" id="19924" onclick='GetYearMonth("1992","4")'>April</a></li><li><a href="#" id="19925" onclick='GetYearMonth("1992","5")'>May</a></li><li><a href="#" id="19926" onclick='GetYearMonth("1992","6")'>June</a></li><li><a href="#" id="19927" onclick='GetYearMonth("1992","7")'>July</a></li><li><a href="#" id="19928" onclick='GetYearMonth("1992","8")'>August</a></li><li><a href="#" id="19929" onclick='GetYearMonth("1992","9")'>September</a></li><li><a href="#" id="199210" onclick='GetYearMonth("1992","10")'>October</a></li><li><a href="#" id="199211" onclick='GetYearMonth("1992","11")'>November</a></li><li><a href="#" id="199212" onclick='GetYearMonth("1992","12")'>December</a></li></ul></div><h2 class="accordionButton year" ><a href="#" onclick="event.preventDefault()" style="text-decoration:none;" aria-expanded="false"  id="btn1991">1991</a></h2><div class="accordionContent month" id="1991"><ul class="accordionlist"><li><a href="#" id="19910" onclick='GetYearMonth("1991","0")'>All Months</a></li><li><a href="#" id="19911" onclick='GetYearMonth("1991","1")'>January</a></li><li><a href="#" id="19912" onclick='GetYearMonth("1991","2")'>February</a></li><li><a href="#" id="19913" onclick='GetYearMonth("1991","3")'>March</a></li><li><a href="#" id="19914" onclick='GetYearMonth("1991","4")'>April</a></li><li><a href="#" id="19915" onclick='GetYearMonth("1991","5")'>May</a></li><li><a href="#" id="19916" onclick='GetYearMonth("1991","6")'>June</a></li><li><a href="#" id="19917" onclick='GetYearMonth("1991","7")'>July</a></li><li><a href="#" id="19918" onclick='GetYearMonth("1991","8")'>August</a></li><li><a href="#" id="19919" onclick='GetYearMonth("1991","9")'>September</a></li><li><a href="#" id="199110" onclick='GetYearMonth("1991","10")'>October</a></li><li><a href="#" id="199111" onclick='GetYearMonth("1991","11")'>November</a></li><li><a href="#" id="199112" onclick='GetYearMonth("1991","12")'>December</a></li></ul></div></div></div></span>
+<style type="text/css"> /*added by ni*/
+.year a
+{
+    text-transform:none;
+    margin:0px;
+    /*color:Black;*/
+    font-size:12px;
+    text-decoration:none;
+    padding: 3px 4px 5px 2px;
+    }
+#DateSettree_lbltree h2
+{
+    margin-top:0px;
+}
+.month ul li a {
+    padding: 3px 4px 7px 2px;
+}
+
+.accordionContent ul.accordionlist li {
+    
+    min-height: 24px;
+}
+</style>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+        </div>
+        <div>
+            <a href="#top" class="scrollToTop" id="backToTop">Top</a>
+<div id="backDiv" style=" text-align:center;" >
+<a href="javascript:history.back()" class="paraheader">Back to previous page</a><br/>
+<span id="lblGetLastUpdateDate" class="paraheader"></span>
+</div>
+<footer class="footer">
+
+<div class="footer">
+  <div class="container_12">    
+      <div class="grid_9" style="width: 833px !important; ">
+          
+          <h2><span class="blue">More</span> Links :</h2>
+          
+		<ul class="footerlist" style="column-count:4">
+                  <li ><a href="/Scripts/HolidayMatrixDisplay.aspx">Bank Holidays</a></li>
+                  <li ><a href="https://shabdavali.rbi.org.in/">Banking Glossary</a></li>
+                  <li ><a href="/Scripts/CitiChart.aspx">Citizen's Charter</a></li>
+                  <li ><a href="/Scripts/Complaints.aspx">Complaints</a></li>
+                  <li ><a href="/Scripts/contactus.aspx">Contact Us</a></li>
+  		<li ><a href="https://www.rbi.org.in/scripts/bs_viewcontent.aspx?Id=3894">COVID-19 Measures</a></li>
+                  <li ><a target="_blank" href="https://ncfe.org.in/e-lms">E-LMS</a></li>
+                  <li ><a href="/Scripts/EventsDisplay.aspx">Events</a></li>
+                  <li ><a href="/Scripts/FAQDisplay.aspx">FAQs</a></li>
+                  <li ><a target="_blank" href="https://www.rbi.org.in/FinancialEducation/">Financial Education</a></li>
+		<li ><a href="/Scripts/BS_ViewForms.aspx">Forms</a></li>
+                  <li ><a href="/Scripts/IFSCMICRDetails.aspx">IFSC/MICR Codes</a></li>
+                  <li><a href="/Scripts/OtherLinks.aspx">Important Websites</a></li>
+                  <li><a target="_blank" href="https://opportunities.rbi.org.in/scripts/index.aspx">Opportunities<span>@</span>RBI</a></li>
+                  <li><a href="/Scripts/rbi_clarification.aspx">RBI Clarifications</a></li>
+ 		<li><a target="_blank" href="https://rbikehtahai.rbi.org.in/">RBI Kehta Hai</a></li>
+                  <li><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Utkarsh202910042026.pdf" target="_blank">RBI’s Vision and Values <img src="../Images/pdf.gif" alt="PDF document" style="padding-bottom: 4px; width:12px; border:0; vertical-align:middle;"> (652 KB)</a></li>
+                  <li><a href="/Scripts/Righttoinfoact.aspx">Right to Information Act</a></li>
+                  <li><a href="/Scripts/BS_ViewTenders.aspx">Tenders</a></li>
+                  
+              </ul>
+      </div>
+
+    <div class="grid_3" style="width:197px !important">
+      
+        <h2><span class="blue">Follow</span> RBI</h2>
+      <ul class="footerlist">
+        
+
+          <li style="float: left;background: url(/images/footer_list_arrow.gif) left 8px no-repeat;"><a href="/Scripts/rss.aspx"><img src="/images/rss-icon.png" alt="RSS Icon" class="rss">RSS</a></li>
+
+        
+          <li>
+              <a href="https://twitter.com/RBI" target="_blank" class="twitter">
+                  <img src="/images/Twitter_New.png" alt="Twitter Icon" class="videos" style="padding-left: 18%; width:14px;">Twitter
+              </a>
+          </li>
+
+        
+
+          <li style="float: left;"><a href="https://www.youtube.com/channel/UCIfCOl43tunZVNYafeC4RQA" class="videos" target="_blank"><img src="/images/youtube.png" alt="YouTube Icon" class="videos">YouTube</a></li>
+
+          <li>
+              <a href="https://instagram.com/reservebankofindia" class="videos" target="_blank">
+                  <img src="/images/Instagram.jpg" alt="Instagram Icon" class="videos" style="padding-left: 5%; width:14px;">Instagram
+              </a>
+          </li>
+          <li style="float: left;"><a href="https://www.facebook.com/RBIsays" class="videos" target="_blank"><img src="/images/Facebook.jpg" style="width:14px;" alt="Facebook Icon" class="videos">Facebook</a></li>
+          <li>
+              <a href="https://www.linkedin.com/company/reservebankofindia" class="videos" target="_blank">
+                  <img src="/images/LinkedinIcon1.png" alt="LinkedIn Icon" class="" style="padding-left: 4%;width: 17px;background: bottom no-repeat;display: block;float: left;margin: 2px 3px 0 1px;">LinkedIn
+              </a>
+          </li>
+      </ul>
+	<a href="https://www.india.gov.in" class="videos" target="_blank">
+                  <img src="/images/indiaGov.png" alt="National Portal of India logo" class="">
+              </a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="copyright">
+    <div class="container_12">
+     <div class="grid_6 pull_left">&copy; Reserve Bank of India. All Rights Reserved. </div>
+        <div class="grid_5 pull_right"><a href="/Scripts/sitemap.aspx">Sitemap</a> <span aria-hidden="true">|</span> <a href="/Scripts/Disclaimer.aspx">Disclaimer</a></div>
+        <div class="clearfix"></div>
+
+        <div class="grid_6 pull_left">Website owned and managed by Reserve Bank of India. Contact us on helpdoc[at]rbi[dot]org[dot]in</div>
+        <div class="grid_5 pull_right">Website last updated date: Nov 11, 2026</div>
+        <div class="clearfix"></div>
+	<div class="grid_6 pull_left"><a href="https://www.rbi.org.in/scripts/wim.aspx">Web Information Manager</a></div>
+	<div class="grid_5 pull_right"><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Accessibility20012026.pdf" target="_blank">Accessibility Statement
+	<img alt="PDF - Accessibility Statement" style="padding: 1px; width:16px; border:0; vertical-align:middle;" src="../Images/pdf.gif" > (133 KB)
+	</a><span aria-hidden="true"> |</span><a href="/scripts/ScreenReader.aspx" title="Information related to screen reader">Screen Reader and Accessibility Help</a></div>
+	<div class="clearfix"></div>
+        <div class="grid_12 pull_left">Supports: Google Chrome 147+ | Firefox 150+ | Microsoft Edge Version 147+ | Safari 17+</div>
+        
+        <div class="clearfix"></div>
+    </div>
+  </div>
+  
+
+
+
+</div>
+
+</footer>
+
+<script src="/js/ReplaceURL.js" ></script>
+<script >
+
+
+    //this is for floating TOP link
+    
+    $(document).ready(function () {
+
+        var offset = 230;
+        var duration = 500;
+
+
+        jQuery(window).scroll(function () {
+            if (jQuery(this).scrollTop() > offset) {
+                jQuery('.scrollToTop').fadeIn(duration);
+                
+            } else {
+                jQuery('.scrollToTop').fadeOut(duration);
+                
+            }
+        });
+
+        
+	$('.page_title').attr('tabindex','-1');
+        $('.scrollToTop').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+		$('.page_title').focus(); 
+            return false;
+        });
+	
+
+
+	if(!window.location.href.includes("Home.aspx") && !window.location.href.includes("home.aspx"))
+{ 
+if( window.location.href.includes(".aspx")){
+var div= document.getElementById('backDiv');
+	div.removeAttribute("hidden");}
+else{
+var div1= document.getElementById('backDiv');
+	div1.setAttribute("hidden","true");}
+}
+else{
+
+
+	var div1= document.getElementById('backDiv');
+	div1.setAttribute("hidden","true");}
+    });
+
+
+  
+    $(window).scroll(function () {
+
+        if ($('div.banner2').length) {
+
+            if ($(window).scrollTop() >= 265) {
+                $('#menubar').css("position", "fixed");
+                $('#menubar').css("width", "240px");
+                $('#menubar').css("margin-top", "-281px");
+                $('.content_area').css("margin-left", "252px");
+
+                $('.sidebar_nav').css("position", "fixed");
+                $('.sidebar_nav').css("margin-top", "-200px");
+                $('.sidebar_nav').css("width", "236px");
+
+
+             
+
+            }
+
+            else {
+                $('#menubar').css("position", "");
+                $('#menubar').css("width", "");
+                $('#menubar').css("margin-top", "");
+                $('.content_area').css("margin-left", "");
+
+                $('.sidebar_nav').css("position", "");
+                $('.sidebar_nav').css("margin-top", "");
+                $('.sidebar_nav').css("width", "");
+
+
+
+         
+            }
+
+        }
+
+        else if ($(window).scrollTop() >= 185) {
+            $('#menubar').css("position", "fixed");
+            $('#menubar').css("width", "240px");
+            $('#menubar').css("margin-top", "-200px");
+            $('.content_area').css("margin-left", "252px");
+
+            $('.sidebar_nav').css("position", "fixed");
+            $('.sidebar_nav').css("margin-top", "-200px");
+            $('.sidebar_nav').css("width", "236px");
+
+
+          
+		var treeheight=0;
+		if($('#treeYear').height()>0){treeheight=$('#treeYear').height();}
+	    	if($(window).scrollTop() >= $('#example-min').height()-treeheight)
+		{			 
+			$('#menubar').css("position", "absolute");
+            		
+			$('#menubar').css("margin-top", "");
+			$('#menubar').css("top", $('#example-min').height()+100-treeheight +"px");
+		}
+		else{$('#menubar').css("position", "fixed"); $('#menubar').css("top", "");}
+		
+        }
+
+        else {
+            $('#menubar').css("position", "");
+            $('#menubar').css("width", "");
+            $('#menubar').css("margin-top", "");
+            $('.content_area').css("margin-left", "");
+
+            $('.sidebar_nav').css("position", "");
+            $('.sidebar_nav').css("margin-top", "");
+            $('.sidebar_nav').css("width", "");
+
+
+       
+        }
+     
+
+       
+    });
+	
+      
+    $(document).ready(function () {
+	
+	
+		  $('.window .close').click(function (e) {
+            //Cancel the link behavior
+            e.preventDefault();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('#maskWN').hide();
+            $('.window').hide();
+            var scroll = $(window).scrollTop();
+            $("html").scrollTop(scroll);
+        });
+		
+		 $('#maskWN').click(function () {
+            $(this).hide();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('.window').hide();
+
+        });
+
+        
+
+        //if close button is clicked
+        $('.window .close').click(function (e) {
+            //Cancel the link behavior
+            e.preventDefault();
+            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+            $('#mask').hide();
+            $('.window').hide();
+            var scroll = $(window).scrollTop();
+            $("html").scrollTop(scroll);
+        });
+
+        //if mask is clicked
+        $('#mask').click(function () {
+            $(this).hide();
+            $('.window').hide();
+        });
+        $('#feedbackbtn').click(function () {
+            var id = '#dialog';
+
+            //Get the screen height and width
+            var maskHeight = $(document).height();
+            var maskWidth = $(window).width();
+
+            //Set heigth and width to mask to fill up the whole screen
+            
+            $('#mask').css({ 'width': '100%', 'height': '100%', 'position': 'fixed' });
+
+            //transition effect
+            $('#mask').fadeIn(500);
+            $('#mask').fadeTo("slow", 0.9);
+
+            //Get the window height and width
+            var winH = $(window).height();
+            var winW = $(window).width();
+
+            //Set the popup window to center
+            $(id).css('top', winH / 2 - $(id).height() / 2);
+            $(id).css('left', winW / 2 - $(id).width() / 2);
+
+            //transition effect
+            $(id).fadeIn(2000);
+        });
+
+        $('.submit').click(function () {
+            var Name = $("[id*=txtFeedbackName]").val();
+            var Email = $("[id*=txtFeedbackEmail]").val();
+            var Comments = $("[id*=txtFeedbackComments]").val();
+            if (Name == "") {
+
+                alert("Please enter your name");
+                $("[id*=txtFeedbackName]").focus();
+                return false;
+            }
+            else if (Email == "") {
+                alert("Please enter your email");
+                $("[id*=txtFeedbackEmail]").focus();
+                return false;
+            }
+            else if (Email != "" && !ValidateEmail(Email)) {
+                alert("Please enter a valid email address");
+                $("[id*=txtFeedbackEmail]").focus();
+                return false;
+            }
+
+            else if (Comments == "") {
+
+                alert("Please enter some comments");
+                $("[id*=txtFeedbackComments]").focus();
+                return false;
+            }
+
+            else {
+                $('[id*=Button1]').attr('disabled', 'disabled');
+
+                var param = { Name: Name, EmailID: Email, Comments: Comments };
+                $.ajax({
+                    type: "POST",
+                    url: "../Home.aspx/SaveFeedback",
+                    data: JSON.stringify(param),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (response) {
+
+                        if (response.d == "0") {
+                            alert("Thank you for your feedback");
+                            $.cookie('feedback_Cookie', 'Yes', { expires: 365, path: '/' });
+                            $('#mask').hide();
+                            $('.window').hide();
+                            $('[id*=Button1]').removeAttr('disabled');
+                            $("[id*=txtFeedbackName]").val("");
+                            $("[id*=txtFeedbackEmail]").val("");
+                            $("[id*=txtFeedbackComments]").val("");
+                        }
+                        else {
+                            alert("Please try again");
+                            $('[id*=Button1]').removeAttr('disabled');
+
+
+                        }
+
+                    }
+                });
+            }
+
+        });
+
+        function ValidateEmail(email) {
+            var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            return expr.test(email);
+        };
+
+       
+
+        $('a.style1').each(function () {
+
+            var $this = $(this);
+            var aHref = $this.attr('class');
+            $this.attr('class', aHref.replace('style1', 'links'));
+        });
+
+		
+   });
+
+  function isExternal(url) {
+	if(url){url=url.toLowerCase();
+       if(url=='#' || url=='javascript:void(0);' || url.includes('javascript')||url=='' )
+	{ return false;} 
+	else{//return (url.indexOf("rbi.org.in")==-1)
+	
+	if(url.indexOf("www.rbi.org.in")==-1 || url.indexOf("https://rbi.org.in")==-1)
+		{	
+			if(url.indexOf("rbi.org.in")==-1)		
+    				return "external";
+			else if(url.indexOf("www.rbi.org.in")==-1 && url.indexOf(".rbi.org.in")>0 && url.indexOf("rbidocs.rbi.org.in")==-1)
+				{return "subdomain";}
+			else if(url.indexOf("financialeducation")>0 || url.indexOf("commonperson")>0 || url.indexOf("/rekyc/")>0 || url.indexOf("rbi90years")>0 ){
+				return "subsite";}
+			
+		}
+	
+	}}
+    }
+    document.addEventListener("click", function () {
+	linkMessage();
+        
+    });
+function linkMessage(){
+	if (event.target.tagName.toLowerCase() === "a") {
+            if (isExternal(event.target.href)=="external") {
+
+                if (confirm("You are being redirected to an external website that opens in a new tab. Please note that Reserve Bank of India will not be held responsible for external websites content in any manner.")) {
+
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+            }
+	    if (isExternal(event.target.href)=="subdomain") {
+	    	 if (confirm("You are being redirected to a subdomain that will open in a new browser tab. The subdomain may have a different header, footer, and navigation structure from the main website. Continue?")) {
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+	    }
+		if (isExternal(event.target.href)=="subsite") {
+	    	 if (confirm("You are being redirected to a subsite that will open in a new browser tab. The subsite may have a different header, footer, and navigation structure from the main website. Some design elements and links may vary from the primary site experience. Continue?")) {
+                    return;
+                }
+                else {
+                   
+                    event.preventDefault();
+                    return;
+                }
+	    }
+        }
+	else if (event.target.tagName.toLowerCase() === "img") {
+		$(event.target).preventDefault;		
+		if($(event.target).parent('a').length){
+			 if (isExternal($(event.target).parent('a').prop('href'))==="external") {
+                		if (confirm("You are being redirected to an external website that opens in a new tab. Please note that Reserve Bank of India will not be held responsible for external websites content in any manner.")) {
+                    		return;
+               		 }
+
+                	else {                   
+                    		event.preventDefault();
+                    		return;
+                	}}
+			if (isExternal($(event.target).parent('a').prop('href'))==="subdomain") {
+                		if (confirm("You are being redirected to a subdomain that will open in a new browser tab. The subdomain may have a different header, footer, and navigation structure from the main website. Continue?")) {
+                    		return;
+               		 	}
+
+                		else {                   
+                    		event.preventDefault();
+                    		return;
+                		}
+			}
+			if (isExternal(event.target.href)=="subsite") {
+	    	 	if (confirm("You are being redirected to a subsite that will open in a new browser tab. The subsite may have a different header, footer, and navigation structure from the main website. Some design elements and links may vary from the primary site experience. Continue?")) {
+                    	return;
+                	}
+                	else {
+                   
+                    		event.preventDefault();
+                    	return;
+                	}
+	    		}
+	}}
+	const link = event.target.closest('a[target="_blank"]');
+	if(link){ 
+		event.preventDefault();
+		const docRegx = /\.(pdf|docx?|xlsx?|zip?|xls|doc)$/i;
+		if(docRegx.test(link)){
+			if(/\.pdf$/i.test(link))
+			{	
+				if(confirm("This PDF will open in a new browser tab. Do you want to continue?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.docx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.doc$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xlsx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xls$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.zip$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this file?")){
+				window.open(link.href,"_blank");}
+			}
+		}
+
+		else 
+		if(confirm("This link will open in a new browser tab. Do you want to continue?")){
+			window.open(link.href,"_blank");
+		}
+	}
+		if (event.target.tagName.toLowerCase() === "button") {
+		if($(event.target).parent('a').length>0){
+			const link1 = event.target.closest('a[target="_blank"]');
+		if(link1){
+			event.preventDefault();
+			if(confirm("This link will open in a new browser tab. Do you want to continue?")){
+				window.open(link.href,"_blank");
+			}
+		}
+		}
+	}
+}
+
+</script>
+<script >
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61369961-1', 'auto');
+  ga('send', 'pageview');
+
+document.querySelectorAll('table.tablebg').forEach(table => {
+    const anchors = table.querySelectorAll('a[href^="#"]:not([href="#"])');
+
+    const hasInPageAnchorsInThisTableOnly = Array.from(anchors).some(a => {
+        // Find the closest table ancestor of this anchor
+        const closestTable = a.closest('table');
+    
+        // Only count it if it belongs to the current table (not a nested one)
+        return closestTable === table;
+    });
+
+    if (!hasInPageAnchorsInThisTableOnly) {
+       // table.setAttribute('role', 'presentation');
+       //} else {
+       //    table.removeAttribute('role'); 
+	if(table.closest('td')){
+	if(table.querySelector('th'))
+	{	
+		table.removeAttribute('role');
+	}
+	else{
+        table.setAttribute('role', 'presentation');
+		}
+	}
+	else{
+        table.setAttribute('role', 'presentation');
+		}
+    }
+});
+$('.brd-ptable1').attr('role','presentation');
+$('html').attr('lang', 'en');
+document.querySelectorAll('br').forEach(br => {br.setAttribute('aria-hidden','true');});
+$('#doublescroll').children('table').filter(':first').attr("role", "presentation");
+$('.page_title').nextAll('table').first().attr("role", "presentation");
+
+
+
+document.addEventListener('DOMContentLoaded', function(){
+$('.tableheader b').each(function () {
+		var curEle= $(this);
+           $(curEle).replaceWith("<h2 class='dop_header'>"+$(curEle).html()+"</h2>")
+        });
+ });
+
+//  tooltip 
+var TooltipManager = {
+    _tip: null, // Create the tooltip element once 
+init: function() {
+    if (!this._tip) {
+    
+        this._tip = $('<div id="js-custom-tooltip"></div>').css({
+            "position": "absolute", "background": '#ffffca', "color":"#000", "padding": "2px 5px", "border-radius": "0px", "font-size": "11px","font-family":"Sans-serif", "z-index": "10000", "pointer-events": "none","border":"1px solid #767676", "box-shadow":"2px 2px 3px rgba(0,0,0,0.2)","white-space":"nowrap"
+        }).appendTo('body');
+        
+    }
+}, 
+show: function(element, text) {
+    this.init(); 
+var $el = $(element); // Update text and position 
+    
+this._tip.text(text).show();
+var pos = $el.offset(); 
+this._tip.css({
+    top: pos.top + this._tip.outerHeight()  + "px", // Show above 
+    left: pos.left + ($el.outerWidth() / 2) - (this._tip.outerWidth() / 2) + "px"
+});
+    }, hide: function() { if (this._tip) this._tip.hide(); }
+}; // Apply to all elements that have a ToolTip (ToolTip renders as 'title') 
+$(document).ready(function() {
+   
+    $('body').on('focusin', 'input, button, a, select, textarea, img', function() {
+        var title = $(this).attr('title'); if (title) {
+    
+            
+      
+            TooltipManager.show(this, title);
+        }
+    }).on('focusout', 'input, button, a, select, textarea, img', function() { 
+       
+            TooltipManager.hide();
+       
+    }); // Dismiss on Escape key
+    $(document).keyup(function(e) { if (e.key === "Escape") TooltipManager.hide(); });
+});
+
+//breadcrumb current page announce
+$(document).ready(function(){
+
+const breadcrumbList = document.querySelector('.breadcrumbs');
+
+    if (breadcrumbList) {
+        const listItems = breadcrumbList.querySelectorAll('li');
+    
+        if (listItems.length > 0) {
+            
+            const lastItem = $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).last().attr('aria-current', 'page').css('background','none'); //remove extra icons from empty breadcrumbs
+            $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" && $(this).children().length===0;}).attr('role','presentation');
+	    
+       		$('.breadcrumbs li').filter(function(){
+			if($(this).children().length!==0)
+			{
+				if($(this).children().text() ===""){}
+			}
+		});
+            const lastLink =lastItem.find('a');
+            if (lastLink) {
+                lastLink.attr('aria-current', 'page');               
+                
+            }
+		if($('.breadcrumbs li').last().find('a').length>0)
+		{			
+			const $a = $('.breadcrumbs li').last().find('a');
+			$('<span>',{class: $a.attr('class'), text: $a.text()}).replaceAll($a).attr('aria-current', 'page').css('background','none');
+		}
+		
+		if($('.breadcrumbs li').last().find('span').length>0)
+		{
+			
+			if($('.breadcrumbs li').last().find('span')[0].innerText==='')
+			{
+				$('.breadcrumbs li').last().find('span').removeAttr('aria-current');				
+			}
+			else{
+				$('.breadcrumbs li').last().find('span').filter(function(){ return $(this).attr('role')!=='presentation';}).last().attr('aria-current', 'page').css('background','none');					
+			}		
+		}
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).removeAttr('role','presentation'); 
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" }).css('background','none');//remove extra icons from empty breadcrumbs
+        }
+    }
+});
+
+//document.addEventListener("DOMContentLoaded", () => {
+//    document.querySelectorAll('img').forEach(img => {
+//      try {
+//        const url = new URL(img.src);
+//        img.crossOrigin = "anonymous";
+//        img.src = window.location.origin + url.pathname + url.search + url.hash;
+//      } catch (e) {}
+//    });
+//  });
+</script>
+        </div>
+        <style type="text/css">
+            .tablebg table, .tablebg table table {
+                background-color: transparent !important;
+                border-color: rgb(239, 209, 170) !important;
+                border-collapse: collapse;
+            }
+
+            table table table td {
+                background-color: transparent !important;
+            }
+
+            .table {
+                background-color: transparent !important;
+            }
+        </style>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+setLetterSpace(false);//]]>
+</script>
+</form>
+</body>
+</html>
+<script type="text/javascript" src="/js/plugins.js"></script>
+<script type="text/javascript" src="/js/script.js"></script>
+<script type="text/javascript" src="/js/Scroll.js"></script>
+<script type="text/javascript" language="javascript">
+    DoubleScrollWithTree(document.getElementById('doublescroll'));
+
+function GetYearMonth(year, month) {
+    document.getElementById("hdnYear").value = year;
+    document.getElementById("hdnMonth").value = month;
+    document.getElementById("btn").click();
+}
+//Implemented onlick for 'archives' link in tree structure
+function hideshow(divArchive) {
+    if (!document.getElementById(divArchive))
+        return
+    if (document.getElementById(divArchive).style.display == "block")
+        document.getElementById(divArchive).style.display = "none"
+    else
+        document.getElementById(divArchive).style.display = "block"
+}
+function SetTreeStyles() {
+    var strYear = document.getElementById("hdnYear").value;
+    var strMonth = document.getElementById("hdnMonth").value
+    if (strYear != "") {
+        var toDay = new Date();
+        document.getElementById("btn" + strYear).setAttribute("class", "accordionButton year active_year");
+        document.getElementById(strYear).style.display = "block"
+        if (strMonth) document.getElementById(strYear + strMonth).setAttribute("class", "active");
+        if (toDay.getFullYear() - 9 > parseInt(strYear)) { document.getElementById("divArchiveSub").style.display = "block" }
+    }
+}
+
+$(document).ready(function() {
+    document.getElementById("2769").style.visibility = "hidden";
+});
+       
+</script>
+<script id="f5_cspm">(function(){var f5_cspm={f5_p:'PPHAINAIKAAKIKFNMFDGPBJMJGMJNOJEOELIIADLOOHCFMDNDBEKNNEJEAKLDPNHNGIBGACAAACNDNJHACKACEHFAAMDDDCBJIOAHCBNAKDEBKIMJMJHKECAMJNCPJEG',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0455741970aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+return;}}
+catch(err){return;}
+setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')
+{var d=new Date();d.setTime(d.getTime()-1000);window.document.cookie='f5_cspm=;expires='+d.toUTCString()+';path=/;'+';';setTimeout(f5_cspm.wait_perf_data,100);}}}}
+f5_cspm.go();}());</script>

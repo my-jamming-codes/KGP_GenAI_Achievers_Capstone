@@ -1,0 +1,38 @@
+# docker compose up  -> the workspace at http://localhost:8501, with Qdrant loaded from the saved index snapshot.
+# The language model stays outside: a local Ollama on the host by default, or the course endpoint.
+# Set DOCKER_LLM_BASE_URL, LLM_API_KEY and LLM_MODEL in the shell or in .env to change it.
+# Set APP_PORT (for example APP_PORT=8502) if another program already uses port 8501.
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    volumes:
+      - qdrant_data:/qdrant/storage
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8501}:8501"   # set APP_PORT if 8501 is taken on the host
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-http://host.docker.internal:11434/v1}
+      LLM_API_KEY: ${LLM_API_KEY:-ollama}
+      LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      LLM_REASONING_EFFORT: ${LLM_REASONING_EFFORT:-none}
+      EMBED_PROVIDER: ${EMBED_PROVIDER:-ollama}
+      EMBED_MODEL: ${EMBED_MODEL:-qllama/bge-small-en-v1.5}
+      EMBED_BASE_URL: ${DOCKER_EMBED_BASE_URL:-http://host.docker.internal:11434/v1}
+      EMBED_API_KEY: ${EMBED_API_KEY:-ollama}
+      QUERY_TOKEN_BUDGET: ${QUERY_TOKEN_BUDGET:-40000}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-6}
+      LANGSMITH_TRACING: "false"   # LangGraph runs locally; no traces are sent to LangSmith
+      TRACE_FILE: /app/state/traces.jsonl
+      STORE_DIR: /app/state/store
+      CACHE_DIR: /app/state/cache
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - app_state:/app/state
+    depends_on:
+      - qdrant
+volumes:
+  qdrant_data:
+  app_state:

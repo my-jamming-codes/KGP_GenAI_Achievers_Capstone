@@ -1,0 +1,7 @@
+{"id": "Q022", "strategy": "A", "type": "scenario", "trace_id": "2ea3b3679c09", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q027", "strategy": "A", "type": "scenario", "trace_id": "3f78b91fccff", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q070", "strategy": "A", "type": "amendment", "trace_id": "a12c1b931ec4", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['2027']; no citation of ['CB-SA-2027/16', 'CB-SA-2027/2']"}
+{"id": "Q017", "strategy": "B", "type": "scenario", "trace_id": "4bec7e8f5096", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q022", "strategy": "B", "type": "scenario", "trace_id": "d2bdc4381218", "category": "tool call error", "note": "", "detail": "ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met; guarantor_disclosure: got needs_information, expected unknown; prepayment_charge: got needs_information, expected met"}
+{"id": "Q070", "strategy": "B", "type": "amendment", "trace_id": "b3c059869021", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['2027']; no citation of ['CB-SA-2027/16', 'CB-SA-2027/2']"}
+{"id": "Q070", "strategy": "C", "type": "amendment", "trace_id": "a5f83fb1c881", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['2027']; no citation of ['CB-SA-2027/16', 'CB-SA-2027/2']"}

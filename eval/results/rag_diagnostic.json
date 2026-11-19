@@ -1,0 +1,230 @@
+{
+ "dev_A": {
+  "queries_with_expected_paragraph": 17,
+  "pipeline_recall": 1.0,
+  "answer_accuracy": 0.824,
+  "accuracy_when_retrieved": 0.824,
+  "accuracy_when_missed": null,
+  "cells": {
+   "retrieved_right": [
+    "Q002",
+    "Q006",
+    "Q010",
+    "Q014",
+    "Q017",
+    "Q032",
+    "Q037",
+    "Q042",
+    "Q047",
+    "Q055",
+    "Q059",
+    "Q062",
+    "Q066",
+    "Q076"
+   ],
+   "retrieved_wrong": [
+    "Q022",
+    "Q027",
+    "Q070"
+   ],
+   "missed_right": [],
+   "missed_wrong": []
+  }
+ },
+ "dev_B": {
+  "queries_with_expected_paragraph": 16,
+  "pipeline_recall": 1.0,
+  "answer_accuracy": 0.875,
+  "accuracy_when_retrieved": 0.875,
+  "accuracy_when_missed": null,
+  "cells": {
+   "retrieved_right": [
+    "Q002",
+    "Q006",
+    "Q010",
+    "Q014",
+    "Q027",
+    "Q032",
+    "Q037",
+    "Q042",
+    "Q047",
+    "Q055",
+    "Q059",
+    "Q062",
+    "Q066",
+    "Q076"
+   ],
+   "retrieved_wrong": [
+    "Q017",
+    "Q070"
+   ],
+   "missed_right": [],
+   "missed_wrong": []
+  }
+ },
+ "dev_C": {
+  "queries_with_expected_paragraph": 17,
+  "pipeline_recall": 1.0,
+  "answer_accuracy": 0.941,
+  "accuracy_when_retrieved": 0.941,
+  "accuracy_when_missed": null,
+  "cells": {
+   "retrieved_right": [
+    "Q002",
+    "Q006",
+    "Q010",
+    "Q014",
+    "Q017",
+    "Q022",
+    "Q027",
+    "Q032",
+    "Q037",
+    "Q042",
+    "Q047",
+    "Q055",
+    "Q059",
+    "Q062",
+    "Q066",
+    "Q076"
+   ],
+   "retrieved_wrong": [
+    "Q070"
+   ],
+   "missed_right": [],
+   "missed_wrong": []
+  }
+ },
+ "test_A": {
+  "queries_with_expected_paragraph": 51,
+  "pipeline_recall": 0.961,
+  "answer_accuracy": 0.824,
+  "accuracy_when_retrieved": 0.857,
+  "accuracy_when_missed": 0.0,
+  "cells": {
+   "retrieved_right": [
+    "Q003",
+    "Q005",
+    "Q007",
+    "Q008",
+    "Q009",
+    "Q011",
+    "Q012",
+    "Q018",
+    "Q019",
+    "Q021",
+    "Q023",
+    "Q025",
+    "Q026",
+    "Q028",
+    "Q029",
+    "Q030",
+    "Q031",
+    "Q033",
+    "Q034",
+    "Q035",
+    "Q036",
+    "Q038",
+    "Q039",
+    "Q044",
+    "Q045",
+    "Q046",
+    "Q048",
+    "Q049",
+    "Q050",
+    "Q052",
+    "Q053",
+    "Q054",
+    "Q056",
+    "Q057",
+    "Q058",
+    "Q063",
+    "Q064",
+    "Q065",
+    "Q067",
+    "Q068",
+    "Q069",
+    "Q077"
+   ],
+   "retrieved_wrong": [
+    "Q001",
+    "Q016",
+    "Q020",
+    "Q024",
+    "Q040",
+    "Q041",
+    "Q061"
+   ],
+   "missed_right": [],
+   "missed_wrong": [
+    "Q004",
+    "Q013"
+   ]
+  }
+ },
+ "test_C": {
+  "queries_with_expected_paragraph": 50,
+  "pipeline_recall": 0.96,
+  "answer_accuracy": 0.94,
+  "accuracy_when_retrieved": 0.979,
+  "accuracy_when_missed": 0.0,
+  "cells": {
+   "retrieved_right": [
+    "Q003",
+    "Q005",
+    "Q007",
+    "Q008",
+    "Q009",
+    "Q011",
+    "Q012",
+    "Q016",
+    "Q018",
+    "Q019",
+    "Q020",
+    "Q021",
+    "Q023",
+    "Q024",
+    "Q025",
+    "Q028",
+    "Q029",
+    "Q030",
+    "Q031",
+    "Q033",
+    "Q034",
+    "Q035",
+    "Q036",
+    "Q038",
+    "Q039",
+    "Q040",
+    "Q041",
+    "Q044",
+    "Q045",
+    "Q046",
+    "Q048",
+    "Q049",
+    "Q050",
+    "Q052",
+    "Q053",
+    "Q054",
+    "Q056",
+    "Q057",
+    "Q058",
+    "Q061",
+    "Q063",
+    "Q064",
+    "Q065",
+    "Q067",
+    "Q068",
+    "Q069",
+    "Q077"
+   ],
+   "retrieved_wrong": [
+    "Q001"
+   ],
+   "missed_right": [],
+   "missed_wrong": [
+    "Q004",
+    "Q013"
+   ]
+  }
+ }
+}

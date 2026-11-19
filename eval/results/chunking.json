@@ -1,0 +1,80 @@
+{
+ "documents": 1080,
+ "queries": {
+  "dev": 26,
+  "test": 81
+ },
+ "embed_model": "BAAI/bge-small-en-v1.5",
+ "rerank_model": "Xenova/ms-marco-MiniLM-L-6-v2",
+ "tag": "full",
+ "schemes": {
+  "paragraph_220": {
+   "chunks": 42204,
+   "mean_words": 108.0,
+   "max_words": 398,
+   "results": {
+    "dev": {
+     "dense": {
+      "recall@1": 0.577,
+      "recall@3": 0.885,
+      "recall@5": 0.962,
+      "recall@10": 1.0,
+      "mrr@10": 0.722
+     },
+     "bm25": {
+      "recall@1": 0.692,
+      "recall@3": 0.923,
+      "recall@5": 0.923,
+      "recall@10": 0.923,
+      "mrr@10": 0.801
+     },
+     "hybrid": {
+      "recall@1": 0.846,
+      "recall@3": 0.885,
+      "recall@5": 0.962,
+      "recall@10": 1.0,
+      "mrr@10": 0.891
+     },
+     "hybrid_rerank": {
+      "recall@1": 0.692,
+      "recall@3": 0.885,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.813
+     }
+    },
+    "test": {
+     "dense": {
+      "recall@1": 0.568,
+      "recall@3": 0.84,
+      "recall@5": 0.852,
+      "recall@10": 0.938,
+      "mrr@10": 0.697
+     },
+     "bm25": {
+      "recall@1": 0.63,
+      "recall@3": 0.914,
+      "recall@5": 0.951,
+      "recall@10": 0.951,
+      "mrr@10": 0.771
+     },
+     "hybrid": {
+      "recall@1": 0.778,
+      "recall@3": 0.827,
+      "recall@5": 0.951,
+      "recall@10": 0.951,
+      "mrr@10": 0.829
+     },
+     "hybrid_rerank": {
+      "recall@1": 0.852,
+      "recall@3": 0.914,
+      "recall@5": 0.951,
+      "recall@10": 0.951,
+      "mrr@10": 0.888
+     }
+    }
+   },
+   "seconds": 119
+  }
+ }
+}
