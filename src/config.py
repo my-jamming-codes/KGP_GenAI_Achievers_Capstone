@@ -1,4 +1,4 @@
-"""Settings, all from environment variables (see .env.example). Nothing secret lives in the repository."""
+"""Settings, all from environment variables (set in the .env file or the shell). Nothing secret lives in the repository."""
 import os
 from pathlib import Path
 
@@ -20,10 +20,15 @@ def _env(name: str, default: str) -> str:
 LLM_BASE_URL = _env("LLM_BASE_URL", "http://localhost:11434/v1")
 LLM_API_KEY = _env("LLM_API_KEY", "ollama")
 LLM_MODEL = _env("LLM_MODEL", "qwen3:8b")
+LLM_CA_CERT = _env("LLM_CA_CERT", "")  # exact path of the endpoint's .crt file, for endpoints served with a private certificate
 LLM_REASONING_EFFORT = _env("LLM_REASONING_EFFORT", "none")  # "" to omit the parameter for endpoints that reject it
 LLM_JSON_MODE = _env("LLM_JSON_MODE", "auto")  # auto | json_schema | json_object | none
 LLM_MAX_RETRIES = int(_env("LLM_MAX_RETRIES", "2"))
 LLM_TIMEOUT_S = float(_env("LLM_TIMEOUT_S", "120"))
+LLM_MAX_CONCURRENT = int(_env("LLM_MAX_CONCURRENT", "1"))   # the course endpoint allows 1 active request per group key
+LLM_MAX_OUTPUT_TOKENS = int(_env("LLM_MAX_OUTPUT_TOKENS", "1024"))  # the course endpoint allows 1,024 output tokens per call
+LLM_RATE_PER_MINUTE = int(_env("LLM_RATE_PER_MINUTE", "55"))   # the course endpoint allows 60 requests per key per minute; 0 = no limit
+LLM_BACKOFF_S = tuple(float(x) for x in _env("LLM_BACKOFF_S", "2,4,8").split(","))  # waits before retrying a 429 or 503
 
 QUERY_TOKEN_BUDGET = int(_env("QUERY_TOKEN_BUDGET", "40000"))  # prompt + completion tokens per question
 QUERY_TIME_LIMIT_S = float(_env("QUERY_TIME_LIMIT_S", "240"))
@@ -38,7 +43,8 @@ EMBED_PROVIDER = _env("EMBED_PROVIDER", "ollama")
 EMBED_MODEL = _env("EMBED_MODEL", "qllama/bge-small-en-v1.5" if EMBED_PROVIDER == "ollama" else "BAAI/bge-small-en-v1.5")
 EMBED_BASE_URL = _env("EMBED_BASE_URL", "http://localhost:11434/v1")
 EMBED_API_KEY = _env("EMBED_API_KEY", "ollama")
-EMBED_BATCH = int(_env("EMBED_BATCH", "64"))
+EMBED_CA_CERT = _env("EMBED_CA_CERT", "")  # exact path of the embeddings endpoint's .crt file (can be the same file as LLM_CA_CERT)
+EMBED_BATCH = int(_env("EMBED_BATCH", "16"))  # the course embeddings endpoint accepts at most 16 texts per call
 # How the embedding source is named on screen (the live status and the Activity log); the setting itself is unchanged.
 EMBED_SOURCE_LABEL = {"ollama": "model server", "fastembed": "in-process"}.get(EMBED_PROVIDER, EMBED_PROVIDER)
 RERANK_MODEL = _env("RERANK_MODEL", "Xenova/ms-marco-MiniLM-L-6-v2")   # cross-encoder, always in-process (fastembed)

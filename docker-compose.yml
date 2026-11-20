@@ -16,11 +16,13 @@ services:
       LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-http://host.docker.internal:11434/v1}
       LLM_API_KEY: ${LLM_API_KEY:-ollama}
       LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      LLM_CA_CERT: ${DOCKER_LLM_CA_CERT:-}          # for example /certs/vm07-ca.crt, a file inside the folder mounted below
       LLM_REASONING_EFFORT: ${LLM_REASONING_EFFORT:-none}
       EMBED_PROVIDER: ${EMBED_PROVIDER:-ollama}
       EMBED_MODEL: ${EMBED_MODEL:-qllama/bge-small-en-v1.5}
       EMBED_BASE_URL: ${DOCKER_EMBED_BASE_URL:-http://host.docker.internal:11434/v1}
       EMBED_API_KEY: ${EMBED_API_KEY:-ollama}
+      EMBED_CA_CERT: ${DOCKER_EMBED_CA_CERT:-}
       QUERY_TOKEN_BUDGET: ${QUERY_TOKEN_BUDGET:-40000}
       RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-6}
       LANGSMITH_TRACING: "false"   # LangGraph runs locally; no traces are sent to LangSmith
@@ -31,6 +33,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - app_state:/app/state
+      - ${CERT_DIR:-./crt}:/certs:ro   # the .crt files live in ./crt (or set CERT_DIR to another folder)
     depends_on:
       - qdrant
 volumes:

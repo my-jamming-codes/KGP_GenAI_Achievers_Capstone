@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets and local settings
+.env
+.env.*
+crt/
+*.crt
+*.pem
+
+# Run-time output (rebuilt by running the app)
+traces/
+data/store/
+data/cache/
+eval/results/*.tmp
+
+# macOS
+.DS_Store

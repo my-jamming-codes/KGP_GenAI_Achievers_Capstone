@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import re
+import threading
 import time
 from pathlib import Path
 from typing import Any, Optional, Type, TypeVar
@@ -55,6 +56,38 @@ def _extract_json(text: str) -> str:
     return text[start:end + 1] if start != -1 and end > start else text
 
 
+_ENDPOINT_SLOTS = threading.BoundedSemaphore(config.LLM_MAX_CONCURRENT)   # one process-wide queue for every LLM in the app
+
+
+class RateWindow:
+    """Allow at most `limit` calls in any 60 seconds; wait() blocks until the next call is allowed (limit 0 = off)."""
+
+    def __init__(self, limit: int, clock=time.monotonic, sleep=time.sleep) -> None:
+        self.limit, self.clock, self.sleep = limit, clock, sleep
+        self.times: list[float] = []
+        self.lock = threading.Lock()
+
+    def wait(self) -> float:
+        """Reserve a slot, sleeping first if the last minute is full. Returns the seconds waited."""
+        if self.limit <= 0:
+            return 0.0
+        with self.lock:
+            now = self.clock()
+            self.times = [t for t in self.times if now - t < 60]
+            delay = 0.0 if len(self.times) < self.limit else 60 - (now - self.times[0]) + 0.05
+            if delay > 0:
+                activity.emit("llm", f"Request limit reached; waiting {delay:.0f} s", status="wait")
+                self.sleep(delay)
+                now = self.clock()
+                self.times = [t for t in self.times if now - t < 60]
+            self.times.append(now)
+            return delay
+
+
+_RATE = RateWindow(config.LLM_RATE_PER_MINUTE)
+_TOO_LARGE = ("context length", "context_length", "maximum context", "too many tokens", "max_tokens", "too long", "token limit", "8192")
+
+
 class LLM:
     def __init__(self, base_url: str = config.LLM_BASE_URL, api_key: str = config.LLM_API_KEY, model: str = config.LLM_MODEL,
                  cache_dir: Optional[Path] = None, use_cache: Optional[bool] = None) -> None:
@@ -74,7 +107,12 @@ class LLM:
         if self._client is None:
             from openai import OpenAI
 
-            self._client = OpenAI(base_url=self.base_url, api_key=self.api_key, timeout=config.LLM_TIMEOUT_S, max_retries=1)
+            from src.tls import http_client
+
+            self._client = OpenAI(base_url=self.base_url, api_key=self.api_key, timeout=config.LLM_TIMEOUT_S, max_retries=0,
+                                  http_client=http_client(config.LLM_CA_CERT))
+        max_tokens = min(max_tokens, config.LLM_MAX_OUTPUT_TOKENS)
+        waits = list(config.LLM_BACKOFF_S)
         while True:
             kwargs: dict[str, Any] = dict(model=self.model, messages=messages, temperature=0, max_tokens=max_tokens)
             if self.mode == "json_schema":
@@ -84,11 +122,19 @@ class LLM:
             if self.reasoning_effort:
                 kwargs["reasoning_effort"] = self.reasoning_effort
             try:
-                resp = self._client.chat.completions.create(**kwargs)
+                with _ENDPOINT_SLOTS:   # queue here instead of earning a 429 from the endpoint
+                    _RATE.wait()
+                    resp = self._client.chat.completions.create(**kwargs)
                 break
             except Exception as exc:  # fall back one feature at a time, then give up
                 msg = str(exc).lower()
-                if self.reasoning_effort and "reasoning" in msg:
+                if getattr(exc, "status_code", None) == 400 and any(w in msg for w in _TOO_LARGE):
+                    raise ToolCallError(f"the request is too large for the endpoint (prompt plus answer must fit its token limit): {exc}") from exc
+                if getattr(exc, "status_code", None) in (429, 503) and waits:
+                    wait = waits.pop(0)   # busy endpoint: wait 2, 4, then 8 seconds, then report the failure
+                    activity.emit("llm", f"Model endpoint busy; retrying in {wait:g} s", status="retry")
+                    time.sleep(wait)
+                elif self.reasoning_effort and "reasoning" in msg:
                     self.reasoning_effort = ""
                 elif self.mode == "json_schema" and any(w in msg for w in ("response_format", "json_schema", "schema", "400")):
                     self.mode = "json_object"

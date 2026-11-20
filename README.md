@@ -25,7 +25,6 @@ On Linux, use your package manager: `poppler-utils` for poppler.
 ```bash
 uv venv --python 3.11 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env                       # local Ollama for the chat model and the embeddings
 ollama pull qwen3:8b                       # the language model (about 5 GB)
 ollama pull qllama/bge-small-en-v1.5       # the embedding model (36 MB)
 ```
@@ -100,14 +99,20 @@ embeddings. Set `DOCKER_LLM_BASE_URL` or `DOCKER_EMBED_BASE_URL` to point it els
 The clients are OpenAI-compatible, so only environment variables change (in `.env`, or the shell for Docker).
 Nothing about an endpoint is stored in the repository.
 
+An endpoint served with a private certificate needs the `.crt` file. Set `LLM_CA_CERT` and `EMBED_CA_CERT` to its exact path; the app does not search for it. With Docker, keep the files in the `crt` folder (or set `CERT_DIR`) and set `DOCKER_LLM_CA_CERT` and `DOCKER_EMBED_CA_CERT` to its path inside the container, for example `/certs/vm04-ca.crt`.
+
 | Variable | Local default | Course endpoint |
 | --- | --- | --- |
 | `LLM_BASE_URL` | `http://localhost:11434/v1` | the course base URL |
 | `LLM_API_KEY` | `ollama` | the course key |
-| `LLM_MODEL` | `qwen3:8b` | for example `Qwen2.5-7B-Instruct-AWQ` |
+| `LLM_MODEL` | `qwen3:8b` | for example `Qwen/Qwen3-8B` |
+| `LLM_CA_CERT` | empty | exact path of the endpoint's `.crt` file, for example `$HOME/Downloads/vm04-ca.crt` |
 | `EMBED_PROVIDER` | `ollama` | `ollama` for any OpenAI-compatible embeddings endpoint, or `fastembed` to run the model in-process |
 | `EMBED_MODEL` | `qllama/bge-small-en-v1.5` | `BAAI/bge-small-en-v1.5` with `fastembed` |
 | `EMBED_BASE_URL`, `EMBED_API_KEY` | `http://localhost:11434/v1`, `ollama` | the embeddings endpoint |
+| `EMBED_CA_CERT` | empty | exact path of the embeddings endpoint's `.crt` file (often the same file as `LLM_CA_CERT`) |
+
+Course endpoint limits are built in and can be tuned: `LLM_MAX_CONCURRENT` (default 1 active request, queued inside the app), `LLM_RATE_PER_MINUTE` (default 55 of the 60 allowed per key; 0 turns it off), `LLM_MAX_OUTPUT_TOKENS` (default 1024) and `LLM_BACKOFF_S` (default `2,4,8` seconds before a 429 or 503 is retried). `EMBED_BATCH` is 16, the most texts the embeddings endpoint accepts per call. The limits are per process, so run one thing at a time on a group key.
 
 JSON-schema output is requested first. If an endpoint rejects it, the client falls back to plain JSON, validates every reply with Pydantic and retries twice with the error before counting a tool call error. `LLM_REASONING_EFFORT=none` switches off qwen3 thinking on Ollama; leave it empty for endpoints that reject the parameter.
 

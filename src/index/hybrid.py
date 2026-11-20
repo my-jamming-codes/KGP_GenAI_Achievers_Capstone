@@ -66,7 +66,10 @@ def _embed_endpoint(texts: list[str]) -> np.ndarray:
 def _embed_client():
     from openai import OpenAI
 
-    return OpenAI(base_url=config.EMBED_BASE_URL, api_key=config.EMBED_API_KEY, timeout=120, max_retries=2)
+    from src.tls import http_client
+
+    return OpenAI(base_url=config.EMBED_BASE_URL, api_key=config.EMBED_API_KEY, timeout=120, max_retries=2,
+                  http_client=http_client(config.EMBED_CA_CERT))
 
 
 @lru_cache(maxsize=1)
