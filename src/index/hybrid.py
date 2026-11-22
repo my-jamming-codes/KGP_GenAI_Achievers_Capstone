@@ -46,6 +46,29 @@ def embed_texts(texts: list[str]) -> np.ndarray:
     return np.asarray(list(model.embed(texts, batch_size=32, parallel=0 if len(texts) > 500 else None)), dtype=np.float32)
 
 
+def _too_long(exc: Exception) -> Optional[int]:
+    """If the endpoint refused an input for passing its token limit, return the token count it reports (or 0 when unstated)."""
+    msg = str(exc)
+    if "tokens" not in msg or not any(w in msg for w in ("less than", "maximum", "too long", "exceed")):
+        return None
+    m = re.search(r"Given:\s*(\d+)", msg)
+    return int(m.group(1)) if m else 0
+
+
+def _embed_fitting(client, text: str) -> list[float]:
+    """Embed one text, shortening it until the endpoint accepts it. Only used after a batch was refused as too long."""
+    for _ in range(8):
+        try:
+            return client.embeddings.create(model=config.EMBED_MODEL, input=[text]).data[0].embedding
+        except Exception as exc:
+            given = _too_long(exc)
+            if given is None:
+                raise
+            keep = (config.EMBED_MAX_TOKENS / given * 0.95) if given else 0.8
+            text = text[: max(50, int(len(text) * min(keep, 0.9)))]
+    raise EmbeddingError("a text could not be shortened enough for the embedding endpoint")
+
+
 def _embed_endpoint(texts: list[str]) -> np.ndarray:
     client = _embed_client()
     out: list[list[float]] = []
@@ -53,9 +76,14 @@ def _embed_endpoint(texts: list[str]) -> np.ndarray:
         batch = texts[i:i + config.EMBED_BATCH]
         try:
             resp = client.embeddings.create(model=config.EMBED_MODEL, input=batch)
+            vectors = [d.embedding for d in sorted(resp.data, key=lambda d: d.index)]
         except Exception as exc:
-            raise EmbeddingError(f"embedding call to {config.EMBED_BASE_URL} ({config.EMBED_MODEL}) failed: {exc}") from exc
-        vectors = [d.embedding for d in sorted(resp.data, key=lambda d: d.index)]
+            if _too_long(exc) is None:
+                raise EmbeddingError(f"embedding call to {config.EMBED_BASE_URL} ({config.EMBED_MODEL}) failed: {exc}") from exc
+            try:   # one text in the batch is over the endpoint's token limit: send them one at a time and shorten that one
+                vectors = [_embed_fitting(client, t) for t in batch]
+            except Exception as inner:
+                raise EmbeddingError(f"embedding call to {config.EMBED_BASE_URL} ({config.EMBED_MODEL}) failed: {inner}") from inner
         if len(vectors) != len(batch):
             raise EmbeddingError(f"asked for {len(batch)} embeddings, got {len(vectors)}")
         out.extend(vectors)

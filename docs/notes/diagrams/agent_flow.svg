@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="440" viewBox="0 0 1100 440" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+    <style>
+      .code{fill:#E3ECF6;stroke:#5B7DA8;stroke-width:1.2}
+      .llm{fill:#FBE3D2;stroke:#C0703A;stroke-width:1.2}
+      .end{fill:#F7F5EF;stroke:#8A8F98;stroke-width:1.2}
+      .t{font-size:15px;font-weight:700;fill:#14213D}
+      .s{font-size:12px;fill:#3D4A5C}
+      .h{font-size:13px;font-weight:700;fill:#14213D;letter-spacing:1px}
+      .l{font-size:12px;fill:#4A5568;font-style:italic}
+      .ln{stroke:#4A5568;stroke-width:1.4;fill:none}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="440" fill="#FFFFFF"/>
+
+  <text class="h" x="20" y="24">RULE CHECK: SCENARIO IN, CHECKED REPORT OUT</text>
+  <rect class="end" x="20" y="48" width="110" height="64" rx="8"/>
+  <text class="t" x="34" y="72">case in</text><text class="s" x="34" y="92">application</text><text class="s" x="34" y="106">or scenario</text>
+  <rect class="code" x="148" y="48" width="104" height="64" rx="8"/>
+  <text class="t" x="162" y="72">guard</text><text class="s" x="162" y="92">refuse, strip</text><text class="s" x="162" y="106">instructions</text>
+  <rect class="llm" x="270" y="48" width="114" height="64" rx="8"/>
+  <text class="t" x="284" y="72">planner</text><text class="s" x="284" y="92">lender type,</text><text class="s" x="284" y="106">checks + tools</text>
+  <rect class="code" x="402" y="48" width="124" height="64" rx="8"/>
+  <text class="t" x="416" y="72">executor</text><text class="s" x="416" y="92">runs the tools,</text><text class="s" x="416" y="106">searches</text>
+  <rect class="llm" x="544" y="48" width="114" height="64" rx="8"/>
+  <text class="t" x="558" y="72">judge</text><text class="s" x="558" y="92">status and</text><text class="s" x="558" y="106">paragraph id</text>
+  <rect class="code" x="676" y="48" width="140" height="64" rx="8"/>
+  <text class="t" x="690" y="72">critic</text><text class="s" x="690" y="92">status, numbers,</text><text class="s" x="690" y="106">citation, rulebook</text>
+  <rect class="llm" x="834" y="48" width="104" height="64" rx="8"/>
+  <text class="t" x="848" y="72">drafter</text><text class="s" x="848" y="92">cited note</text><text class="s" x="848" y="106">for the officer</text>
+  <rect class="end" x="956" y="48" width="124" height="64" rx="8"/>
+  <text class="t" x="970" y="72">officer</text><text class="s" x="970" y="92">decides and</text><text class="s" x="970" y="106">signs off</text>
+
+  <path class="ln" d="M130,80 L146,80" marker-end="url(#a)"/>
+  <path class="ln" d="M252,80 L268,80" marker-end="url(#a)"/>
+  <path class="ln" d="M384,80 L400,80" marker-end="url(#a)"/>
+  <path class="ln" d="M526,80 L542,80" marker-end="url(#a)"/>
+  <path class="ln" d="M658,80 L674,80" marker-end="url(#a)"/>
+  <path class="ln" d="M816,80 L832,80" marker-end="url(#a)"/>
+  <text class="l" x="812" y="40">pass</text>
+  <path class="ln" d="M938,80 L954,80" marker-end="url(#a)"/>
+
+  <rect class="code" x="676" y="160" width="140" height="58" rx="8"/>
+  <text class="t" x="690" y="184">revise</text><text class="s" x="690" y="204">with the critic's reasons</text>
+  <path class="ln" d="M746,112 L746,158" marker-end="url(#a)"/>
+  <text class="l" x="754" y="140">fail (once)</text>
+  <path class="ln" d="M676,189 L464,189 L464,114" marker-end="url(#a)"/>
+  <text class="l" x="476" y="182">re-run only the failed checks</text>
+  <path class="ln" d="M676,206 L327,206 L327,114" marker-end="url(#a)"/>
+  <text class="l" x="338" y="222">re-plan when the rulebook or plan was wrong</text>
+  <text class="s" x="676" y="240">Still wrong after the retry: shown as</text>
+  <text class="s" x="676" y="255">"needs information" with the tool's numbers</text>
+
+  <text class="h" x="20" y="306">RULE LOOKUP: A GENERAL QUESTION ABOUT THE RULES</text>
+  <rect class="code" x="20" y="326" width="118" height="58" rx="8"/>
+  <text class="t" x="34" y="350">guard</text><text class="s" x="34" y="370">refusals, injection</text>
+  <rect class="llm" x="156" y="326" width="118" height="58" rx="8"/>
+  <text class="t" x="170" y="350">planner</text><text class="s" x="170" y="370">lender, query</text>
+  <rect class="code" x="292" y="326" width="160" height="58" rx="8"/>
+  <text class="t" x="306" y="350">lookup guard</text><text class="s" x="306" y="370">unverified → unknown</text>
+  <rect class="code" x="470" y="326" width="120" height="58" rx="8"/>
+  <text class="t" x="484" y="350">search</text><text class="s" x="484" y="370">hybrid + reranker</text>
+  <rect class="llm" x="608" y="326" width="120" height="58" rx="8"/>
+  <text class="t" x="622" y="350">draft</text><text class="s" x="622" y="370">answer + citations</text>
+  <rect class="code" x="746" y="326" width="150" height="58" rx="8"/>
+  <text class="t" x="760" y="350">grounding check</text><text class="s" x="760" y="370">checks the citations</text>
+  <rect class="end" x="914" y="326" width="166" height="58" rx="8"/>
+  <text class="t" x="928" y="350">cited answer</text><text class="s" x="928" y="370">or "could not verify"</text>
+
+  <path class="ln" d="M138,355 L154,355" marker-end="url(#a)"/>
+  <path class="ln" d="M274,355 L290,355" marker-end="url(#a)"/>
+  <path class="ln" d="M452,355 L468,355" marker-end="url(#a)"/>
+  <path class="ln" d="M590,355 L606,355" marker-end="url(#a)"/>
+  <path class="ln" d="M728,355 L744,355" marker-end="url(#a)"/>
+  <path class="ln" d="M896,355 L912,355" marker-end="url(#a)"/>
+  <path class="ln" d="M821,384 L821,412 L668,412 L668,386" marker-end="url(#a)"/>
+  <text class="l" x="680" y="430">fail: one redraft with the reason</text>
+</svg>

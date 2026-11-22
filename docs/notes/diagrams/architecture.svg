@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="790" viewBox="0 0 1100 790" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+    <style>
+      .box{fill:#F7F5EF;stroke:#8A8F98;stroke-width:1.2}
+      .code{fill:#E3ECF6;stroke:#5B7DA8;stroke-width:1.2}
+      .llm{fill:#FBE3D2;stroke:#C0703A;stroke-width:1.2}
+      .data{fill:#EEF3E6;stroke:#7C9A5A;stroke-width:1.2}
+      .group{fill:none;stroke:#14213D;stroke-width:1.4;stroke-dasharray:6 4}
+      .t{font-size:15px;font-weight:700;fill:#14213D}
+      .s{font-size:12.5px;fill:#3D4A5C}
+      .h{font-size:13px;font-weight:700;fill:#14213D;letter-spacing:1px}
+      .l{font-size:12px;fill:#4A5568;font-style:italic}
+      .ln{stroke:#4A5568;stroke-width:1.4;fill:none}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="790" fill="#FFFFFF"/>
+
+  <!-- Layer 1: data and ingestion -->
+  <text class="h" x="20" y="22">1 · DATA, INGESTION AND SEARCH INDEX</text>
+  <rect class="data" x="20" y="36" width="200" height="62" rx="8"/>
+  <text class="t" x="34" y="60">RBI web pages</text>
+  <text class="s" x="34" y="80">data/raw/html · 1,085 pages</text>
+  <rect class="data" x="20" y="112" width="200" height="62" rx="8"/>
+  <text class="t" x="34" y="136">Official RBI PDFs</text>
+  <text class="s" x="34" y="156">data/raw/pdf · saved by hand</text>
+
+  <rect class="code" x="270" y="60" width="240" height="92" rx="8"/>
+  <text class="t" x="284" y="84">Ingest · src/ingest</text>
+  <text class="s" x="284" y="104">download · PDF checklist</text>
+  <text class="s" x="284" y="122">parse: the PDF when it passes checks,</text>
+  <text class="s" x="284" y="140">else the web page</text>
+
+  <rect class="data" x="560" y="74" width="160" height="64" rx="8"/>
+  <text class="t" x="574" y="98">Paragraph chunks</text>
+  <text class="s" x="574" y="118">id · lender · date · source</text>
+
+  <rect class="code" x="770" y="36" width="310" height="138" rx="8"/>
+  <text class="t" x="784" y="60">Hybrid index · src/index</text>
+  <text class="s" x="784" y="82">bge-small embeddings (model server) in Qdrant</text>
+  <text class="s" x="784" y="101">BM25 keyword search</text>
+  <text class="s" x="784" y="120">reciprocal rank fusion, top 20</text>
+  <text class="s" x="784" y="139">cross-encoder reranker</text>
+  <text class="s" x="784" y="158">lender filter: HFC or bank rulebook</text>
+
+  <path class="ln" d="M220,67 L268,95" marker-end="url(#a)"/>
+  <path class="ln" d="M220,143 L268,118" marker-end="url(#a)"/>
+  <path class="ln" d="M510,106 L558,106" marker-end="url(#a)"/>
+  <path class="ln" d="M720,106 L768,106" marker-end="url(#a)"/>
+
+  <!-- Layer 2: agents -->
+  <text class="h" x="20" y="226">2 · AGENTS · LANGGRAPH STATE GRAPH (src/agents)</text>
+  <rect class="box" x="20" y="250" width="160" height="236" rx="8"/>
+  <text class="t" x="34" y="274">Workspace</text>
+  <text class="s" x="34" y="292">src/app · Streamlit</text>
+  <text class="s" x="34" y="318">· question</text>
+  <text class="s" x="34" y="338">· Run RBI rule check</text>
+  <text class="s" x="34" y="358">· Share this screen</text>
+  <text class="s" x="44" y="376">(fields as text)</text>
+  <text class="s" x="34" y="400">· live activity box</text>
+  <text class="s" x="34" y="420">· FAQ, Prompt lab,</text>
+  <text class="s" x="44" y="438">Retrieval lab,</text>
+  <text class="s" x="44" y="456">Activity log</text>
+
+  <rect class="group" x="200" y="240" width="880" height="282" rx="12"/>
+
+  <rect class="code" x="216" y="296" width="96" height="58" rx="8"/>
+  <text class="t" x="232" y="320">guard</text><text class="s" x="232" y="340">refusals</text>
+  <rect class="llm" x="328" y="296" width="100" height="58" rx="8"/>
+  <text class="t" x="344" y="320">planner</text><text class="s" x="344" y="340">which checks</text>
+  <rect class="code" x="444" y="296" width="110" height="58" rx="8"/>
+  <text class="t" x="460" y="320">executor</text><text class="s" x="460" y="340">tools + search</text>
+  <rect class="llm" x="570" y="296" width="100" height="58" rx="8"/>
+  <text class="t" x="586" y="320">judge</text><text class="s" x="586" y="340">A · B · C</text>
+  <rect class="code" x="686" y="296" width="100" height="58" rx="8"/>
+  <text class="t" x="702" y="320">critic</text><text class="s" x="702" y="340">vs the tools</text>
+  <rect class="code" x="814" y="296" width="100" height="58" rx="8"/>
+  <text class="t" x="830" y="320">finalize</text><text class="s" x="830" y="340">confirmed only</text>
+  <rect class="llm" x="940" y="296" width="124" height="58" rx="8"/>
+  <text class="t" x="956" y="320">drafter</text><text class="s" x="956" y="340">cited note</text>
+
+  <path class="ln" d="M180,325 L214,325" marker-end="url(#a)"/>
+  <path class="ln" d="M312,325 L326,325" marker-end="url(#a)"/>
+  <path class="ln" d="M428,325 L442,325" marker-end="url(#a)"/>
+  <path class="ln" d="M554,325 L568,325" marker-end="url(#a)"/>
+  <path class="ln" d="M670,325 L684,325" marker-end="url(#a)"/>
+  <path class="ln" d="M786,325 L812,325" marker-end="url(#a)"/>
+  <text class="l" x="789" y="316">pass</text>
+  <path class="ln" d="M914,325 L938,325" marker-end="url(#a)"/>
+
+  <rect class="code" x="686" y="420" width="100" height="52" rx="8"/>
+  <text class="t" x="702" y="442">revise</text><text class="s" x="702" y="460">re-plan if needed</text>
+  <path class="ln" d="M736,354 L736,418" marker-end="url(#a)"/>
+  <text class="l" x="744" y="392">fail, once</text>
+  <path class="ln" d="M686,446 L640,446 L640,392 L520,392 L520,356" marker-end="url(#a)"/>
+  <text class="l" x="532" y="386">re-run failed checks</text>
+
+  <rect class="code" x="420" y="424" width="170" height="54" rx="8"/>
+  <text class="t" x="434" y="446">Tools · src/tools</text>
+  <text class="s" x="434" y="465">arithmetic; limits from rules</text>
+  <rect class="data" x="216" y="424" width="180" height="62" rx="8" style="stroke:#C0703A;stroke-width:2"/>
+  <text class="t" x="230" y="446">rules/rules.yaml</text>
+  <text class="s" x="230" y="463">29 verified · 1 unknown</text>
+  <text class="s" x="230" y="479">R = reads this file</text>
+  <path class="ln" d="M396,451 L418,451" marker-end="url(#a)"/>
+  <path class="ln" d="M470,354 L470,422" marker-end="url(#a)"/>
+
+  <path class="ln" d="M925,174 L925,206 L499,206 L499,294" marker-end="url(#a)"/>
+  <text class="l" x="740" y="200">search the RBI paragraphs</text>
+
+  <text class="s" x="216" y="498">Rule lookups take a shorter path: guard → planner → lookup guard (an unverified rule is answered "unknown")</text>
+  <text class="s" x="216" y="514">→ search → draft → grounding check, with one redraft. The rules file says which rules are unverified.</text>
+
+  <!-- Layer 3: decision and models -->
+  <text class="h" x="20" y="562">3 · MODELS AND THE OFFICER'S DECISION</text>
+  <rect class="llm" x="20" y="578" width="600" height="66" rx="8"/>
+  <text class="t" x="34" y="602">Course model servers (OpenAI-compatible chat and embeddings)</text>
+  <text class="s" x="34" y="622">qwen3:8b for planner, judge and drafter · qllama/bge-small-en-v1.5 for embeddings</text>
+  <text class="s" x="34" y="639">switch with LLM_* and EMBED_* settings, for example to the course endpoint</text>
+
+  <rect class="box" x="660" y="578" width="420" height="66" rx="8"/>
+  <text class="t" x="674" y="602">Officer accepts, disputes, comments, signs off</text>
+  <text class="s" x="674" y="622">only the officer can change a status (src/app/store)</text>
+  <text class="s" x="674" y="639">results show the RBI paragraph id for every rule</text>
+  <path class="ln" d="M1002,354 L1002,576" marker-end="url(#a)"/>
+
+  <!-- Layer 4: alongside every run -->
+  <text class="h" x="20" y="688">4 · ALONGSIDE EVERY RUN</text>
+  <rect class="code" x="20" y="702" width="200" height="66" rx="8"/>
+  <text class="t" x="34" y="726">Safety · src/safety</text>
+  <text class="s" x="34" y="746">refusals · injection removal</text>
+  <text class="s" x="34" y="762">PII masking</text>
+  <rect class="code" x="236" y="702" width="210" height="66" rx="8"/>
+  <text class="t" x="250" y="726">Tracing · src/tracing</text>
+  <text class="s" x="250" y="746">one trace per question (audit)</text>
+  <text class="s" x="250" y="762">live activity log</text>
+  <rect class="code" x="462" y="702" width="190" height="66" rx="8"/>
+  <text class="t" x="476" y="726">Memory and cache</text>
+  <text class="s" x="476" y="746">follow-up questions</text>
+  <text class="s" x="476" y="762">answers keyed on rules version</text>
+  <rect class="code" x="668" y="702" width="412" height="66" rx="8"/>
+  <text class="t" x="682" y="726">Limits</text>
+  <text class="s" x="682" y="746">10 steps · 40,000 tokens · 240 s per question · 2 validation retries</text>
+  <text class="s" x="682" y="762">6 questions per minute per session</text>
+
+
+  <!-- R badges: the rules file is read here -->
+  <circle cx="780" cy="302" r="9" fill="#C0703A"/><text x="780" y="306" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="584" cy="430" r="9" fill="#C0703A"/><text x="584" y="434" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="646" cy="708" r="9" fill="#C0703A"/><text x="646" y="712" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="174" cy="256" r="9" fill="#C0703A"/><text x="174" y="260" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="536" cy="302" r="9" fill="#C0703A"/><text x="536" y="306" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <text class="l" x="590" y="284" style="fill:#9A4F1B">critic: which rulebook a cited paragraph belongs to</text>
+  <text class="l" x="190" y="262" style="fill:#9A4F1B">FAQ quotes</text>
+
+  <!-- legend -->
+  <rect class="code" x="820" y="220" width="14" height="14" rx="3"/><text class="s" x="840" y="232">code</text>
+  <rect class="llm" x="890" y="220" width="14" height="14" rx="3"/><text class="s" x="910" y="232">language model</text>
+  <rect class="data" x="1010" y="220" width="14" height="14" rx="3"/><text class="s" x="1030" y="232">data</text>
+</svg>

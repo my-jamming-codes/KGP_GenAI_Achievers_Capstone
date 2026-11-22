@@ -14,20 +14,19 @@ official PDFs and the search index are not in git (they are large and regenerate
 | Tool | Used for | Install (macOS) |
 | --- | --- | --- |
 | Python 3.11 and [uv](https://docs.astral.sh/uv/) | the code | `brew install uv` |
-| [Ollama](https://ollama.com) | the language model and the embedding model | `brew install ollama`, then keep `ollama serve` running |
 | poppler (`pdftotext`) | reading the RBI PDFs (pypdf is used if it is missing) | `brew install poppler` |
 | Docker Desktop | optional, to run the app in containers | from docker.com |
 
 On Linux, use your package manager: `poppler-utils` for poppler.
 
-### 2. Create the environment and pull the models
+### 2. Create the environment and set the model endpoints
 
 ```bash
 uv venv --python 3.11 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-ollama pull qwen3:8b                       # the language model (about 5 GB)
-ollama pull qllama/bge-small-en-v1.5       # the embedding model (36 MB)
 ```
+
+The chat model and the embedding model are not installed here: they are OpenAI-compatible endpoints, set in a `.env` file in the project folder (see "Switching the model" for every variable). For the course server set `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_CA_CERT`, `EMBED_BASE_URL`, `EMBED_API_KEY`, `EMBED_MODEL` and `EMBED_CA_CERT`, and keep the `.crt` files in the `crt` folder.
 
 The reranker (`Xenova/ms-marco-MiniLM-L-6-v2`) is downloaded automatically by fastembed the first time a search runs.
 
@@ -49,7 +48,7 @@ Tier 1 (the 10 Directions the rules cite) is the important one; anything not sav
 ### 4. Build the search index
 
 ```bash
-.venv/bin/python -m src.index.hybrid build # embeds every chunk through Ollama, builds BM25 (about 3 minutes)
+.venv/bin/python -m src.index.hybrid build # embeds every chunk through the embedding endpoint, builds BM25 (this takes a long time on the course server, which accepts 16 texts per call and one request at a time; a stopped build resumes from its saved parts)
 ```
 
 The index records which embedding model built it. If you change `EMBED_PROVIDER` or `EMBED_MODEL`, rebuild it.
@@ -57,9 +56,9 @@ The index records which embedding model built it. If you change `EMBED_PROVIDER`
 ### 5. Check the build
 
 ```bash
-.venv/bin/python -m pytest tests -q        # 138 tests, no model needed
+.venv/bin/python -m pytest tests -q        # 165 tests, no model needed
 .venv/bin/python rules/check_quotes.py     # every rule quote against the RBI source text
-.venv/bin/python -m eval.retrieval_eval    # recall at 5 for the four search modes
+.venv/bin/python -m eval.retrieval_eval    # recall at 5 for the four search modes (the Ragas report is in the evaluation list below)
 ```
 
 ### 6. Run the workspace
@@ -70,11 +69,11 @@ The index records which embedding model built it. If you change `EMBED_PROVIDER`
 
 Sign in as **Kiran Rao (compliance officer)**. Dev Malhotra (credit processor) and Sana Qureshi (approver) can view but
 not change a status. Pages: Work queue, Application (with the assistant and Share this screen), Compliance checks,
-Comments and sign-off, FAQ, Prompt lab, Retrieval lab, Activity log, History and evaluation.
+Comments and sign-off, FAQ, Prompt lab, Retrieval lab, Activity log, History and evaluation, Task board (the capstone tasks by role, each with its current assignee, from `src/app/board/tasks.json`).
 
 ### Or run it with Docker
 
-After step 4 (the image copies the index from `data/index`), with Ollama running on the host:
+After step 4 (the image copies the index and the `eval/results` files from the project folder at build time, so rebuild after a new index or a new evaluation run), with the model endpoints set as below:
 
 ```bash
 docker compose up -d --build               # app on http://localhost:8501, plus a Qdrant server
@@ -82,15 +81,21 @@ APP_PORT=8502 docker compose up -d --build # if port 8501 is already taken
 docker compose down                        # stop
 ```
 
-The container calls Ollama on the host at `http://host.docker.internal:11434/v1`, for both the chat model and the
-embeddings. Set `DOCKER_LLM_BASE_URL` or `DOCKER_EMBED_BASE_URL` to point it elsewhere.
+The container reads the chat and embeddings addresses from `DOCKER_LLM_BASE_URL` and `DOCKER_EMBED_BASE_URL`; if they are not set it uses `http://host.docker.internal:11434/v1` for both, which is a server running on the host. For the course endpoints, also mount the certificate folder and give the paths inside the container:
+
+```bash
+APP_PORT=8502 CERT_DIR=./crt \
+DOCKER_LLM_BASE_URL=<chat base URL> DOCKER_EMBED_BASE_URL=<embeddings base URL> \
+DOCKER_LLM_CA_CERT=/certs/<chat>.crt DOCKER_EMBED_CA_CERT=/certs/<embeddings>.crt \
+docker compose up -d --build
+```
 
 ### If something goes wrong
 
 | Message or symptom | Cause and fix |
 | --- | --- |
 | "the index was built with … but the settings say …" | The embedding settings changed since the index was built: set them back, or rebuild (step 4) |
-| "I stopped because of a model reply that failed validation", or an embedding call failed | Ollama is not running or the model is not pulled: `ollama serve`, then step 2 |
+| "I stopped because of a model reply that failed validation", or an embedding call failed | The chat or embeddings endpoint is unreachable, the key or the `.crt` path is wrong, or the model name is wrong. Check `LLM_BASE_URL`, `EMBED_BASE_URL`, the keys, the certificate paths and the model names in `.env` (step 2) |
 | "ports are not available … 8501" | Another app uses the port: `APP_PORT=8502` (Docker) or `--server.port 8502` (Streamlit) |
 | A document you saved as PDF still shows `source_format: html` in `data/parsed/corpus_manifest.json` | The PDF failed a quality check; the reason is in `pdf_fallbacks` in the same file |
 
@@ -101,20 +106,20 @@ Nothing about an endpoint is stored in the repository.
 
 An endpoint served with a private certificate needs the `.crt` file. Set `LLM_CA_CERT` and `EMBED_CA_CERT` to its exact path; the app does not search for it. With Docker, keep the files in the `crt` folder (or set `CERT_DIR`) and set `DOCKER_LLM_CA_CERT` and `DOCKER_EMBED_CA_CERT` to its path inside the container, for example `/certs/vm04-ca.crt`.
 
-| Variable | Local default | Course endpoint |
+| Variable | Default in the code | Course endpoint |
 | --- | --- | --- |
-| `LLM_BASE_URL` | `http://localhost:11434/v1` | the course base URL |
-| `LLM_API_KEY` | `ollama` | the course key |
-| `LLM_MODEL` | `qwen3:8b` | for example `Qwen/Qwen3-8B` |
-| `LLM_CA_CERT` | empty | exact path of the endpoint's `.crt` file, for example `$HOME/Downloads/vm04-ca.crt` |
-| `EMBED_PROVIDER` | `ollama` | `ollama` for any OpenAI-compatible embeddings endpoint, or `fastembed` to run the model in-process |
-| `EMBED_MODEL` | `qllama/bge-small-en-v1.5` | `BAAI/bge-small-en-v1.5` with `fastembed` |
-| `EMBED_BASE_URL`, `EMBED_API_KEY` | `http://localhost:11434/v1`, `ollama` | the embeddings endpoint |
+| `LLM_BASE_URL` | `http://localhost:11434/v1` (a server on the same machine) | the course base URL |
+| `LLM_API_KEY` | a placeholder value | the course key |
+| `LLM_MODEL` | `qwen3:8b` | the course chat model, `Qwen/Qwen3-8B` |
+| `LLM_CA_CERT` | empty | exact path of the endpoint's `.crt` file, for example `crt/vm07-ca.crt` |
+| `EMBED_PROVIDER` | the endpoint mode (leave it unset) | leave unset to call an OpenAI-compatible embeddings endpoint, or set `fastembed` to run the model in-process |
+| `EMBED_MODEL` | `qllama/bge-small-en-v1.5` | `bge-small-en-v1.5` on the course endpoint; `BAAI/bge-small-en-v1.5` with `fastembed` |
+| `EMBED_BASE_URL`, `EMBED_API_KEY` | `http://localhost:11434/v1`, a placeholder value | the embeddings endpoint and its key |
 | `EMBED_CA_CERT` | empty | exact path of the embeddings endpoint's `.crt` file (often the same file as `LLM_CA_CERT`) |
 
 Course endpoint limits are built in and can be tuned: `LLM_MAX_CONCURRENT` (default 1 active request, queued inside the app), `LLM_RATE_PER_MINUTE` (default 55 of the 60 allowed per key; 0 turns it off), `LLM_MAX_OUTPUT_TOKENS` (default 1024) and `LLM_BACKOFF_S` (default `2,4,8` seconds before a 429 or 503 is retried). `EMBED_BATCH` is 16, the most texts the embeddings endpoint accepts per call. The limits are per process, so run one thing at a time on a group key.
 
-JSON-schema output is requested first. If an endpoint rejects it, the client falls back to plain JSON, validates every reply with Pydantic and retries twice with the error before counting a tool call error. `LLM_REASONING_EFFORT=none` switches off qwen3 thinking on Ollama; leave it empty for endpoints that reject the parameter.
+JSON-schema output is requested first. If an endpoint rejects it, the client falls back to plain JSON, validates every reply with Pydantic and retries twice with the error before counting a tool call error. `LLM_REASONING_EFFORT=none` switches off Qwen3 thinking; leave it empty for endpoints that reject the parameter.
 
 ## How a rule check runs
 
@@ -151,7 +156,7 @@ While the assistant works, the workspace shows each step, model call and search 
 | `src/agents`, `src/prompts` | The LangGraph agent flow, shared state, conversation memory, the three prompt strategies, the side-by-side strategy comparison and the JSON schemas |
 | `src/safety`, `src/tracing` | Refusals, injection handling, PII masking, JSON line traces, and the live activity log |
 | `src/app` | Streamlit workspace, answer cache, rate limiter, application store, and the FAQ page (rule answers are the verbatim quotes from `rules/rules.yaml`) |
-| `eval/` | Evaluation, retrieval recall, chunking experiments, the retrieval-versus-answer diagnostic, and the injection, PII and refusal sets |
+| `eval/` | Evaluation, retrieval recall, chunking experiments, the retrieval-versus-answer diagnostic, the extra Ragas report, and the injection, PII and refusal sets |
 | `docs/` | The project specification (`.md` and `.pdf`, with diagrams in `images/`), open questions, labelling guide, results, failure taxonomy, demo script, RAG and agentic layer write-ups, and project structure (a file-by-file guide) |
 
 ## Project tracking
@@ -162,6 +167,7 @@ The plan's tasks, with what proves each one done and its status, are tracked on 
 
 ```bash
 .venv/bin/python -m eval.retrieval_eval                       # recall at 5: dense, BM25, hybrid, hybrid plus reranker
+.venv/bin/python -m eval.ragas_eval --split dev --strategy C   # extra: Ragas faithfulness, relevancy, context precision (about 25 minutes on the course server)
 .venv/bin/python -m eval.chunking_eval                        # four chunking schemes x four modes, recall@1/3/5/10 and MRR (re-embeds the corpus)
 .venv/bin/python -m eval.run_eval --split dev --strategies A B C
 .venv/bin/python -m eval.run_eval --split test --strategies A C
@@ -177,6 +183,7 @@ Results are in `docs/results.md` and `docs/failure_taxonomy.md`. How the Week 2 
 - The credit scoring layer in the project specification is not built: the dataset and NPA target were not settled.
 - Gold labels were written from the verified rules and still need the second person review the project specification asks for.
 - "Bank" means a commercial bank as the Directions define it; regional rural banks, small finance banks and co-operative banks are out of scope.
-- The evaluation in `docs/results.md` was run before PDF ingestion and the move to Ollama embeddings, so it describes the earlier corpus. Retrieval was re-measured on the current index, but the end-to-end evaluation has not been re-run yet.
+- The accuracy evaluation in `docs/results.md` was run on 13 November, before PDF ingestion and the move to the course endpoints, so it describes the earlier corpus and a local Ollama model. Retrieval was re-measured on the current index, but the end-to-end evaluation has not been re-run yet.
 - Of the four chunking schemes, only the production one has been measured.
-- The system has been run only against a local Ollama model, not the course endpoint.
+- The course endpoints (chat and embeddings) are tested and the index is built on them. One full rule check, the retrieval recall and the Ragas report have been run against them; the full 80-query evaluation has not.
+- The Ragas report is judged by the 8B course model, so its scores are noisy and are a trend, not accuracy.

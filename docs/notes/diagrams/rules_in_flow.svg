@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="400" viewBox="0 0 1000 400" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C0703A"/></marker>
+    <style>
+      .code{fill:#E3ECF6;stroke:#5B7DA8;stroke-width:1.2}
+      .llm{fill:#FBE3D2;stroke:#C0703A;stroke-width:1.2}
+      .rule{fill:#EEF3E6;stroke:#7C9A5A;stroke-width:2}
+      .t{font-size:14px;font-weight:700;fill:#14213D}
+      .s{font-size:12px;fill:#3D4A5C}
+      .h{font-size:12px;font-weight:700;fill:#14213D;letter-spacing:1px}
+      .l{font-size:11.5px;fill:#9A4F1B;font-style:italic}
+      .ln{stroke:#4A5568;stroke-width:1.4;fill:none}
+      .rl{stroke:#C0703A;stroke-width:1.6;fill:none}
+    </style>
+  </defs>
+  <rect width="1000" height="400" fill="#FFFFFF"/>
+  <text class="h" x="10" y="22">WHERE rules/rules.yaml IS USED IN ONE RULE CHECK</text>
+
+  <rect class="code" x="10" y="40" width="150" height="52" rx="8"/><text class="t" x="22" y="62">guard</text><text class="s" x="22" y="80">refuse, clean input</text>
+  <rect class="llm" x="170" y="40" width="150" height="52" rx="8"/><text class="t" x="182" y="62">planner</text><text class="s" x="182" y="80">lender, which checks</text>
+  <rect class="code" x="330" y="40" width="150" height="52" rx="8"/><text class="t" x="342" y="62">executor: tools</text><text class="s" x="342" y="80">LTV, risk weight, ...</text>
+  <rect class="llm" x="490" y="40" width="150" height="52" rx="8"/><text class="t" x="502" y="62">judge</text><text class="s" x="502" y="80">status + paragraph</text>
+  <rect class="code" x="650" y="40" width="150" height="52" rx="8"/><text class="t" x="662" y="62">critic</text><text class="s" x="662" y="80">code checks the model</text>
+  <rect class="llm" x="810" y="40" width="180" height="52" rx="8"/><text class="t" x="822" y="62">drafter</text><text class="s" x="822" y="80">cited note for officer</text>
+  <line class="ln" x1="160" y1="66" x2="168" y2="66" marker-end="url(#a)"/><line class="ln" x1="320" y1="66" x2="328" y2="66" marker-end="url(#a)"/><line class="ln" x1="480" y1="66" x2="488" y2="66" marker-end="url(#a)"/><line class="ln" x1="640" y1="66" x2="648" y2="66" marker-end="url(#a)"/><line class="ln" x1="800" y1="66" x2="808" y2="66" marker-end="url(#a)"/>
+
+  <rect class="code" x="170" y="150" width="190" height="52" rx="8"/><text class="t" x="182" y="172">lookup_guard</text><text class="s" x="182" y="190">unverified rule? say "unknown"</text>
+  <rect class="code" x="520" y="150" width="190" height="52" rx="8"/><text class="t" x="532" y="172">answer cache key</text><text class="s" x="532" y="190">includes the rules version</text>
+  <rect class="code" x="800" y="150" width="190" height="52" rx="8"/><text class="t" x="812" y="172">FAQ page</text><text class="s" x="812" y="190">verbatim quotes, no model</text>
+
+  <rect class="rule" x="170" y="270" width="820" height="100" rx="10"/>
+  <text class="t" x="188" y="296">rules/rules.yaml</text>
+  <text class="s" x="188" y="316">30 records, each with: rule id, lender type, RBI paragraph id, the quoted text, the numbers (limits, bands, dates),</text>
+  <text class="s" x="188" y="332">effective date, and status. 29 are "verified" (checked against the RBI text). 1 is "unverified" (bank guarantor disclosure).</text>
+  <text class="s" x="188" y="348">Only verified records may be used for a limit. Also lists the 13 RBI source documents and which lender each one covers.</text>
+
+  <line class="rl" x1="405" y1="270" x2="405" y2="94" marker-end="url(#r)"/>
+  <text class="l" x="413" y="240">limits, bands, dates, paragraph id</text>
+  <line class="rl" x1="725" y1="270" x2="725" y2="94" marker-end="url(#r)"/>
+  <text class="l" x="733" y="256">which rulebook a paragraph belongs to</text>
+  <line class="rl" x1="265" y1="270" x2="265" y2="204" marker-end="url(#r)"/>
+  <text class="l" x="188" y="238">verified or not</text>
+  <line class="rl" x1="615" y1="270" x2="615" y2="204" marker-end="url(#r)"/>
+  <line class="rl" x1="895" y1="270" x2="895" y2="204" marker-end="url(#r)"/>
+  <text class="l" x="903" y="238">quote + id</text>
+
+  <text class="s" x="10" y="250">Orange arrows: the rules file is read</text>
+  <text class="s" x="10" y="266">at these points. The model never</text>
+  <text class="s" x="10" y="282">supplies a limit.</text>
+</svg>

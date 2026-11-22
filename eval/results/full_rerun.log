@@ -1,0 +1,171 @@
+== retrieval Mon Nov 23 00:26:55 IST 2026
+/Users/chetan/Workspaces/Claude-workspace/kg-capstone/KGP_GenAI_Achievers_Capstone/src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self.client.upload_collection(
+dense          recall@5 = 26/26 = 1.0
+bm25           recall@5 = 24/26 = 0.923
+hybrid         recall@5 = 26/26 = 1.0
+hybrid_rerank  recall@5 = 26/26 = 1.0
+== dev Mon Nov 23 00:27:23 IST 2026
+/Users/chetan/Workspaces/Claude-workspace/kg-capstone/KGP_GenAI_Achievers_Capstone/src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self.client.upload_collection(
+A Q002 lookup         ok  steps=5 critic=0 
+A Q006 lookup         ok  steps=5 critic=0 
+A Q010 lookup         ok  steps=5 critic=0 
+A Q014 lookup         ok  steps=5 critic=0 
+A Q017 scenario       ok  steps=8 critic=5 
+A Q022 scenario       ok  steps=8 critic=7 
+A Q027 scenario       ok  steps=8 critic=5 
+A Q032 scenario       ok  steps=9 critic=4 
+A Q037 scenario       ok  steps=8 critic=1 
+A Q042 scenario       ok  steps=8 critic=1 
+A Q047 entity_variant ok  steps=8 critic=1 
+A Q051 entity_variant ok  steps=5 critic=0 
+A Q055 entity_variant ok  steps=5 critic=0 
+A Q059 entity_variant ok  steps=8 critic=1 
+A Q062 amendment      ok  steps=8 critic=1 
+A Q066 amendment      ok  steps=8 critic=1 
+A Q070 amendment      ok  steps=7 critic=1 
+A Q072 refusal        ok  steps=1 critic=0 
+A Q076 refusal        ok  steps=5 critic=0 
+A Q080 refusal        ok  steps=1 critic=0 
+B Q002 lookup         ok  steps=5 critic=0 
+B Q006 lookup         ok  steps=5 critic=0 
+B Q010 lookup         ok  steps=5 critic=0 
+B Q014 lookup         ok  steps=5 critic=0 
+B Q017 scenario       ok  steps=8 critic=5 
+B Q022 scenario       ok  steps=8 critic=7 
+B Q027 scenario       BAD steps=8 critic=5 risk_weight: got needs_information, expected met
+B Q032 scenario       ok  steps=9 critic=4 
+B Q037 scenario       ok  steps=8 critic=1 
+B Q042 scenario       ok  steps=8 critic=1 
+B Q047 entity_variant ok  steps=8 critic=1 
+B Q051 entity_variant ok  steps=5 critic=0 
+B Q055 entity_variant ok  steps=8 critic=1 
+B Q059 entity_variant ok  steps=8 critic=1 
+B Q062 amendment      ok  steps=8 critic=1 
+B Q066 amendment      ok  steps=8 critic=1 
+B Q070 amendment      ok  steps=7 critic=1 
+B Q072 refusal        ok  steps=1 critic=0 
+B Q076 refusal        ok  steps=8 critic=1 
+B Q080 refusal        ok  steps=1 critic=0 
+C Q002 lookup         ok  steps=5 critic=0 
+C Q006 lookup         ok  steps=5 critic=0 
+C Q010 lookup         ok  steps=5 critic=0 
+C Q014 lookup         ok  steps=5 critic=0 
+C Q017 scenario       BAD steps=8 critic=5 ltv_cap: got needs_information, expected met
+C Q022 scenario       ok  steps=8 critic=7 
+C Q027 scenario       ok  steps=8 critic=4 
+C Q032 scenario       ok  steps=9 critic=3 
+C Q037 scenario       ok  steps=5 critic=0 
+C Q042 scenario       ok  steps=8 critic=1 
+C Q047 entity_variant ok  steps=8 critic=1 
+C Q051 entity_variant ok  steps=5 critic=0 
+C Q055 entity_variant ok  steps=5 critic=0 
+C Q059 entity_variant ok  steps=8 critic=1 
+C Q062 amendment      ok  steps=8 critic=1 
+C Q066 amendment      ok  steps=8 critic=1 
+C Q070 amendment      ok  steps=7 critic=1 
+C Q072 refusal        ok  steps=1 critic=0 
+C Q076 refusal        ok  steps=5 critic=0 
+C Q080 refusal        ok  steps=1 critic=0 
+
+strategy  accuracy  first-pass  citation  retrieval miss  reasoning error  tool call error  hallucination
+A         1.0       0.231       1.0       0               0                0                0            
+          by type: {'lookup': '4/4', 'scenario': '6/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
+B         0.95      0.154       1.0       0               1                0                0            
+          by type: {'lookup': '4/4', 'scenario': '5/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
+          Q027 trace e7cbf6d69e45 [reasoning error] risk_weight: got needs_information, expected met
+C         0.95      0.308       1.0       0               0                0                1            
+          by type: {'lookup': '4/4', 'scenario': '5/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
+          Q017 trace cf3b63f06a1e [hallucination] ltv_cap: got needs_information, expected met
+== test Mon Nov 23 00:46:18 IST 2026
+/Users/chetan/Workspaces/Claude-workspace/kg-capstone/KGP_GenAI_Achievers_Capstone/src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self.client.upload_collection(
+A Q001 lookup         ok  steps=5 critic=0 
+A Q003 lookup         ok  steps=5 critic=0 
+A Q004 lookup         BAD steps=5 critic=0 no citation of ['HFC-MD/22']
+A Q005 lookup         ok  steps=5 critic=0 
+A Q007 lookup         ok  steps=5 critic=0 
+A Q008 lookup         ok  steps=5 critic=0 
+A Q009 lookup         ok  steps=5 critic=0 
+A Q011 lookup         ok  steps=5 critic=0 
+A Q012 lookup         ok  steps=5 critic=0 
+A Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
+A Q015 lookup         ok  steps=3 critic=0 
+A Q016 scenario       BAD steps=8 critic=5 risk_weight: got needs_information, expected met
+A Q018 scenario       ok  steps=8 critic=4 
+A Q019 scenario       ok  steps=8 critic=5 
+A Q020 scenario       ok  steps=8 critic=5 
+A Q021 scenario       ok  steps=8 critic=4 
+A Q023 scenario       ok  steps=8 critic=7 
+A Q024 scenario       BAD steps=8 critic=6 ltv_cap: got needs_information, expected met
+A Q025 scenario       ok  steps=8 critic=5 
+A Q026 scenario       ok  steps=8 critic=7 
+A Q028 scenario       ok  steps=8 critic=1 
+A Q029 scenario       ok  steps=8 critic=2 
+A Q030 scenario       ok  steps=8 critic=1 
+A Q031 scenario       ok  steps=8 critic=5 
+A Q033 scenario       ok  steps=8 critic=1 
+A Q034 scenario       ok  steps=8 critic=1 
+A Q035 scenario       ok  steps=8 critic=4 
+A Q036 scenario       ok  steps=5 critic=0 
+A Q038 scenario       ok  steps=8 critic=2 
+A Q039 scenario       ok  steps=5 critic=0 
+A Q040 scenario       ok  steps=8 critic=2 
+A Q041 scenario       BAD steps=8 critic=2 risk_weight: got needs_information, expected met
+A Q043 scenario       ok  steps=5 critic=0 
+A Q044 scenario       ok  steps=8 critic=1 
+A Q045 scenario       ok  steps=5 critic=0 
+A Q046 entity_variant ok  steps=8 critic=1 
+A Q048 entity_variant ok  steps=8 critic=1 
+A Q049 entity_variant ok  steps=8 critic=1 
+A Q050 entity_variant ok  steps=5 critic=0 
+A Q052 entity_variant ok  steps=8 critic=1 
+A Q053 entity_variant ok  steps=8 critic=1 
+A Q054 entity_variant ok  steps=5 critic=0 
+A Q056 entity_variant ok  steps=5 critic=0 
+A Q057 entity_variant ok  steps=5 critic=0 
+A Q058 entity_variant ok  steps=8 critic=1 
+A Q060 entity_variant ok  steps=5 critic=0 
+A Q061 amendment      ok  steps=8 critic=1 
+A Q063 amendment      ok  steps=8 critic=1 
+A Q064 amendment      ok  steps=8 critic=1 
+A Q065 amendment      ok  steps=8 critic=1 
+A Q067 amendment      ok  steps=5 critic=0 
+A Q068 amendment      ok  steps=8 critic=1 
+A Q069 amendment      ok  steps=5 critic=0 
+A Q071 refusal        ok  steps=1 critic=0 
+A Q073 refusal        ok  steps=1 critic=0 
+A Q074 refusal        ok  steps=1 critic=0 
+A Q075 refusal        ok  steps=1 critic=0 
+A Q077 refusal        ok  steps=8 critic=7 
+A Q078 refusal        ok  steps=1 critic=0 
+A Q079 refusal        ok  steps=1 critic=0 
+C Q001 lookup         ok  steps=5 critic=0 
+C Q003 lookup         ok  steps=5 critic=0 
+C Q004 lookup         BAD steps=5 critic=0 no citation of ['HFC-MD/22']
+C Q005 lookup         ok  steps=5 critic=0 
+C Q007 lookup         ok  steps=5 critic=0 
+C Q008 lookup         ok  steps=5 critic=0 
+C Q009 lookup         ok  steps=5 critic=0 
+C Q011 lookup         ok  steps=5 critic=0 
+C Q012 lookup         ok  steps=5 critic=0 
+C Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
+C Q015 lookup         ok  steps=3 critic=0 
+C Q016 scenario       ok  steps=8 critic=4 
+C Q018 scenario       ok  steps=8 critic=3 
+C Q019 scenario       ok  steps=8 critic=5 
+C Q020 scenario       ok  steps=8 critic=4 
+C Q021 scenario       ok  steps=8 critic=3 
+C Q023 scenario       ok  steps=8 critic=6 
+C Q024 scenario       BAD steps=8 critic=6 ltv_cap: got needs_information, expected met
+C Q025 scenario       ok  steps=8 critic=4 
+C Q026 scenario       ok  steps=8 critic=7 
+C Q028 scenario       ok  steps=8 critic=1 
+C Q029 scenario       ok  steps=8 critic=2 
+C Q030 scenario       ok  steps=8 critic=1 
+C Q031 scenario       ok  steps=8 critic=3 
+C Q033 scenario       ok  steps=5 critic=0 
+C Q034 scenario       ok  steps=8 critic=1 
+C Q035 scenario       ok  steps=8 critic=3 
+C Q036 scenario       ok  steps=5 critic=0 

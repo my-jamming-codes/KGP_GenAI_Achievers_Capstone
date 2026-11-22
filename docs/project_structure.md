@@ -37,6 +37,9 @@ gold + eval ─► measures the whole loop; tests ─► checks each part
 | `docker-compose.yml` | Starts two containers: the app (port 8501 by default; set `APP_PORT` to change it) and the Qdrant vector database |
 | `.dockerignore`, `.gitignore` | Keep secrets, caches and large generated files out of the image and out of git |
 | `session.txt` | The project owner's own notes file |
+| `crt/` | The CA certificate files (`.crt`) for the course endpoints. Not tracked by git; mounted read only into the Docker app |
+| `docs/notes/` | Scratchpad notes: gold answers with their citations, diagrams, and walkthroughs of chunking and of how the gold set is built |
+| `debug/`, `.vscode/` | Debug helper that runs one question end to end, the breakpoint guide, and the VS Code launch configurations |
 | `traces/` | Created when the app runs locally: `traces.jsonl` (one trace per question) and `activity.jsonl` (every model, search and tool call). Not in git; under Docker they live in the app's volume |
 
 ## `rules/`: the verified RBI rules (the source of truth)
@@ -69,7 +72,8 @@ gold + eval ─► measures the whole loop; tests ─► checks each part
 | `config.py` | Reads every setting from environment variables: chat endpoint, key and model; the embedding provider, model and endpoint; budgets, step cap, time limit, rate limit |
 | `schemas.py` | Data shapes used everywhere (Pydantic): `Case` (one loan case), `Plan`, `ToolResult`, `Judgement`, `CheckResult`, `RunOutput` (the full answer). Also converts an application's tabs into a `Case` |
 | `rules.py` | Reads `rules.yaml`. Hands out verified rules only; asking for an unverified one raises an error, which becomes "unknown" |
-| `llm.py` | The model client (OpenAI-compatible, so it works with Ollama or the course endpoint). Forces JSON replies that match a schema, retries twice, enforces the token budget, caches replies. Includes `FakeLLM` for tests |
+| `tls.py` | Builds the HTTP client that trusts a course endpoint's `.crt` file (plain and async) |
+| `llm.py` | The model client (OpenAI-compatible, so it works with the course endpoint or any compatible server). Forces JSON replies that match a schema, retries twice, enforces the token budget, caches replies. Includes `FakeLLM` for tests |
 
 ### `src/ingest/`: getting the RBI text
 
@@ -84,7 +88,7 @@ gold + eval ─► measures the whole loop; tests ─► checks each part
 
 | File | What it does |
 | --- | --- |
-| `hybrid.py` | Hybrid search: bge-small-en-v1.5 embeddings (from Ollama, or in-process with fastembed) in Qdrant plus BM25 keyword search, merged by reciprocal rank fusion, then reranked by a cross-encoder. `python -m src.index.hybrid build` creates `data/index/` |
+| `hybrid.py` | Hybrid search: bge-small-en-v1.5 embeddings (from the embeddings endpoint, or in-process with fastembed) in Qdrant plus BM25 keyword search, merged by reciprocal rank fusion, then reranked by a cross-encoder. `python -m src.index.hybrid build` creates `data/index/` |
 
 ### `src/tools/`: all calculations
 
@@ -132,6 +136,7 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | `main.py` | The Streamlit app: sign-in and the pages Work queue, Application (tabs plus assistant with a saved conversation and Share this screen), Compliance checks, Comments and sign-off, FAQ, Prompt lab (the three prompting strategies run side by side on one rule), Retrieval lab (the four retrieval modes side by side, with the recall, chunking and diagnostic tables), Activity log (every model, search and tool call, grouped by question with each step's calls under it), and History and evaluation. A live status box shows what the assistant is doing while it works |
 | `store.py` | Saves applications, statuses, comments and officer actions. Only the compliance officer role can change a status |
 | `ratelimit.py` | Limits questions per minute per session and returns a polite wait message |
+| `taskboard.py`, `board/` | The Task board page: `board/tasks.json` holds the capstone tasks (role, assignee, requirement, status, evidence; edit it to change a status), `board/task_board.html` is the standalone page, and `taskboard.py` checks the data and puts it into the page |
 | `faq.py` | FAQ content: rule answers taken word for word from `rules.yaml`, plus how-to questions about the workspace |
 | `textfmt.py` | Text helper: makes line breaks in plain text, such as the officer note, show up when written as Markdown |
 
@@ -147,6 +152,7 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | File | What it does |
 | --- | --- |
 | `run_eval.py` | Runs every gold question through the agent loop per strategy, scores accuracy and citation rate, and labels each failure (retrieval miss, reasoning error, tool call error, hallucination) |
+| `ragas_eval.py` | Extra report: Ragas faithfulness, answer relevancy and context precision on the dev set, judged by the course model. Does not replace `run_eval.py` |
 | `retrieval_eval.py` | Measures search recall at 5 for dense, BM25, hybrid and hybrid plus reranker |
 | `chunking_eval.py` | Chunking experiments: four chunking schemes, each with its own BM25 and embeddings, measured with all four retrieval modes on recall@1/3/5/10 and MRR |
 | `rag_diagnostic.py` | Retrieval versus answer quality: for each query, whether the pipeline retrieved the expected paragraph and whether the answer was right, separating retrieval errors from generator errors |
@@ -183,8 +189,10 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | `images/` | The architecture and agent-flow diagrams (SVG) used in the project specification |
 | `Capstone-Project-Templates.pdf` | The course template |
 | `labelling_guide.md` | What each status means and how gold answers and failures are labelled |
+| `technical_report.md`, `technical_report.pdf` | The 12 page technical report the course asks for: scope, prompts, retrieval, agents, what compensates for a small model, evaluation, deployment, responsible AI and limits |
 | `results.md` | Evaluation results: accuracy, citation, retrieval, safety, before and after the Q015 fix |
 | `failure_taxonomy.md` | Every failure by category, with trace ids and a worked example of each |
+| `demo_overview_5min.md`, `demo/` | The five minute overview script and its narrated video |
 | `demo_script.md` | The ten-minute demo walkthrough and fallbacks |
 | `rag.md` | How the Week 2 RAG requirements are met: corpus, chunking experiments, hybrid retrieval, reranker, citation grounding, recall measured apart from answer quality, and a TA walkthrough |
 | `agentic_layer.md` | How the Week 3 agentic layer requirements are met: agents, tools, loop, persistent state, error handling, with tests |
@@ -205,5 +213,6 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | Evaluate on test | `.venv/bin/python -m eval.run_eval --split test --strategies A C` |
 | Safety sets | `.venv/bin/python -m eval.safety_eval --real` |
 | Retrieval recall | `.venv/bin/python -m eval.retrieval_eval` |
+| Ragas report (extra) | `.venv/bin/python -m eval.ragas_eval --split dev --strategy C` |
 | Chunking experiments | `.venv/bin/python -m eval.chunking_eval` |
 | Retrieval versus answer quality | `.venv/bin/python -m eval.rag_diagnostic` |

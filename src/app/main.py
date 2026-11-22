@@ -18,7 +18,7 @@ import streamlit as st  # noqa: E402
 from src import config  # noqa: E402
 from src.agents import loop  # noqa: E402
 from src.agents.memory import ConversationMemory  # noqa: E402
-from src.app import faq  # noqa: E402
+from src.app import faq, taskboard  # noqa: E402
 from src.app.textfmt import softbreaks  # noqa: E402
 from src.app.ratelimit import RateLimiter  # noqa: E402
 from src.app.store import STATUSES, USERS, Store  # noqa: E402
@@ -28,7 +28,7 @@ from src.tracing import activity  # noqa: E402
 from src.tracing.tracer import new_id, read_traces  # noqa: E402
 
 st.set_page_config(page_title="RBI Home Loan Rule Checker", layout="wide")
-PAGES = ["Work queue", "Application", "Compliance checks", "Comments and sign-off", "FAQ", "Prompt lab", "Retrieval lab", "Activity log", "History and evaluation"]
+PAGES = ["Work queue", "Application", "Compliance checks", "Comments and sign-off", "FAQ", "Prompt lab", "Retrieval lab", "Activity log", "History and evaluation", "Task board"]
 BADGE = {"met": "🟢 Met", "breached": "🔴 Breached", "needs_information": "🟠 Needs information",
          "not_applicable": "⚪ Not applicable", "unknown": "🟣 Unknown (rule unverified)"}
 ISSUE_VALUES = {"no", "not_recorded", "not_provided"}
@@ -683,6 +683,30 @@ def history_page() -> None:
                      use_container_width=True, hide_index=True)
     if not shown:
         st.caption("No evaluation results found. Run `python -m eval.run_eval`.")
+    st.markdown("#### Ragas scores (extra, model-judged)")
+    ragas_files = sorted(results.glob("ragas_*.json"))
+    if not ragas_files:
+        st.caption("Not run yet. `python -m eval.ragas_eval --split dev --strategy C` (about 20 minutes on the course server).")
+    for f in ragas_files:
+        r = json.loads(f.read_text())
+        st.caption(f"{r['split']} split · strategy {r['strategy']} · {'written answers' if r.get('drafted', False) else 'answers built from check results'} · {r['queries_judged']} queries judged · judge {r['judge_model']}")
+        names = {"faithfulness": "Faithfulness", "answer_relevancy": "Answer relevancy",
+                 "llm_context_precision_without_reference": "Context precision"}
+        st.dataframe([{"Metric": names.get(k, k), "Average": v, "Queries with no score": r["failed_scores"].get(k, 0)}
+                      for k, v in r["average"].items()], use_container_width=True, hide_index=True)
+        with st.expander("Scores for each query"):
+            st.dataframe([{"Query": q["id"], "Type": q["type"], "Question": q.get("question", ""), **{names.get(k, k): q.get(k) for k in r["average"]}, "Trace": q["trace_id"]}
+                          for q in r["per_query"]], use_container_width=True, hide_index=True)
+    st.caption("The judge is the 8B course model, so these scores are noisy and show a trend. Correctness is scored in code against the gold answers (table above).")
+
+
+# ------------------------------------------------------------------ project task board
+def task_board_page() -> None:
+    st.header("Task board")
+    st.caption("What was built for the capstone, by role, with the current assignee against each task. The data is `src/app/board/tasks.json`.")
+    import streamlit.components.v1 as components
+
+    components.html(taskboard.render_html(), height=1500, scrolling=True)
 
 
 def main() -> None:
@@ -698,7 +722,7 @@ def main() -> None:
                 ss.pop(k, None)
             st.rerun()
     {"Work queue": work_queue, "Application": application_page, "Compliance checks": checks_page,
-     "Comments and sign-off": signoff_page, "FAQ": faq_page, "Prompt lab": prompt_lab_page, "Retrieval lab": retrieval_lab_page, "Activity log": activity_page, "History and evaluation": history_page}[ss["page"]]()
+     "Comments and sign-off": signoff_page, "FAQ": faq_page, "Prompt lab": prompt_lab_page, "Retrieval lab": retrieval_lab_page, "Activity log": activity_page, "History and evaluation": history_page, "Task board": task_board_page}[ss["page"]]()
 
 
 main()

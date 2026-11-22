@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1. App in the browser (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "python": "${workspaceFolder}/../Loan_Guarantor/.venv/bin/python",
+      "args": ["run", "src/app/main.py", "--server.port", "8503", "--server.headless", "true", "--server.fileWatcherType", "none"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "QUERY_TIME_LIMIT_S": "7200",
+        "LLM_TIMEOUT_S": "900",
+        "RATE_LIMIT_PER_MINUTE": "100"
+      }
+    },
+    {
+      "name": "2. One question, no browser (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug/run_one_question.py",
+      "python": "${workspaceFolder}/../Loan_Guarantor/.venv/bin/python",
+      "args": ["--app", "HL-2043", "Run the full RBI rule check on application HL-2043."],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "QUERY_TIME_LIMIT_S": "7200",
+        "LLM_TIMEOUT_S": "900"
+      }
+    }
+  ]
+}

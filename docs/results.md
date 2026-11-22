@@ -1,6 +1,6 @@
 # Evaluation results
 
-> **Corpus note (18 November).** These results were measured on the 13 November corpus: 1,080 documents from RBI web pages, 42,204 chunks, embeddings computed in-process. The corpus has since gained PDF ingestion (118 documents from the official PDF in the current index) and the embeddings now come from Ollama with identical vectors. Retrieval was re-measured on the new index (recall at 5: dense 1.0, BM25 0.923, hybrid 1.0, hybrid plus reranker 1.0); the end-to-end evaluation below has not yet been re-run on it.
+> **Corpus note (18 November).** These results were measured on the 13 November corpus: 1,080 documents from RBI web pages, 42,204 chunks, embeddings computed in-process. The corpus has since gained PDF ingestion (987 documents from the official PDF in the current index) and the embeddings now come from the course embeddings endpoint. The current index has 1,080 documents (987 from the official PDF, 93 from web pages) and 43,336 chunks. Retrieval was re-measured on it (dev recall at 5: dense 1.0, BM25 0.923, hybrid 1.0, hybrid plus reranker 1.0, up from 0.962 for dense and hybrid); the end-to-end evaluation below has not yet been re-run on it.
 
 Run on 13 November 2026 with `qwen3:8b` on a local Ollama endpoint (thinking off, temperature 0), against the frozen gold file of 80 queries. Corpus version `bd906e801acb`: 1,080 RBI documents, 42,204 paragraph chunks. This run includes the Q015 fix described below; the 12 November run without it is kept in `eval/results/before_q015_fix_*`.
 
@@ -106,3 +106,18 @@ Strategy C's self check removed the wrong-number problem entirely, which is wher
 - Final answers for rule checks are confirmed against deterministic tools, so final scenario accuracy mostly reflects whether the model can be brought into agreement within one retry. First pass accuracy is the fairer measure of the model's own reading.
 - Two runs on one local 8B model. Across the two runs the same queries failed with the same labels, apart from Q015 (fixed) and Q026 (stall). The course endpoint model was not available, so its numbers may differ.
 - The credit scoring layer was not built, so there is no NPA, AUC or ablation table.
+
+## Ragas report (extra, model-judged)
+
+`python -m eval.ragas_eval --split dev --strategy C` scores the dev answers with Ragas 0.4: faithfulness (is each claim in the answer supported by the retrieved paragraphs), answer relevancy (does the answer address the question) and context precision without a reference (were the retrieved paragraphs useful for the question). It uses no gold answer and no rules file, so it does not measure correctness; `eval/run_eval.py` does that against the gold file. The judge is the course model, Qwen3-8B, one request at a time, with at most 4 paragraphs of 700 characters per call.
+
+Run on 22 to 23 November 2026 on the dev split: 18 queries with an answer to judge (the 2 refusal queries have none). Strategy C, corpus version `6074ba19e620`.
+
+| Answers judged | Faithfulness | Answer relevancy | Context precision |
+| --- | --- | --- | --- |
+| Built from the check results (`--no-draft`) | 0.124 | 0.402 | 0.758 |
+| Written by the drafter (default) | 0.223 | 0.505 | 0.668 |
+
+By query type, with written answers: lookup (4) 0.31 / 0.90 / 0.81; rule check on an application and described scenarios (6) 0.10 / 0.26 / 0.65; lender variants (4) 0.24 / 0.37 / 0.42; amendments (3) 0.33 / 0.56 / 0.86. Per-query scores with the question text are in `eval/results/ragas_dev_C.json` and `ragas_dev_C_nodraft.json`, and on the History and evaluation page.
+
+How to read it. The scores are low and noisy, and they disagree with the code-scored accuracy of 0.95 for strategy C on dev. Short lookup answers score well on relevancy (0.82 to 0.99). Structured rule-check replies often score 0, a sign that the 8B judge struggles to split a table of check results into claims, so a 0 does not mean the answer was wrong. Only context precision is a steady signal, and it shows retrieval returning a useful paragraph for most queries (weakest: Q032, Q051). Written answers raised faithfulness and relevancy a little and lowered precision; with 18 queries and a model judge those differences are within the noise. Treat the report as a trend and use the code-scored accuracy as the result.
