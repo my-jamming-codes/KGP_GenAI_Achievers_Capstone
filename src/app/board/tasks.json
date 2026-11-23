@@ -97,8 +97,8 @@
    "assignee": "Swaroop",
    "req": "II",
    "task": "Strategy comparison re-run on the course model",
-   "status": "progress",
-   "evidence": "eval/results (running)"
+   "status": "done",
+   "evidence": "eval/results/summary_dev.json"
   },
   {
    "n": 11,
@@ -295,8 +295,8 @@
    "assignee": "Ankush",
    "req": "V",
    "task": "Full evaluation re-run on the course endpoints",
-   "status": "progress",
-   "evidence": "eval/results (running)"
+   "status": "done",
+   "evidence": "docs/results.md"
   },
   {
    "n": 33,
@@ -376,8 +376,8 @@
    "assignee": "Jitendra",
    "req": "VI",
    "task": "Single technical documentation file",
-   "status": "progress",
-   "evidence": "docs/"
+   "status": "done",
+   "evidence": "docs/technical_documentation.md"
   },
   {
    "n": 42,
@@ -385,7 +385,7 @@
    "assignee": "Damandeep",
    "req": "VI",
    "task": "Rebuild Docker with final results and commit to git",
-   "status": "open",
+   "status": "progress",
    "evidence": ""
   }
  ]

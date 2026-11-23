@@ -117,7 +117,7 @@
   <text class="h" x="20" y="562">3 · MODELS AND THE OFFICER'S DECISION</text>
   <rect class="llm" x="20" y="578" width="600" height="66" rx="8"/>
   <text class="t" x="34" y="602">Course model servers (OpenAI-compatible chat and embeddings)</text>
-  <text class="s" x="34" y="622">qwen3:8b for planner, judge and drafter · qllama/bge-small-en-v1.5 for embeddings</text>
+  <text class="s" x="34" y="622">Qwen3-8B for planner, judge and drafter · bge-small-en-v1.5 for embeddings</text>
   <text class="s" x="34" y="639">switch with LLM_* and EMBED_* settings, for example to the course endpoint</text>
 
   <rect class="box" x="660" y="578" width="420" height="66" rx="8"/>

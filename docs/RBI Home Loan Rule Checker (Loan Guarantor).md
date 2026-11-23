@@ -102,7 +102,7 @@ The main risks are a thin corpus, limits locked inside tables, and a rule set th
 | Scenario labels drift from the rules | A second person reviews every label before the Week 1 freeze |
 | The project is read as a credit scoring tool | Say it plainly in the report and refuse repayment questions in the guardrails |
 
-**Open questions.** The questions raised while planning, and how each one stands now, are kept in the companion document RBI Home Loan Rule Checker (Loan Guarantor) – Open Questions.
+**Open questions.** The questions raised while planning that are still open, and the known gaps, are listed in section 11 of the technical report (`docs/technical_report.md`).
 
 **Responsible AI.** All scenarios are synthetic and contain no real borrower data. The tool never approves a loan or declares a lender compliant, it shows its cited paragraphs every time, it treats pasted text as data and not instructions, and a human approves every report.
 
@@ -387,6 +387,6 @@ Build in the order below, finishing and testing each step before the next. Where
 8. Use only fake personal data in tests, applications and demos.
 9. After each build step, record a short status: what works, what failed, what is next.
 
-**Open items.** Listed, with how each one stands, in the companion document RBI Home Loan Rule Checker (Loan Guarantor) – Open Questions.
+**Open items.** Listed, with how each one stands, in section 11 of the technical report (`docs/technical_report.md`).
 
 **Definition of done for the capstone.** Rules file and gold file frozen; the evaluation script prints accuracy, citation rate and the failure table for three prompt strategies; the injection, PII and refusal tests pass at the reported rates; the Streamlit workspace runs the full demo script; and `docker compose up` starts the app.

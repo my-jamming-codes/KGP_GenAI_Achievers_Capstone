@@ -69,7 +69,9 @@ The index records which embedding model built it. If you change `EMBED_PROVIDER`
 
 Sign in as **Kiran Rao (compliance officer)**. Dev Malhotra (credit processor) and Sana Qureshi (approver) can view but
 not change a status. Pages: Work queue, Application (with the assistant and Share this screen), Compliance checks,
-Comments and sign-off, FAQ, Prompt lab, Retrieval lab, Activity log, History and evaluation, Task board (the capstone tasks by role, each with its current assignee, from `src/app/board/tasks.json`).
+Comments and sign-off, FAQ, Prompt lab, Retrieval lab, Activity log, History and evaluation.
+
+The capstone task list is a separate standalone page, `src/app/board/task_board.html` (open it in a browser; it is not part of the app). `src/app/board/tasks.json` is the same data.
 
 ### Or run it with Docker
 
@@ -120,6 +122,10 @@ An endpoint served with a private certificate needs the `.crt` file. Set `LLM_CA
 Course endpoint limits are built in and can be tuned: `LLM_MAX_CONCURRENT` (default 1 active request, queued inside the app), `LLM_RATE_PER_MINUTE` (default 55 of the 60 allowed per key; 0 turns it off), `LLM_MAX_OUTPUT_TOKENS` (default 1024) and `LLM_BACKOFF_S` (default `2,4,8` seconds before a 429 or 503 is retried). `EMBED_BATCH` is 16, the most texts the embeddings endpoint accepts per call. The limits are per process, so run one thing at a time on a group key.
 
 JSON-schema output is requested first. If an endpoint rejects it, the client falls back to plain JSON, validates every reply with Pydantic and retries twice with the error before counting a tool call error. `LLM_REASONING_EFFORT=none` switches off Qwen3 thinking; leave it empty for endpoints that reject the parameter.
+
+## Documentation
+
+Start with `docs/technical_documentation.md` (PDF alongside): architecture, data, configuration, deployment, the operations runbook, testing and security in one place. `docs/technical_report.md` is the 12 page report, and `docs/project_structure.md` lists every file.
 
 ## How a rule check runs
 
@@ -183,7 +189,7 @@ Results are in `docs/results.md` and `docs/failure_taxonomy.md`. How the Week 2 
 - The credit scoring layer in the project specification is not built: the dataset and NPA target were not settled.
 - Gold labels were written from the verified rules and still need the second person review the project specification asks for.
 - "Bank" means a commercial bank as the Directions define it; regional rural banks, small finance banks and co-operative banks are out of scope.
-- The accuracy evaluation in `docs/results.md` was run on 13 November, before PDF ingestion and the move to the course endpoints, so it describes the earlier corpus and a local Ollama model. Retrieval was re-measured on the current index, but the end-to-end evaluation has not been re-run yet.
+- The evaluation in `docs/results.md` was re-run on 23 November on the course endpoints and the current index; each strategy ran once, so differences of a query or two are within run-to-run variation, and the development queries were used to choose strategy C, so dev accuracy is optimistic.
 - Of the four chunking schemes, only the production one has been measured.
-- The course endpoints (chat and embeddings) are tested and the index is built on them. One full rule check, the retrieval recall and the Ragas report have been run against them; the full 80-query evaluation has not.
+- The course endpoints (chat and embeddings) are in use: the index is built on them and the full evaluation was run against them.
 - The Ragas report is judged by the 8B course model, so its scores are noisy and are a trend, not accuracy.

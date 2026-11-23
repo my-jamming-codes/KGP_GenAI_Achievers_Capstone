@@ -136,7 +136,7 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | `main.py` | The Streamlit app: sign-in and the pages Work queue, Application (tabs plus assistant with a saved conversation and Share this screen), Compliance checks, Comments and sign-off, FAQ, Prompt lab (the three prompting strategies run side by side on one rule), Retrieval lab (the four retrieval modes side by side, with the recall, chunking and diagnostic tables), Activity log (every model, search and tool call, grouped by question with each step's calls under it), and History and evaluation. A live status box shows what the assistant is doing while it works |
 | `store.py` | Saves applications, statuses, comments and officer actions. Only the compliance officer role can change a status |
 | `ratelimit.py` | Limits questions per minute per session and returns a polite wait message |
-| `taskboard.py`, `board/` | The Task board page: `board/tasks.json` holds the capstone tasks (role, assignee, requirement, status, evidence; edit it to change a status), `board/task_board.html` is the standalone page, and `taskboard.py` checks the data and puts it into the page |
+| `board/` | The standalone task board: `task_board.html` (open in a browser; not part of the app) and `tasks.json`, the same data |
 | `faq.py` | FAQ content: rule answers taken word for word from `rules.yaml`, plus how-to questions about the workspace |
 | `textfmt.py` | Text helper: makes line breaks in plain text, such as the officer note, show up when written as Markdown |
 
@@ -159,7 +159,7 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | `safety_eval.py` | Runs the injection, PII and refusal sets with a fake model built to obey anything it sees, then with the real model |
 | `sets/` | Safety test cases: `injection.jsonl` (15), `pii.jsonl` (15), `refusal.jsonl` (10) |
 | `failure_labels_dev.jsonl`, `failure_labels_test.jsonl` | Each wrong answer with its category and trace id |
-| `results/` | Output of every run: summaries, per-query rows, traces and logs. The 12 November run is kept as `before_q015_fix_*`, plus the Q026 re-check. `dev_A.jsonl` was overwritten by an evaluation run that was stopped on the PDF corpus (16 of 20 right), so it no longer matches `summary_dev.json` or the docs; the earlier rows they describe are kept as `before_pdf_dev_A.jsonl` |
+| `results/` | Output of every run: summaries, per-query rows, traces and logs. The latest run (23 November, course endpoints, PDF corpus) is in `summary_dev.json`, `summary_test.json`, `dev_*.jsonl`, `test_*.jsonl`, `traces_*.jsonl`, `safety.json` and `full_rerun.log`. The 13 November run is kept in `before_course_endpoint/`, the 12 November run as `before_q015_fix_*`, plus the Q026 re-check and the Ragas reports (`ragas_dev_C.json`, `ragas_dev_C_nodraft.json`) |
 
 ## `tests/`: automated tests (153)
 
@@ -185,10 +185,10 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | File | What it is |
 | --- | --- |
 | `RBI Home Loan Rule Checker (Loan Guarantor).md` and `.pdf` | The project specification, with the architecture as built (diagrams in `images/`) |
-| `RBI Home Loan Rule Checker (Loan Guarantor) – Open Questions.md` | The questions raised while planning and how each one stands: settled, assumed or still open, plus the known gaps |
 | `images/` | The architecture and agent-flow diagrams (SVG) used in the project specification |
 | `Capstone-Project-Templates.pdf` | The course template |
 | `labelling_guide.md` | What each status means and how gold answers and failures are labelled |
+| `technical_documentation.md`, `technical_documentation.pdf` | The single technical reference: architecture, data, agent runtime, endpoint integration, configuration, workspace, deployment, operations runbook, testing, security, limitations, developer guide, glossary |
 | `technical_report.md`, `technical_report.pdf` | The 12 page technical report the course asks for: scope, prompts, retrieval, agents, what compensates for a small model, evaluation, deployment, responsible AI and limits |
 | `results.md` | Evaluation results: accuracy, citation, retrieval, safety, before and after the Q015 fix |
 | `failure_taxonomy.md` | Every failure by category, with trace ids and a worked example of each |

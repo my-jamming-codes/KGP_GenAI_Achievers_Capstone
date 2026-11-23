@@ -115,7 +115,7 @@ State lives at three levels.
 
 A new question that is not a follow-up does not use history, so its answer does not depend on what was asked before.
 
-Example from the local model (qwen3:8b):
+Example from a run with a local model:
 
 | Turn | Question | Answer |
 | --- | --- | --- |

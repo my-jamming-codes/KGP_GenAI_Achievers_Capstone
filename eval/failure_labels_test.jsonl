@@ -1,13 +1,8 @@
-{"id": "Q001", "strategy": "A", "type": "lookup", "trace_id": "8d6498b05354", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['90']"}
-{"id": "Q004", "strategy": "A", "type": "lookup", "trace_id": "fad196de9d99", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
-{"id": "Q013", "strategy": "A", "type": "lookup", "trace_id": "03223c2db418", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
-{"id": "Q016", "strategy": "A", "type": "scenario", "trace_id": "7d92291026e8", "category": "reasoning error", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
-{"id": "Q020", "strategy": "A", "type": "scenario", "trace_id": "ef0ad7641a66", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
-{"id": "Q024", "strategy": "A", "type": "scenario", "trace_id": "01c913e7184e", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met"}
-{"id": "Q040", "strategy": "A", "type": "scenario", "trace_id": "ca1e90774678", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
-{"id": "Q041", "strategy": "A", "type": "scenario", "trace_id": "c3ddf8387a6c", "category": "hallucination", "note": "", "detail": "risk_weight: got needs_information, expected met"}
-{"id": "Q061", "strategy": "A", "type": "amendment", "trace_id": "50e1c9512fe9", "category": "hallucination", "note": "", "detail": "risk_weight: got needs_information, expected met"}
-{"id": "Q001", "strategy": "C", "type": "lookup", "trace_id": "bd9bf56b6260", "category": "reasoning error", "note": "", "detail": "answer lacks any of ['90']"}
-{"id": "Q004", "strategy": "C", "type": "lookup", "trace_id": "4c2a2fed9fb7", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
-{"id": "Q013", "strategy": "C", "type": "lookup", "trace_id": "5b35d8f4a257", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
-{"id": "Q026", "strategy": "C", "type": "scenario", "trace_id": "6818322f5293", "category": "tool call error", "note": "", "detail": "ltv_cap: got needs_information, expected not_applicable; prepayment_charge: got needs_information, expected met"}
+{"id": "Q004", "strategy": "A", "type": "lookup", "trace_id": "bbec30a46d22", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "A", "type": "lookup", "trace_id": "c31cadccffee", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q016", "strategy": "A", "type": "scenario", "trace_id": "dd5a71f78a55", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q024", "strategy": "A", "type": "scenario", "trace_id": "a61b68ba8ad5", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q041", "strategy": "A", "type": "scenario", "trace_id": "e5cbf3bf8f8f", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q004", "strategy": "C", "type": "lookup", "trace_id": "b22caafcaa89", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "C", "type": "lookup", "trace_id": "e7cc9cbf9b85", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q024", "strategy": "C", "type": "scenario", "trace_id": "fabf9ca26e2c", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}

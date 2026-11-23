@@ -18,7 +18,7 @@ import streamlit as st  # noqa: E402
 from src import config  # noqa: E402
 from src.agents import loop  # noqa: E402
 from src.agents.memory import ConversationMemory  # noqa: E402
-from src.app import faq, taskboard  # noqa: E402
+from src.app import faq  # noqa: E402
 from src.app.textfmt import softbreaks  # noqa: E402
 from src.app.ratelimit import RateLimiter  # noqa: E402
 from src.app.store import STATUSES, USERS, Store  # noqa: E402
@@ -28,7 +28,7 @@ from src.tracing import activity  # noqa: E402
 from src.tracing.tracer import new_id, read_traces  # noqa: E402
 
 st.set_page_config(page_title="RBI Home Loan Rule Checker", layout="wide")
-PAGES = ["Work queue", "Application", "Compliance checks", "Comments and sign-off", "FAQ", "Prompt lab", "Retrieval lab", "Activity log", "History and evaluation", "Task board"]
+PAGES = ["Work queue", "Application", "Compliance checks", "Comments and sign-off", "FAQ", "Prompt lab", "Retrieval lab", "Activity log", "History and evaluation"]
 BADGE = {"met": "🟢 Met", "breached": "🔴 Breached", "needs_information": "🟠 Needs information",
          "not_applicable": "⚪ Not applicable", "unknown": "🟣 Unknown (rule unverified)"}
 ISSUE_VALUES = {"no", "not_recorded", "not_provided"}
@@ -700,15 +700,6 @@ def history_page() -> None:
     st.caption("The judge is the 8B course model, so these scores are noisy and show a trend. Correctness is scored in code against the gold answers (table above).")
 
 
-# ------------------------------------------------------------------ project task board
-def task_board_page() -> None:
-    st.header("Task board")
-    st.caption("What was built for the capstone, by role, with the current assignee against each task. The data is `src/app/board/tasks.json`.")
-    import streamlit.components.v1 as components
-
-    components.html(taskboard.render_html(), height=1500, scrolling=True)
-
-
 def main() -> None:
     if "user" not in ss:
         sign_in()
@@ -722,7 +713,7 @@ def main() -> None:
                 ss.pop(k, None)
             st.rerun()
     {"Work queue": work_queue, "Application": application_page, "Compliance checks": checks_page,
-     "Comments and sign-off": signoff_page, "FAQ": faq_page, "Prompt lab": prompt_lab_page, "Retrieval lab": retrieval_lab_page, "Activity log": activity_page, "History and evaluation": history_page, "Task board": task_board_page}[ss["page"]]()
+     "Comments and sign-off": signoff_page, "FAQ": faq_page, "Prompt lab": prompt_lab_page, "Retrieval lab": retrieval_lab_page, "Activity log": activity_page, "History and evaluation": history_page}[ss["page"]]()
 
 
 main()
