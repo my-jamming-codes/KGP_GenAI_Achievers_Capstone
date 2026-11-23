@@ -106,3 +106,25 @@ def test_context_length_400_is_reported_clearly_without_changing_mode():
     with _pt.raises(ToolCallError, match="too large"):
         llm._raw([{"role": "user", "content": "x"}], {}, 100)
     assert calls["n"] == 1 and llm.mode == mode
+
+
+def test_over_long_embedding_input_is_shortened_and_retried(monkeypatch):
+    from types import SimpleNamespace as N
+
+    from src.index import hybrid
+
+    class TooLong(Exception):
+        pass
+
+    calls = []
+
+    def create(model, input):
+        calls.append([len(t) for t in input])
+        if any(len(t) > 600 for t in input):
+            raise TooLong("Error code: 422 - Input validation error: `inputs` must have less than 512 tokens. Given: 800")
+        return N(data=[N(index=i, embedding=[float(len(t))] * 3) for i, t in enumerate(input)])
+
+    monkeypatch.setattr(hybrid, "_embed_client", lambda: N(embeddings=N(create=create)))
+    vecs = hybrid._embed_endpoint(["short text", "x" * 1000, "another short one"])
+    assert vecs.shape == (3, 3)
+    assert vecs[1][0] <= 600 and vecs[0][0] == len("short text")

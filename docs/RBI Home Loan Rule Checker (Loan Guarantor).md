@@ -70,7 +70,7 @@ A failed critic check goes back once with a reason, inside the 10 step cap: when
 
 Home loan rules sit in a handful of long documents, so a home loan only corpus will almost certainly fall under the 500 document floor. The plan is to use home loans as one workflow inside a wider RBI lending corpus, which search results suggest has 238 function wise Master Directions in total, 35 of them for NBFCs. How many are lending related is not yet counted.
 
-**As built.** The corpus is 1,076 RBI documents from rbi.org.in (8 for housing finance companies, 75 for NBFCs, 130 for banks and 863 other RBI documents), split into paragraph chunks with the paragraph id, lender type, date and source format. RBI has replaced the master circulars with the Commercial Banks Directions, 2025, so those are used in place of "the bank master circular". Each document is read from its official PDF when one has been saved and passes quality checks, and from its web page otherwise.
+**As built.** The corpus is 1,080 RBI documents from rbi.org.in (8 for housing finance companies, 75 for NBFCs, 130 for banks and 867 other RBI documents) in 43,336 chunks, split into paragraph chunks with the paragraph id, lender type, date and source format. RBI has replaced the master circulars with the Commercial Banks Directions, 2025, so those are used in place of "the bank master circular". Each document is read from its official PDF when one has been saved and passes quality checks, and from its web page otherwise.
 
 The evaluation set has 80 queries, 20 for development and 60 held back, frozen at the Week 1 gate. Planned mix:
 
@@ -86,7 +86,7 @@ The evaluation set has 80 queries, 20 for development and 60 held back, frozen a
 | --- | --- |
 | Download and parse the HFC Directions and the bank master circular | Text and tables extract cleanly |
 | Read the LTV, risk weight and prepayment paragraphs | Thresholds found and written into a rules file |
-| Count lending related RBI documents | At or above 500 (as built: 1,076) |
+| Count lending related RBI documents | At or above 500 (as built: 1,080) |
 | Write 10 synthetic scenarios and label them by hand | Each label traced to one paragraph |
 
 ## Risks and responsible AI
@@ -102,7 +102,7 @@ The main risks are a thin corpus, limits locked inside tables, and a rule set th
 | Scenario labels drift from the rules | A second person reviews every label before the Week 1 freeze |
 | The project is read as a credit scoring tool | Say it plainly in the report and refuse repayment questions in the guardrails |
 
-**Open questions.** The questions raised while planning, and how each one stands now, are kept in the companion document RBI Home Loan Rule Checker (Loan Guarantor) – Open Questions.
+**Open questions.** The questions raised while planning that are still open, and the known gaps, are listed in section 11 of the technical report (`docs/technical_report.md`).
 
 **Responsible AI.** All scenarios are synthetic and contain no real borrower data. The tool never approves a loan or declares a lender compliant, it shows its cited paragraphs every time, it treats pasted text as data and not instructions, and a human approves every report.
 
@@ -161,25 +161,7 @@ The NPA figure is a proxy: a loan 90 or more days past due in the dataset's own 
 
 ## Dataset options
 
-The candidate datasets are below; the choice is among the open questions. Descriptions and sizes are from memory and approximate: none of these was opened or checked for licence in this document, so confirm each in the first hours.
-
-| Dataset | What it holds | Fit for a home loan checker | Check before use |
-| --- | --- | --- | --- |
-| Freddie Mac single family loan level data | US mortgages: origination fields such as credit score, LTV, DTI and amount, plus monthly performance | Best fit. Real home loans, and a 90 day delinquency label can be built. LTV is a ratio the rule gate can test | Registration and terms of use; files are large, so use a sample |
-| Home Credit default risk | About 300 thousand loan applications with a default flag, spread over several tables | Good size and tabular, but consumer and cash loans, not home loans | Kaggle competition terms |
-| Give Me Some Credit | About 150 thousand borrowers with a flag for 90 days past due | The 90 day label is built in, but not home loans | Kaggle competition terms |
-| Lending Club | US personal loans, 2007 to 2018, with a loan status field | Not home loans; many columns | Whether the data is still available and its licence |
-| German credit (UCI) | 1,000 loans, 20 attributes, good or bad label | Tiny, but a safe fallback that downloads in minutes | Licence on the UCI page; label is good or bad, not NPA |
-
-**Recommendation.** Start with a sample of the Freddie Mac data for the home loan fit and a real LTV, and keep German credit as the fallback if registration or file size blocks you. Decide by day 2 and note the reasoning for the report.
-
-**How to present the data choice.** The credit model is trained on a public non Indian dataset, with Freddie Mac mortgage data as the first choice, and the target NPA rate is an assumption set with reference to Indian aggregate NPA figures. Three limits must be stated in the report:
-
-- The model's predicted risk is not calibrated to Indian borrowers, so the project makes no claim about Indian default risk.
-- An aggregate bank NPA ratio covers a whole loan book, not home loans or this applicant pool, so it informs the target and does not prove it.
-- Rupee thresholds in RBI rules cannot be tested on dollar loans, so those rules are tested through the scenario form and the frozen gold set.
-
-The credit model demonstrates the method of score, cutoff and rule gate. Its value lies in the design and the trade-offs recorded.
+No dataset is used. The credit lane described above was not built, because the course did not provide a dataset or an NPA target, so nothing in the build, the evaluation or the demo reads a lending dataset. Public candidates (US mortgage and consumer credit data) were considered, but none was opened or checked for licence, and none is recommended here. If the credit lane is built later, choose and verify a dataset first, and state the limits listed above: the data is not Indian, rupee thresholds cannot be tested on it, it carries no guarantor field, and its predicted risk makes no claim about Indian default risk.
 
 ## Architecture
 
@@ -194,7 +176,7 @@ A question or a rule check comes in from the compliance officer's workspace and 
 | Component | What it does | Built with | Code |
 | --- | --- | --- | --- |
 | Ingest | Downloads RBI Master Directions and notifications; lists each document's official PDF for saving in a browser; splits text at numbered RBI paragraphs, using the PDF when it passes quality checks (enough text, the paragraphs the rules cite) and the web page otherwise | pdftotext (poppler), pypdf as fallback | `src/ingest/` |
-| Index | Embeds every chunk once and on every query; fuses dense and keyword results; reranks the top 20; filters by lender type so an HFC case never searches bank Directions | bge-small-en-v1.5 served by Ollama, Qdrant, rank-bm25, ms-marco-MiniLM cross-encoder | `src/index/hybrid.py` |
+| Index | Embeds every chunk once and on every query; fuses dense and keyword results; reranks the top 20; filters by lender type so an HFC case never searches bank Directions | bge-small-en-v1.5 served by the model server, Qdrant, rank-bm25, ms-marco-MiniLM cross-encoder | `src/index/hybrid.py` |
 | Rules file | 30 records read from the RBI text, 29 verified; an unverified rule is reported as unknown and never sent to the model | YAML, quotes checked by script | `rules/` |
 | Tools | One plain function per rule check (LTV cap, risk weight, prepayment, KFS, guarantor, valuation, KYC, rate reset, related party, MITC), plus the rule version in force on a date and the lender type picker. All arithmetic and date logic | Python | `src/tools/checks.py` |
 | Agent graph | Guard, planner, executor, judge, critic, revise, finalize and drafter nodes; the critic's verdict is a conditional edge; one retry; unconfirmed results are withheld as "needs information"; a separate lookup path for general rule questions | LangGraph `StateGraph` | `src/agents/graph.py`, `steps.py`, `loop.py` |
@@ -209,11 +191,11 @@ A question or a rule check comes in from the compliance officer's workspace and 
 
 | Service | Default | How to change |
 | --- | --- | --- |
-| Language model | `qwen3:8b` on a local Ollama, through its OpenAI-compatible endpoint | `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL` (for example the course endpoint) |
-| Embeddings | `qllama/bge-small-en-v1.5` on Ollama | `EMBED_PROVIDER`, `EMBED_MODEL`, `EMBED_BASE_URL`; `EMBED_PROVIDER=fastembed` runs `BAAI/bge-small-en-v1.5` in-process with the same vectors. The index records which model built it and refuses another |
+| Language model | Qwen3-8B on the course server, through an OpenAI-compatible endpoint. Calls are queued one at a time, kept under the per-minute limit, capped at 1,024 output tokens, and retried after a busy reply | `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_CA_CERT`, `LLM_MAX_CONCURRENT`, `LLM_RATE_PER_MINUTE`, `LLM_MAX_OUTPUT_TOKENS` |
+| Embeddings | `bge-small-en-v1.5` on the course embeddings endpoint | `EMBED_PROVIDER`, `EMBED_MODEL`, `EMBED_BASE_URL`, `EMBED_CA_CERT`, `EMBED_BATCH`, `EMBED_MAX_TOKENS`; `EMBED_PROVIDER=fastembed` runs `BAAI/bge-small-en-v1.5` in-process with the same vectors. The index records which model built it and refuses another |
 | Reranker | `Xenova/ms-marco-MiniLM-L-6-v2`, in-process | `RERANK_MODEL` |
 | Vector database | Qdrant in memory, loaded from the saved index; a Qdrant server under Docker Compose | `QDRANT_URL` |
-| Deployment | `docker compose up`: the app and Qdrant containers; Ollama stays on the host | `APP_PORT`, `DOCKER_LLM_BASE_URL`, `DOCKER_EMBED_BASE_URL` |
+| Deployment | `docker compose up`: the app and Qdrant containers; the model servers stay outside Docker, and the `crt` folder with the certificate files is mounted read only | `APP_PORT`, `CERT_DIR`, `DOCKER_LLM_BASE_URL`, `DOCKER_EMBED_BASE_URL`, `DOCKER_LLM_CA_CERT`, `DOCKER_EMBED_CA_CERT` |
 
 **Limits on every run.** At most 10 agent steps (and 25 graph node visits as a second guard), 40,000 tokens and 240 seconds per question, two retries for a reply that fails validation, and 6 questions per minute per session. A run that hits a limit stops politely, says why, and shows what the tools found as unconfirmed.
 
@@ -229,7 +211,7 @@ A question or a rule check comes in from the compliance officer's workspace and 
 | 7 | Run the test split with score only, rules only and both | Ablation table |
 | 10 | Add NPA rate, approval rate and gate effect to the report | Report section |
 
-If registration or file size blocks the Freddie Mac data by day 2, switch to German credit. If days still run short, drop gradient boosting and keep the logistic model.
+If days still run short, drop gradient boosting and keep the logistic model.
 
 ## Compliance officer workspace
 
@@ -304,7 +286,7 @@ Every question or rule check produces one trace, a record of each step, so a wro
 | Latency in milliseconds and token counts | Every model call |
 | Officer action: accepted, disputed, commented, cleared, returned | End |
 
-Store traces as one JSON line each in a local file, and add a History screen that lists traces and the officer's actions for an application. This doubles as the audit trail in the workspace. A tracing library such as Langfuse is optional.
+Store traces as one JSON line each in a local file, and add a History screen that lists traces and the officer's actions for an application. This doubles as the audit trail in the workspace. A tracing library such as Langfuse is optional. As built, tracing is the application's own trace file and History page; LangSmith, Langfuse and OpenTelemetry are not used. An extra Ragas report (`eval/ragas_eval.py`: faithfulness, answer relevancy and context precision, judged by the course model on the dev split) sits beside the code-scored evaluation. It needs no gold answers, it is noisy with an 8B judge, and it does not replace the gold-set accuracy (see `docs/results.md`).
 
 **Failure taxonomy table.** The evaluation script reads traces and labelled failures and prints counts by category, by strategy and by query type, with the trace id for each failure.
 
@@ -336,7 +318,7 @@ The interface is a Streamlit app that implements the screens in the compliance o
 
 **Rate limiting.** Allow a fixed number of assistant questions per minute per session, and stop any question at the 10 step cap and a time limit. When the limit is hit, show a clear message and never crash. A test sends a burst of questions and checks the extra ones are refused politely. The numbers depend on the endpoint's token quota, which is among the open questions.
 
-**Containerisation.** One Dockerfile and one compose file starting the app and Qdrant together. The language model stays on the course endpoint, with address, key and model name from environment variables, never in the repository. As built, the default is a local Ollama on the host (qwen3:8b for the language model and qllama/bge-small-en-v1.5 for embeddings), because the course endpoint was not available; switching is a change to the environment variables only. `docker compose up` must start a working app with the index loaded from a saved snapshot.
+**Containerisation.** One Dockerfile and one compose file starting the app and Qdrant together. The language model stays on the course endpoint, with address, key and model name from environment variables, never in the repository. As built, the chat and embedding endpoints are the course servers (Qwen3-8B and bge-small-en-v1.5), reached with their own certificate files mounted read only; pointing at another OpenAI-compatible server is a change to the environment variables only. `docker compose up` must start a working app with the index loaded from a saved snapshot.
 
 **Demo.** A 10 minute script: sign in as the compliance officer; open the application with the planted issues; run the rule check and show the wrong rulebook caught by the critic; ask the chat a question with the screen shared; add a comment and request more information; clear a clean application; try an injection in a comment field and show it ignored; then show the evaluation screen.
 
@@ -405,6 +387,6 @@ Build in the order below, finishing and testing each step before the next. Where
 8. Use only fake personal data in tests, applications and demos.
 9. After each build step, record a short status: what works, what failed, what is next.
 
-**Open items.** Listed, with how each one stands, in the companion document RBI Home Loan Rule Checker (Loan Guarantor) – Open Questions.
+**Open items.** Listed, with how each one stands, in section 11 of the technical report (`docs/technical_report.md`).
 
 **Definition of done for the capstone.** Rules file and gold file frozen; the evaluation script prints accuracy, citation rate and the failure table for three prompt strategies; the injection, PII and refusal tests pass at the reported rates; the Streamlit workspace runs the full demo script; and `docker compose up` starts the app.

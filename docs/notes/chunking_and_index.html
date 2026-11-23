@@ -1,0 +1,221 @@
+<title>Chunking and Index Scratchboard</title>
+<style>
+/* Layout: one column of numbered stages; each stage is a small board with a live example from HFC-MD/58 */
+:root{--bg:#f5f6f8;--fg:#18202c;--muted:#5a6475;--card:#ffffff;--bd:#d9dee7;--accent:#1f5fbf;--a1:#cfe0ff;--a2:#ffe3c4;--a3:#d4f0d9;--a4:#f2d5f0;--a1b:#2f6fd8;--a2b:#c9731f;--a3b:#2e8b4a;--a4b:#a44aa0;--warn:#b4451b;--code:#eef1f6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--fg:#e6eaf2;--muted:#9aa5b8;--card:#171e29;--bd:#2a3444;--accent:#7aa7ff;--a1:#1d3158;--a2:#4a3220;--a3:#1f4130;--a4:#44274a;--a1b:#6b9bf2;--a2b:#f0a05a;--a3b:#58c27a;--a4b:#d58ad0;--warn:#fb923c;--code:#212a38;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f141c;--fg:#e6eaf2;--muted:#9aa5b8;--card:#171e29;--bd:#2a3444;--accent:#7aa7ff;--a1:#1d3158;--a2:#4a3220;--a3:#1f4130;--a4:#44274a;--a1b:#6b9bf2;--a2b:#f0a05a;--a3b:#58c27a;--a4b:#d58ad0;--warn:#fb923c;--code:#212a38;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.55;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:28px}
+main{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:1.6rem;margin:0 0 6px;text-wrap:balance}
+h2{font-size:1.1rem;margin:0 0 6px;display:flex;gap:10px;align-items:baseline}
+h2 .n{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-size:.9rem}
+p{margin:0;color:var(--muted);max-width:72ch}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:.85em}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:560px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.new{background:var(--a3);color:var(--a3b)} .same{background:var(--code);color:var(--muted)} .rej{background:var(--a2);color:var(--warn)}
+.lines{display:flex;flex-direction:column;gap:5px}
+.line{display:grid;grid-template-columns:minmax(0,1fr) 150px 54px;gap:10px;align-items:center;font-size:.85rem;border-left:5px solid var(--bd);padding:3px 8px;border-radius:4px;background:var(--code)}
+.line .txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:10px;border-radius:5px;background:var(--bd);min-width:3px}
+.line .w{text-align:right;color:var(--muted)}
+.cutline{font-size:.8rem;font-weight:700;color:var(--warn);border-top:2px dashed var(--warn);padding-top:3px}
+.chunkhead{font-size:.8rem;font-weight:700;margin-top:4px}
+.ctl{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ctl input[type=range]{flex:1;min-width:160px;accent-color:var(--accent)}
+.out{font-weight:700}
+pre{margin:0;background:var(--code);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto}
+svg{display:block;min-width:760px;width:100%;height:auto}
+svg text{fill:var(--fg);font-size:12.5px;font-family:Inter,system-ui,sans-serif}
+svg .sub{fill:var(--muted);font-size:11px}
+svg .lbl{fill:var(--muted);font-size:11px;font-style:italic}
+svg .box{fill:var(--code);stroke:var(--bd);stroke-width:1.2}
+svg .b1{fill:var(--a1);stroke:var(--a1b);stroke-width:1.4}
+svg .b2{fill:var(--a2);stroke:var(--a2b);stroke-width:1.4}
+svg .b3{fill:var(--a3);stroke:var(--a3b);stroke-width:1.4}
+svg .b4{fill:var(--a4);stroke:var(--a4b);stroke-width:1.4}
+svg .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
+svg .arrow{fill:var(--muted)}
+.cap{font-size:.88rem;color:var(--muted);max-width:80ch}
+</style>
+
+<main>
+<header>
+<h1>How a page becomes chunks, and chunks become search results</h1>
+<p>Every example below is paragraph 58 of the RBI Housing Finance Companies Directions, the paragraph behind the 90 / 80 / 75 percent LTV limits. Code: <code>src/ingest/parse.py</code> for splitting and <code>src/index/hybrid.py</code> for the index.</p>
+</header>
+
+<section>
+<h2><span class="n">THE WHOLE PATH</span></h2>
+<div class="scroll">
+<svg viewBox="0 0 1000 120" role="img" aria-label="Pipeline: RBI page, lines, numbered paragraphs, chunks of at most 220 words, chunks.jsonl, then three index stores, then search.">
+<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrow"/></marker></defs>
+<rect class="box" x="5" y="30" width="120" height="60" rx="8"/><text x="65" y="55" text-anchor="middle">RBI page</text><text class="sub" x="65" y="72" text-anchor="middle">HTML or PDF</text>
+<rect class="b1" x="165" y="30" width="120" height="60" rx="8"/><text x="225" y="55" text-anchor="middle">1 Lines</text><text class="sub" x="225" y="72" text-anchor="middle">menus removed</text>
+<rect class="b3" x="325" y="30" width="120" height="60" rx="8"/><text x="385" y="55" text-anchor="middle">2 Paragraphs</text><text class="sub" x="385" y="72" text-anchor="middle">cut at "58."</text>
+<rect class="b2" x="485" y="30" width="120" height="60" rx="8"/><text x="545" y="55" text-anchor="middle">3 Chunks</text><text class="sub" x="545" y="72" text-anchor="middle">max 220 words</text>
+<rect class="b4" x="645" y="30" width="120" height="60" rx="8"/><text x="705" y="55" text-anchor="middle">4 Index</text><text class="sub" x="705" y="72" text-anchor="middle">vectors + keywords</text>
+<rect class="box" x="805" y="30" width="190" height="60" rx="8"/><text x="900" y="55" text-anchor="middle">5 Search</text><text class="sub" x="900" y="72" text-anchor="middle">top paragraphs, cited</text>
+<line class="ln" x1="125" y1="60" x2="163" y2="60" marker-end="url(#m)"/><line class="ln" x1="285" y1="60" x2="323" y2="60" marker-end="url(#m)"/><line class="ln" x1="445" y1="60" x2="483" y2="60" marker-end="url(#m)"/><line class="ln" x1="605" y1="60" x2="643" y2="60" marker-end="url(#m)"/><line class="ln" x1="765" y1="60" x2="803" y2="60" marker-end="url(#m)"/>
+</svg>
+</div>
+</section>
+
+<section>
+<h2><span class="n">STAGE 2</span>Cut at paragraph numbers</h2>
+<p>The splitter reads the page line by line. A line starts a new paragraph only if it begins with a number and a dot, and the number makes sense after the previous one. Everything else stays with the paragraph above. This is the example run live in your browser with the same rule as <code>split_paragraphs</code>.</p>
+<div class="scroll"><table id="ptable"><thead><tr><th>Line on the page</th><th>Verdict</th><th>Why</th></tr></thead><tbody></tbody></table></div>
+<p class="cap">The rule: a line counts as paragraph <em>n</em> when <code>current ≤ n ≤ current + 60</code>, and it is not the same plain number again. Nested lists such as "1. Policy for…" restart at 1, so they fail the test and stay inside paragraph 58. The line "1. Policy for valuation…" here is an illustration of that case. Letters are allowed, so <code>13G.</code> is paragraph 13G.</p>
+</section>
+
+<section>
+<h2><span class="n">STAGE 3</span>Keep each chunk to 220 words</h2>
+<p>Paragraph 58 as it really is in the data: eight lines, with the number of words in each. The code adds lines to a chunk until the next line would pass the limit, then starts a new chunk. It never cuts inside a line. Move the slider to see where the cut falls.</p>
+<div class="ctl"><label for="lim">Word limit</label><input id="lim" type="range" min="100" max="400" step="1" value="220"><span class="out mono" id="limv">220</span><span class="cap" id="limnote"></span></div>
+<div class="lines" id="lines"></div>
+<p class="cap">At 220 words, the first seven lines come to 211 words. The eighth, a 13-word heading of the next section ("E. Concentration of credit…"), would make 224, so it becomes its own chunk <code>HFC-MD/58#1</code>. That is why paragraph 58 has two chunks. Slide above 224 and it becomes one.</p>
+</section>
+
+<section>
+<h2><span class="n">STAGE 4</span>One chunk is one line of chunks.jsonl</h2>
+<pre>{"chunk_id": "HFC-MD/58#0",
+ "paragraph_id": "HFC-MD/58",          ← what answers cite
+ "doc_key": "HFC-MD",
+ "title": "Reserve Bank of India (Housing Finance Companies) Directions, 2025 (Updated as on October 01, 2026)",
+ "lender_type": "hfc",                 ← keeps bank rules away from housing finance cases
+ "dated": "2025-11-28",
+ "source_format": "html",
+ "text": "58. No housing finance company shall grant housing loans to individuals: (1) up to ₹30 lakh with LTV ratio exceeding 90 percent, ..."}</pre>
+<p class="cap">43,336 lines like this in <code>data/index/chunks.jsonl</code>. The line number matters: the index below is built so that line N of the vectors belongs to line N of this file.</p>
+</section>
+
+<section>
+<h2><span class="n">STAGE 5</span>Build the index: three stores from one file</h2>
+<div class="scroll">
+<svg viewBox="0 0 1000 330" role="img" aria-label="Each line of chunks.jsonl feeds three stores: embedding vectors in embeddings.npy, a BM25 keyword index in bm25.pkl, and a Qdrant collection; meta.json records the corpus version and embedding model.">
+<defs><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrow"/></marker></defs>
+<rect class="b2" x="10" y="20" width="200" height="270" rx="8"/>
+<text x="24" y="44" font-weight="700">chunks.jsonl</text>
+<text class="sub" x="24" y="62">one chunk per line</text>
+<rect class="box" x="24" y="76" width="172" height="26" rx="4"/><text class="sub" x="34" y="93">line 0   HFC-MD/0#0</text>
+<rect class="box" x="24" y="108" width="172" height="26" rx="4"/><text class="sub" x="34" y="125">line 1   …</text>
+<rect class="b1" x="24" y="140" width="172" height="26" rx="4"/><text x="34" y="157" font-size="12">line N   HFC-MD/58#0</text>
+<rect class="box" x="24" y="172" width="172" height="26" rx="4"/><text class="sub" x="34" y="189">line N+1 HFC-MD/58#1</text>
+<rect class="box" x="24" y="204" width="172" height="26" rx="4"/><text class="sub" x="34" y="221">…</text>
+<text class="sub" x="24" y="260">43,336 lines in all</text>
+
+<rect class="b3" x="330" y="20" width="300" height="76" rx="8"/>
+<text x="344" y="44" font-weight="700">Embedding model → embeddings.npy</text>
+<text class="sub" x="344" y="62">text sent: title (first 80 characters), newline,</text>
+<text class="sub" x="344" y="76">then the chunk text, cut at 1,000 characters</text>
+<text class="sub" x="344" y="90">one row of 384 numbers per line, same order</text>
+<rect class="b4" x="330" y="124" width="300" height="76" rx="8"/>
+<text x="344" y="148" font-weight="700">BM25 keyword index → bm25.pkl</text>
+<text class="sub" x="344" y="166">chunk text lower-cased and cut into words</text>
+<text class="sub" x="344" y="180">(letters, digits, ₹ and %) so "75%" matches "75%"</text>
+<rect class="b1" x="330" y="228" width="300" height="76" rx="8"/>
+<text x="344" y="252" font-weight="700">Qdrant collection (vector database)</text>
+<text class="sub" x="344" y="270">the same vectors, with paragraph id and lender type</text>
+<text class="sub" x="344" y="284">attached so a search can filter by lender</text>
+
+<rect class="box" x="720" y="110" width="270" height="104" rx="8"/>
+<text x="734" y="134" font-weight="700">meta.json</text>
+<text class="sub" x="734" y="152">corpus version (hash of chunks.jsonl)</text>
+<text class="sub" x="734" y="166">embedding model name, for example</text>
+<text class="sub" x="734" y="180">endpoint:bge-small-en-v1.5</text>
+<text class="sub" x="734" y="198">the app refuses a different model name</text>
+
+<line class="ln" x1="210" y1="150" x2="328" y2="60" marker-end="url(#m2)"/>
+<line class="ln" x1="210" y1="160" x2="328" y2="162" marker-end="url(#m2)"/>
+<line class="ln" x1="210" y1="170" x2="328" y2="266" marker-end="url(#m2)"/>
+<text class="lbl" x="228" y="100">line N</text>
+</svg>
+</div>
+<p class="cap">If a vector were stored in the wrong order, a search would return the wrong paragraph text. That is why the build keeps one ordered file and a recorded corpus version. It reuses an old vector when a chunk's text is unchanged, so a re-parse only embeds what changed.</p>
+</section>
+
+<section>
+<h2><span class="n">STAGE 6</span>Search: two lists, merged, then re-read carefully</h2>
+<div class="scroll">
+<svg viewBox="0 0 1000 300" role="img" aria-label="A question goes to a dense vector search and a BM25 keyword search, each returning 40 chunks filtered by lender type. Reciprocal rank fusion merges them into 20. A cross-encoder reranker reorders the 20, and the top k paragraphs are returned with their text.">
+<defs><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrow"/></marker></defs>
+<rect class="box" x="10" y="110" width="170" height="80" rx="8"/><text x="24" y="136" font-weight="700">Question</text><text class="sub" x="24" y="154">+ lender type (hfc, bank)</text><text class="sub" x="24" y="170">"max LTV for ₹25 lakh"</text>
+<rect class="b1" x="250" y="30" width="200" height="76" rx="8"/><text x="264" y="54" font-weight="700">Vector search</text><text class="sub" x="264" y="72">finds chunks with similar meaning</text><text class="sub" x="264" y="88">top 40, lender filter applied</text>
+<rect class="b4" x="250" y="194" width="200" height="76" rx="8"/><text x="264" y="218" font-weight="700">Keyword search (BM25)</text><text class="sub" x="264" y="236">finds chunks with the same words</text><text class="sub" x="264" y="252">top 40, lender filter applied</text>
+<rect class="b3" x="520" y="110" width="200" height="80" rx="8"/><text x="534" y="134" font-weight="700">Merge by rank</text><text class="sub" x="534" y="152">each list gives 1 ÷ (60 + rank)</text><text class="sub" x="534" y="168">scores added, best 20 kept</text>
+<rect class="b2" x="790" y="110" width="200" height="80" rx="8"/><text x="804" y="134" font-weight="700">Reranker</text><text class="sub" x="804" y="152">reads question + chunk together</text><text class="sub" x="804" y="168">re-orders the 20, keeps top k</text>
+<line class="ln" x1="180" y1="140" x2="248" y2="76" marker-end="url(#m3)"/><line class="ln" x1="180" y1="160" x2="248" y2="226" marker-end="url(#m3)"/>
+<line class="ln" x1="450" y1="68" x2="518" y2="136" marker-end="url(#m3)"/><line class="ln" x1="450" y1="232" x2="518" y2="164" marker-end="url(#m3)"/>
+<line class="ln" x1="720" y1="150" x2="788" y2="150" marker-end="url(#m3)"/>
+<text class="lbl" x="990" y="214" text-anchor="end">→ paragraph ids and text</text><text class="lbl" x="990" y="230" text-anchor="end">to the agent, cited in the answer</text>
+</svg>
+</div>
+<p class="cap">Meaning search catches "borrowing limit" for "LTV"; keyword search catches the exact "75" and "₹30 lakh". Merging by rank rather than by raw score avoids comparing two different scales. The lender filter is why a housing finance case never sees the bank Directions. Code: <code>HybridIndex.search</code>, <code>hybrid.py:210</code>.</p>
+</section>
+</main>
+
+<script>
+// Stage 2: the same rule as split_paragraphs, run on a short illustrative page
+const PARA = /^\s*(?:\d+\[)?(\d{1,3})([A-Z]{0,2})\.(?:\s+\S|(?=[A-Z(“"]))/;
+const page = [
+  "57. HFCs shall comply with the instructions prescribed in Reserve Bank of India (Non-Banking…",
+  "D. Loan to Value (LTV) Ratio for housing loans",
+  "58. No housing finance company shall grant housing loans to individuals:",
+  "(1) up to ₹30 lakh with LTV ratio exceeding 90 percent,",
+  "Note:",
+  "1. Policy for valuation of immovable properties",
+  "59. HFCs shall comply with the provisions of paragraphs 13, 15, 17, 18, 20, 21 of Reserve…"
+];
+let current = 0; const tb = document.querySelector("#ptable tbody");
+for (const ln of page) {
+  const m = PARA.exec(ln); let cls = "same", verdict = "same paragraph", why = "does not start with a number and a dot";
+  if (m) {
+    const n = +m[1];
+    if (current <= n && n <= current + 60 && !(n === current && !m[2])) { cls = "new"; verdict = "new paragraph " + n + m[2]; why = "number " + n + " is between " + current + " and " + (current + 60); current = n; }
+    else { cls = "rej"; verdict = "number rejected"; why = "number " + n + " is not between " + current + " and " + (current + 60) + ", so it is part of the list inside paragraph " + current; }
+  } else if (/^\(/.test(ln)) { why = "starts with a bracket, a sub-point of the paragraph"; }
+  else if (/^[A-Z]\. /.test(ln)) { why = "a section heading, not a paragraph number; it stays with the paragraph above"; }
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td class="mono"></td><td><span class="tag ${cls}">${verdict}</span></td><td>${why}</td>`;
+  tr.firstChild.textContent = ln; tb.appendChild(tr);
+}
+
+// Stage 3: the same grouping rule as sub_chunks, on the real lines of HFC-MD/58
+const L58 = [
+  ["58. No housing finance company shall grant housing loans to individuals:", 11],
+  ["(1) up to ₹30 lakh with LTV ratio exceeding 90 percent,", 11],
+  ["(2) above ₹30 lakh and up to ₹75 lakh with LTV ratio exceeding 80 percent, and,", 16],
+  ["(3) above ₹75 lakh with LTV ratio exceeding 75 per cent", 11],
+  ["Note:", 1],
+  ["(1) The LTV ratio shall be computed as a percentage with total outstanding in the account …", 141],
+  ["(2) The HFC shall be guided by paragraph 215 of these Directions on valuation of properties …", 20],
+  ["E. Concentration of credit / investment (not applicable to HFCs in Upper Layer)", 13]
+];
+const COL = [["var(--a1)","var(--a1b)"],["var(--a2)","var(--a2b)"],["var(--a3)","var(--a3b)"],["var(--a4)","var(--a4b)"]];
+const box = document.getElementById("lines"), lim = document.getElementById("lim"), limv = document.getElementById("limv"), note = document.getElementById("limnote");
+function render() {
+  const limit = +lim.value; limv.textContent = limit; box.innerHTML = "";
+  const chunks = []; let cur = [], words = 0;
+  for (const [t, w] of L58) { if (cur.length && words + w > limit) { chunks.push(cur); cur = []; words = 0; } cur.push([t, w]); words += w; }
+  if (cur.length) chunks.push(cur);
+  const maxw = 141;
+  chunks.forEach((c, i) => {
+    const total = c.reduce((a, x) => a + x[1], 0);
+    const h = document.createElement("div"); h.className = "chunkhead"; h.style.color = COL[i % 4][1];
+    h.textContent = "HFC-MD/58#" + i + "  ·  " + total + " words"; box.appendChild(h);
+    for (const [t, w] of c) {
+      const d = document.createElement("div"); d.className = "line"; d.style.borderLeftColor = COL[i % 4][1]; d.style.background = COL[i % 4][0];
+      d.innerHTML = `<span class="txt"></span><span><div class="bar" style="width:${Math.max(3, w / maxw * 100)}%;background:${COL[i % 4][1]}"></div></span><span class="w">${w} w</span>`;
+      d.firstChild.textContent = t; box.appendChild(d);
+    }
+    if (i < chunks.length - 1) { const cut = document.createElement("div"); cut.className = "cutline"; cut.textContent = "cut here: the next line would not fit under " + limit + " words"; box.appendChild(cut); }
+  });
+  note.textContent = chunks.length + (chunks.length === 1 ? " chunk" : " chunks") + (limit === 220 ? "  (the value used in the project)" : "");
+}
+lim.addEventListener("input", render); render();
+</script>

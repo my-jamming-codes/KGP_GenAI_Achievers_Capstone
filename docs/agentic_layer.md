@@ -44,7 +44,7 @@ The graph replaced a hand-written loop on 14 November 2026. The nodes call the s
 | `check_rate_reset` | Communication of a floating rate reset |
 | `check_related_party` | Loans to directors, their relatives or key managerial personnel |
 | `check_mitc` | Most important terms and conditions signed (HFC) |
-| `HybridIndex.search` | BM25 plus dense search (bge-small embeddings from Ollama, in Qdrant), rank fusion and a reranker over the RBI paragraph index (40,890 chunks) |
+| `HybridIndex.search` | BM25 plus dense search (bge-small embeddings from the model server, in Qdrant), rank fusion and a reranker over the RBI paragraph index (43,336 chunks) |
 | `rule_in_force` | Which version of a rule applies on a date; the rule check tools use it |
 | `amendment_chain` | Every version of a rule over time. Built and tested, but not called by the agents |
 
@@ -115,7 +115,7 @@ State lives at three levels.
 
 A new question that is not a follow-up does not use history, so its answer does not depend on what was asked before.
 
-Example from the local model (qwen3:8b):
+Example from a run with a local model:
 
 | Turn | Question | Answer |
 | --- | --- | --- |

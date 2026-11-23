@@ -1,0 +1,157 @@
+{
+ "split": "test",
+ "queries": 60,
+ "model": "qwen3:8b",
+ "corpus_version": "bd906e801acb",
+ "strategies": {
+  "A": {
+   "accuracy": 0.85,
+   "first_pass_accuracy": 0.488,
+   "first_pass_queries": 43,
+   "citation_rate": 0.975,
+   "queries_with_critic_failure": 31,
+   "critic_kinds": {
+    "wrong_status": 32,
+    "wrong_paragraph": 32,
+    "wrong_number": 10,
+    "missing_check": 1
+   },
+   "failures": {
+    "retrieval miss": 2,
+    "reasoning error": 2,
+    "tool call error": 0,
+    "hallucination": 5
+   },
+   "wrong_rulebook_notes": 0,
+   "by_type": {
+    "lookup": "8/11",
+    "scenario": "19/24",
+    "entity_variant": "11/11",
+    "amendment": "6/7",
+    "refusal": "7/7"
+   },
+   "failed": [
+    {
+     "id": "Q001",
+     "trace_id": "8d6498b05354",
+     "category": "reasoning error",
+     "detail": "answer lacks any of ['90']"
+    },
+    {
+     "id": "Q004",
+     "trace_id": "fad196de9d99",
+     "category": "retrieval miss",
+     "detail": "no citation of ['HFC-MD/22']"
+    },
+    {
+     "id": "Q013",
+     "trace_id": "03223c2db418",
+     "category": "retrieval miss",
+     "detail": "no citation of ['NBFC-KYC/23']"
+    },
+    {
+     "id": "Q016",
+     "trace_id": "7d92291026e8",
+     "category": "reasoning error",
+     "detail": "ltv_cap: got needs_information, expected met"
+    },
+    {
+     "id": "Q020",
+     "trace_id": "ef0ad7641a66",
+     "category": "hallucination",
+     "detail": "ltv_cap: got needs_information, expected met"
+    },
+    {
+     "id": "Q024",
+     "trace_id": "01c913e7184e",
+     "category": "hallucination",
+     "detail": "ltv_cap: got needs_information, expected met; risk_weight: got needs_information, expected met"
+    },
+    {
+     "id": "Q040",
+     "trace_id": "ca1e90774678",
+     "category": "hallucination",
+     "detail": "ltv_cap: got needs_information, expected met"
+    },
+    {
+     "id": "Q041",
+     "trace_id": "c3ddf8387a6c",
+     "category": "hallucination",
+     "detail": "risk_weight: got needs_information, expected met"
+    },
+    {
+     "id": "Q061",
+     "trace_id": "50e1c9512fe9",
+     "category": "hallucination",
+     "detail": "risk_weight: got needs_information, expected met"
+    }
+   ],
+   "avg_tokens_per_query": 6395,
+   "stopped": {},
+   "model_calls": 291,
+   "cache_hits": 0,
+   "validation_retries": 0,
+   "seconds": 847
+  },
+  "C": {
+   "accuracy": 0.933,
+   "first_pass_accuracy": 0.465,
+   "first_pass_queries": 43,
+   "citation_rate": 0.975,
+   "queries_with_critic_failure": 27,
+   "critic_kinds": {
+    "wrong_status": 36,
+    "wrong_paragraph": 30,
+    "missing_check": 1
+   },
+   "failures": {
+    "retrieval miss": 2,
+    "reasoning error": 1,
+    "tool call error": 1,
+    "hallucination": 0
+   },
+   "wrong_rulebook_notes": 0,
+   "by_type": {
+    "lookup": "8/11",
+    "scenario": "23/24",
+    "entity_variant": "11/11",
+    "amendment": "7/7",
+    "refusal": "7/7"
+   },
+   "failed": [
+    {
+     "id": "Q001",
+     "trace_id": "bd9bf56b6260",
+     "category": "reasoning error",
+     "detail": "answer lacks any of ['90']"
+    },
+    {
+     "id": "Q004",
+     "trace_id": "4c2a2fed9fb7",
+     "category": "retrieval miss",
+     "detail": "no citation of ['HFC-MD/22']"
+    },
+    {
+     "id": "Q013",
+     "trace_id": "5b35d8f4a257",
+     "category": "retrieval miss",
+     "detail": "no citation of ['NBFC-KYC/23']"
+    },
+    {
+     "id": "Q026",
+     "trace_id": "6818322f5293",
+     "category": "tool call error",
+     "detail": "ltv_cap: got needs_information, expected not_applicable; prepayment_charge: got needs_information, expected met"
+    }
+   ],
+   "avg_tokens_per_query": 6798,
+   "stopped": {
+    "time_limit": 1
+   },
+   "model_calls": 277,
+   "cache_hits": 0,
+   "validation_retries": 0,
+   "seconds": 2335
+  }
+ }
+}

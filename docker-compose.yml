@@ -1,5 +1,5 @@
 # docker compose up  -> the workspace at http://localhost:8501, with Qdrant loaded from the saved index snapshot.
-# The language model stays outside: a local Ollama on the host by default, or the course endpoint.
+# The model servers stay outside: the course chat and embeddings endpoints, or any OpenAI-compatible server on the host.
 # Set DOCKER_LLM_BASE_URL, LLM_API_KEY and LLM_MODEL in the shell or in .env to change it.
 # Set APP_PORT (for example APP_PORT=8502) if another program already uses port 8501.
 services:

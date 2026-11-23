@@ -1,0 +1,158 @@
+<title>Gold Build and Application Link</title>
+<style>
+/* Layout: one column of boards. Colours: blue = the application's data, green = the test questions, orange = the script, grey = people and files */
+:root{--bg:#f5f6f8;--fg:#18202c;--muted:#5a6475;--card:#ffffff;--bd:#d9dee7;--accent:#1f5fbf;--a1:#cfe0ff;--a2:#ffe3c4;--a3:#d4f0d9;--a1b:#2f6fd8;--a2b:#c9731f;--a3b:#2e8b4a;--warn:#b4451b;--code:#eef1f6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--fg:#e6eaf2;--muted:#9aa5b8;--card:#171e29;--bd:#2a3444;--accent:#7aa7ff;--a1:#1d3158;--a2:#4a3220;--a3:#1f4130;--a1b:#6b9bf2;--a2b:#f0a05a;--a3b:#58c27a;--warn:#fb923c;--code:#212a38;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f141c;--fg:#e6eaf2;--muted:#9aa5b8;--card:#171e29;--bd:#2a3444;--accent:#7aa7ff;--a1:#1d3158;--a2:#4a3220;--a3:#1f4130;--a1b:#6b9bf2;--a2b:#f0a05a;--a3b:#58c27a;--warn:#fb923c;--code:#212a38;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.55;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:28px}
+main{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:1.6rem;margin:0 0 6px;text-wrap:balance}
+h2{font-size:1.1rem;margin:0 0 4px}
+p{margin:0;color:var(--muted);max-width:74ch}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--code);padding:1px 5px;border-radius:4px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:620px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+pre{margin:0;background:var(--code);padding:10px 12px;border-radius:8px;font-size:.78rem;overflow-x:auto;line-height:1.45}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.step{border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.step h3{margin:0;font-size:.95rem;display:flex;gap:8px;align-items:baseline}
+.step h3 b{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-size:.8rem}
+.step .who{font-size:.8rem;color:var(--muted)}
+.s1{border-top:4px solid var(--a2b)} .s2{border-top:4px solid var(--a1b)} .s3{border-top:4px solid var(--a1b)} .s4{border-top:4px solid var(--a3b)} .s5{border-top:4px solid var(--bd)}
+svg{display:block;min-width:820px;width:100%;height:auto}
+svg text{fill:var(--fg);font-size:12.5px;font-family:Inter,system-ui,sans-serif}
+svg .sub{fill:var(--muted);font-size:11px}
+svg .lbl{fill:var(--muted);font-size:11px;font-style:italic}
+svg .box{fill:var(--code);stroke:var(--bd);stroke-width:1.2}
+svg .b1{fill:var(--a1);stroke:var(--a1b);stroke-width:1.4}
+svg .b2{fill:var(--a2);stroke:var(--a2b);stroke-width:1.4}
+svg .b3{fill:var(--a3);stroke:var(--a3b);stroke-width:1.4}
+svg .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
+svg .dash{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+svg .arrow{fill:var(--muted)}
+.cap{font-size:.88rem;color:var(--muted);max-width:80ch}
+.yes{color:var(--a3b);font-weight:700}.no{color:var(--warn);font-weight:700}
+</style>
+
+<main>
+<header>
+<h1>build_gold.py: what it writes and how the files link into the application</h1>
+<p>One script, run once, produces the 12 sample loan applications that the app shows and the 80 test questions that the evaluation asks. They are built together so every test question has a known right answer on those same applications.</p>
+</header>
+
+<section>
+<h2>The big picture</h2>
+<div class="scroll">
+<svg viewBox="0 0 1000 380" role="img" aria-label="build_gold.py takes hand-typed people, loan parameters and expected answers, and writes three files: the 12 application files, the 80 gold questions, and the answer key. The Streamlit app reads the applications, the evaluation reads the applications and the gold questions, and only reviewers read the answer key.">
+<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrow"/></marker></defs>
+<text class="sub" x="10" y="14">TYPED BY HAND</text><text class="sub" x="270" y="14">RUN ONCE</text><text class="sub" x="530" y="14">WRITES</text><text class="sub" x="830" y="14">READ BY</text>
+<rect class="box" x="10" y="30" width="215" height="84" rx="8"/><text x="22" y="54" font-weight="700">Rules</text><text class="sub" x="22" y="72">verified records in rules/rules.yaml,</text><text class="sub" x="22" y="86">read by a person, not by code</text>
+<rect class="box" x="10" y="148" width="215" height="84" rx="8"/><text x="22" y="172" font-weight="700">12 people + loan terms</text><text class="sub" x="22" y="190">name, lender, loan, property value,</text><text class="sub" x="22" y="204">guarantor, valuation reports, notes</text>
+<rect class="box" x="10" y="266" width="215" height="84" rx="8"/><text x="22" y="290" font-weight="700">Expected answers</text><text class="sub" x="22" y="308">status and paragraph for each</text><text class="sub" x="22" y="322">check, typed per application</text>
+<rect class="b2" x="270" y="110" width="190" height="130" rx="8"/><text x="284" y="136" font-weight="700">gold/build_gold.py</text><text class="sub" x="284" y="156">builds applications and</text><text class="sub" x="284" y="170">80 questions, checks the</text><text class="sub" x="284" y="184">counts (15, 30, 15, 10, 10),</text><text class="sub" x="284" y="198">sets 20 dev and 60 test,</text><text class="sub" x="284" y="212">then makes the files read-only</text>
+<rect class="b1" x="530" y="30" width="235" height="84" rx="8"/><text x="544" y="54" font-weight="700">data/applications/</text><text class="sub" x="544" y="72">HL-2041.json to HL-2052.json</text><text class="sub" x="544" y="86">12 loan files, 8 tabs each</text>
+<rect class="b3" x="530" y="148" width="235" height="84" rx="8"/><text x="544" y="172" font-weight="700">gold/gold_queries.jsonl</text><text class="sub" x="544" y="190">80 questions, each with an</text><text class="sub" x="544" y="204">expected block</text>
+<rect class="box" x="530" y="266" width="235" height="84" rx="8"/><text x="544" y="290" font-weight="700">data/applications/answer_key.json</text><text class="sub" x="544" y="308">the planted problem in each</text><text class="sub" x="544" y="322">application, for reviewers</text>
+<rect class="b1" x="830" y="30" width="165" height="84" rx="8"/><text x="842" y="54" font-weight="700">The app</text><text class="sub" x="842" y="72">work queue, tabs,</text><text class="sub" x="842" y="86">rule check cards</text>
+<rect class="b3" x="830" y="148" width="165" height="84" rx="8"/><text x="842" y="172" font-weight="700">eval/run_eval.py</text><text class="sub" x="842" y="190">asks all 80, scores</text><text class="sub" x="842" y="204">against expected</text>
+<rect class="box" x="830" y="266" width="165" height="84" rx="8"/><text x="842" y="290" font-weight="700">Reviewers</text><text class="sub" x="842" y="308">check the labels</text><text class="sub" x="842" y="322">by hand</text>
+<line class="ln" x1="225" y1="72" x2="268" y2="150" marker-end="url(#m)"/><line class="ln" x1="225" y1="190" x2="268" y2="175" marker-end="url(#m)"/><line class="ln" x1="225" y1="308" x2="268" y2="200" marker-end="url(#m)"/>
+<line class="ln" x1="460" y1="150" x2="528" y2="72" marker-end="url(#m)"/><line class="ln" x1="460" y1="175" x2="528" y2="190" marker-end="url(#m)"/><line class="ln" x1="460" y1="200" x2="528" y2="300" marker-end="url(#m)"/>
+<line class="ln" x1="765" y1="72" x2="828" y2="72" marker-end="url(#m)"/><line class="ln" x1="765" y1="190" x2="828" y2="190" marker-end="url(#m)"/><line class="ln" x1="765" y1="308" x2="828" y2="308" marker-end="url(#m)"/>
+<line class="ln" x1="765" y1="94" x2="828" y2="160" marker-end="url(#m)"/>
+<text class="lbl" x="772" y="64">loads files</text><text class="lbl" x="772" y="182">question</text><text class="lbl" x="772" y="300">read only</text><text class="lbl" x="772" y="140" transform="rotate(46 772 140)">case</text>
+</svg>
+</div>
+<p class="cap">The application never reads <code>gold_queries.jsonl</code> or <code>answer_key.json</code>. Only <code>eval/run_eval.py</code> reads the questions, and nothing reads the answer key at all except people. That keeps the test honest: the agent is never shown the answers.</p>
+</section>
+
+<section>
+<h2>One application, followed through: HL-2043</h2>
+<p>A Lakeside Housing Finance loan of ₹64 lakh on a ₹76 lakh property, with a guarantor whose disclosure was not recorded. Here is every place it appears.</p>
+<div class="steps">
+<div class="step s1"><h3><b>1</b>In the script</h3><div class="who">gold/build_gold.py, typed by hand</div>
+<pre>app(2, HFC, "Lakeside Housing Finance Ltd",
+    64 * L, 76 * L,
+    guarantor=True, gdisc="not_recorded",
+    vals=2, ivals=1, layer="middle")
+
+FULL["HL-2043"] = {
+ "ltv_cap": c("breached", "HFC-MD/58"),
+ "guarantor_disclosure":
+   c("needs_information", "HFC-MD/158"), ...}</pre></div>
+<div class="step s2"><h3><b>2</b>The application file</h3><div class="who">data/applications/HL-2043.json</div>
+<pre>"Loan request": { "loan_amount": 6400000, ... },
+"Property": { "property_value": 7600000,
+              "valuation_reports": 2,
+              "independent_valuation_reports": 1 },
+"Co-applicant and Guarantor": {
+   "guarantor_present": true,
+   "guarantor_disclosure": "not_recorded" }</pre></div>
+<div class="step s3"><h3><b>3</b>In the app</h3><div class="who">src/app/store.py, then main.py</div>
+<p class="cap">The Work queue lists HL-2043. Opening it shows the 8 tabs. "Run RBI rule check" turns the file into a <code>Case</code> and runs the agent. The tools work out the LTV as 64 ÷ 76 = <b>84.2%</b>, against the 80% cap for loans of ₹30 to ₹75 lakh. The card for LTV cap shows <b>Breached</b>, citing <code>HFC-MD/58</code>. The guarantor card shows <b>Needs information</b>.</p></div>
+<div class="step s4"><h3><b>4</b>The test question</h3><div class="who">gold/gold_queries.jsonl, Q018 (test)</div>
+<pre>"question": "Run the full RBI rule check on
+  application HL-2043 and list the result
+  for each rule.",
+"application_id": "HL-2043",
+"expected": {"checks": {
+  "ltv_cap": {"status": "breached",
+              "paragraph_id": "HFC-MD/58"},
+  "guarantor_disclosure":
+    {"status": "needs_information",
+     "paragraph_id": "HFC-MD/158"}, ...}}</pre>
+<p class="cap"><code>run_eval</code> loads the same application, runs the agent exactly as the app does, and marks the question correct only if every status and paragraph matches.</p></div>
+<div class="step s5"><h3><b>5</b>The answer key</h3><div class="who">data/applications/answer_key.json</div>
+<pre>"HL-2043": {"planted_issues": [
+  {"check": "ltv_cap",
+   "status": "breached",
+   "paragraph_id": "HFC-MD/58"},
+  {"check": "guarantor_disclosure",
+   "status": "needs_information",
+   "paragraph_id": "HFC-MD/158"}],
+ "clean": false}</pre>
+<p class="cap">The problems deliberately placed in each file. Nothing runs from it.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Who reads which file</h2>
+<div class="scroll"><table>
+<thead><tr><th>File</th><th>Holds</th><th>The app reads it?</th><th>The evaluation reads it?</th></tr></thead>
+<tbody>
+<tr><td><code>data/applications/HL-20xx.json</code> (12)</td><td>The loan file, 8 tabs, fake people</td><td class="yes">Yes: queue, tabs, rule check</td><td class="yes">Yes: builds the case for 25 questions</td></tr>
+<tr><td><code>gold/gold_queries.jsonl</code> (80)</td><td>Questions and expected answers</td><td class="no">Never</td><td class="yes">Yes, the only reader</td></tr>
+<tr><td><code>data/applications/answer_key.json</code></td><td>The planted problem per application</td><td class="no">Never</td><td class="no">No, reviewers only</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>Where the 80 questions come from</h2>
+<div class="steps">
+<div class="step"><h3>Two shapes of question</h3>
+<p class="cap"><b>Application questions (25):</b> "Run the full RBI rule check on application HL-2043…". They point to one of the 12 saved files. Some also carry the open tab, as if the officer shared that screen.</p>
+<p class="cap"><b>Described-case questions (34):</b> a case written out in the question, with no saved file. The script starts from one standard case and changes only what the question needs.</p><p class="cap"><b>Neither (21):</b> plain rule lookups and general refusals such as "Approve this loan.", which need no case.</p></div>
+<div class="step"><h3>Example: one standard case, two answers</h3>
+<pre>BASE = dict(lender_type="hfc",
+  lender_name="Sunrise Home Finance Ltd",
+  loan_amount=40 * L, property_value=55 * L,
+  rate_type="floating", ... case_date="2026-11-12")
+
+S(...)  # BASE with a few changes
+
+Q046:  S(non-individual, prepayment charge levied)
+       → breached, HFC-MD/163
+Q047:  same, but lender_type="bank"
+       → met, CB-RBC/353</pre></div>
+<div class="step"><h3>How dev and test are chosen</h3>
+<p class="cap">Within each type, every fourth question becomes a development question (every fifth for scenarios). That gives 20 dev and 60 test, spread across all types. Dev is used to pick a prompt strategy. Test is run afterwards as a check.</p>
+<p class="cap">The script stops with an error if the counts are not exactly 15, 30, 15, 10 and 10 (80 in all, 25 on applications) or if dev is not 20.</p></div>
+<div class="step"><h3>Why the labels can be trusted</h3>
+<p class="cap">The expected statuses and paragraphs were typed by hand from the verified rules, not produced by the app's own tools. If the labels came from the same code being tested, a bug would pass its own test.</p>
+<p class="cap">At the end, the script switches the output files to read-only, so they can't be edited by accident.</p></div>
+</div>
+</section>
+</main>

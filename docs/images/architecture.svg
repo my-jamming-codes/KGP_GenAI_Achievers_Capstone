@@ -39,7 +39,7 @@
 
   <rect class="code" x="770" y="36" width="310" height="138" rx="8"/>
   <text class="t" x="784" y="60">Hybrid index · src/index</text>
-  <text class="s" x="784" y="82">bge-small embeddings (Ollama) in Qdrant</text>
+  <text class="s" x="784" y="82">bge-small embeddings (model server) in Qdrant</text>
   <text class="s" x="784" y="101">BM25 keyword search</text>
   <text class="s" x="784" y="120">reciprocal rank fusion, top 20</text>
   <text class="s" x="784" y="139">cross-encoder reranker</text>
@@ -99,10 +99,11 @@
 
   <rect class="code" x="420" y="424" width="170" height="54" rx="8"/>
   <text class="t" x="434" y="446">Tools · src/tools</text>
-  <text class="s" x="434" y="465">all arithmetic and dates</text>
-  <rect class="data" x="216" y="424" width="180" height="54" rx="8"/>
+  <text class="s" x="434" y="465">arithmetic; limits from rules</text>
+  <rect class="data" x="216" y="424" width="180" height="62" rx="8" style="stroke:#C0703A;stroke-width:2"/>
   <text class="t" x="230" y="446">rules/rules.yaml</text>
-  <text class="s" x="230" y="465">29 verified · 1 unknown</text>
+  <text class="s" x="230" y="463">29 verified · 1 unknown</text>
+  <text class="s" x="230" y="479">R = reads this file</text>
   <path class="ln" d="M396,451 L418,451" marker-end="url(#a)"/>
   <path class="ln" d="M470,354 L470,422" marker-end="url(#a)"/>
 
@@ -110,13 +111,13 @@
   <text class="l" x="740" y="200">search the RBI paragraphs</text>
 
   <text class="s" x="216" y="498">Rule lookups take a shorter path: guard → planner → lookup guard (an unverified rule is answered "unknown")</text>
-  <text class="s" x="216" y="514">→ search → draft → grounding check, with one redraft</text>
+  <text class="s" x="216" y="514">→ search → draft → grounding check, with one redraft. The rules file says which rules are unverified.</text>
 
   <!-- Layer 3: decision and models -->
   <text class="h" x="20" y="562">3 · MODELS AND THE OFFICER'S DECISION</text>
   <rect class="llm" x="20" y="578" width="600" height="66" rx="8"/>
-  <text class="t" x="34" y="602">Ollama on the host (OpenAI-compatible endpoints)</text>
-  <text class="s" x="34" y="622">qwen3:8b for planner, judge and drafter · qllama/bge-small-en-v1.5 for embeddings</text>
+  <text class="t" x="34" y="602">Course model servers (OpenAI-compatible chat and embeddings)</text>
+  <text class="s" x="34" y="622">Qwen3-8B for planner, judge and drafter · bge-small-en-v1.5 for embeddings</text>
   <text class="s" x="34" y="639">switch with LLM_* and EMBED_* settings, for example to the course endpoint</text>
 
   <rect class="box" x="660" y="578" width="420" height="66" rx="8"/>
@@ -138,11 +139,21 @@
   <rect class="code" x="462" y="702" width="190" height="66" rx="8"/>
   <text class="t" x="476" y="726">Memory and cache</text>
   <text class="s" x="476" y="746">follow-up questions</text>
-  <text class="s" x="476" y="762">repeated answers</text>
+  <text class="s" x="476" y="762">answers keyed on rules version</text>
   <rect class="code" x="668" y="702" width="412" height="66" rx="8"/>
   <text class="t" x="682" y="726">Limits</text>
   <text class="s" x="682" y="746">10 steps · 40,000 tokens · 240 s per question · 2 validation retries</text>
   <text class="s" x="682" y="762">6 questions per minute per session</text>
+
+
+  <!-- R badges: the rules file is read here -->
+  <circle cx="780" cy="302" r="9" fill="#C0703A"/><text x="780" y="306" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="584" cy="430" r="9" fill="#C0703A"/><text x="584" y="434" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="646" cy="708" r="9" fill="#C0703A"/><text x="646" y="712" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="174" cy="256" r="9" fill="#C0703A"/><text x="174" y="260" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <circle cx="536" cy="302" r="9" fill="#C0703A"/><text x="536" y="306" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#FFFFFF">R</text>
+  <text class="l" x="590" y="284" style="fill:#9A4F1B">critic: which rulebook a cited paragraph belongs to</text>
+  <text class="l" x="190" y="262" style="fill:#9A4F1B">FAQ quotes</text>
 
   <!-- legend -->
   <rect class="code" x="820" y="220" width="14" height="14" rx="3"/><text class="s" x="840" y="232">code</text>

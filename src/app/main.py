@@ -683,6 +683,21 @@ def history_page() -> None:
                      use_container_width=True, hide_index=True)
     if not shown:
         st.caption("No evaluation results found. Run `python -m eval.run_eval`.")
+    st.markdown("#### Ragas scores (extra, model-judged)")
+    ragas_files = sorted(results.glob("ragas_*.json"))
+    if not ragas_files:
+        st.caption("Not run yet. `python -m eval.ragas_eval --split dev --strategy C` (about 20 minutes on the course server).")
+    for f in ragas_files:
+        r = json.loads(f.read_text())
+        st.caption(f"{r['split']} split · strategy {r['strategy']} · {'written answers' if r.get('drafted', False) else 'answers built from check results'} · {r['queries_judged']} queries judged · judge {r['judge_model']}")
+        names = {"faithfulness": "Faithfulness", "answer_relevancy": "Answer relevancy",
+                 "llm_context_precision_without_reference": "Context precision"}
+        st.dataframe([{"Metric": names.get(k, k), "Average": v, "Queries with no score": r["failed_scores"].get(k, 0)}
+                      for k, v in r["average"].items()], use_container_width=True, hide_index=True)
+        with st.expander("Scores for each query"):
+            st.dataframe([{"Query": q["id"], "Type": q["type"], "Question": q.get("question", ""), **{names.get(k, k): q.get(k) for k in r["average"]}, "Trace": q["trace_id"]}
+                          for q in r["per_query"]], use_container_width=True, hide_index=True)
+    st.caption("The judge is the 8B course model, so these scores are noisy and show a trend. Correctness is scored in code against the gold answers (table above).")
 
 
 def main() -> None:

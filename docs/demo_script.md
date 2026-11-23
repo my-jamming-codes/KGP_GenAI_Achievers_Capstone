@@ -1,6 +1,6 @@
 # Demo script (10 minutes)
 
-Start Ollama with both models pulled (`qwen3:8b` and `qllama/bge-small-en-v1.5`), then `docker compose up -d` (or `streamlit run src/app/main.py`) and open http://localhost:8501, or the port set in `APP_PORT`. Run each rule check once before the demo so the model cache is warm. While the assistant works, a status box shows each step, model call and search as it happens; point at it once, then let it run.
+Check that the chat and embeddings endpoints in `.env` are reachable (and the `crt` folder holds their certificates), then `docker compose up -d` (or `streamlit run src/app/main.py`) and open http://localhost:8501, or the port set in `APP_PORT`. Run each rule check once before the demo so the model cache is warm. While the assistant works, a status box shows each step, model call and search as it happens; point at it once, then let it run.
 
 | Minute | Screen | What to do | What to say |
 | --- | --- | --- | --- |

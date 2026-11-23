@@ -44,6 +44,7 @@ EMBED_MODEL = _env("EMBED_MODEL", "qllama/bge-small-en-v1.5" if EMBED_PROVIDER =
 EMBED_BASE_URL = _env("EMBED_BASE_URL", "http://localhost:11434/v1")
 EMBED_API_KEY = _env("EMBED_API_KEY", "ollama")
 EMBED_CA_CERT = _env("EMBED_CA_CERT", "")  # exact path of the embeddings endpoint's .crt file (can be the same file as LLM_CA_CERT)
+EMBED_MAX_TOKENS = int(_env("EMBED_MAX_TOKENS", "512"))  # the embedding model reads at most this many tokens; longer inputs are shortened
 EMBED_BATCH = int(_env("EMBED_BATCH", "16"))  # the course embeddings endpoint accepts at most 16 texts per call
 # How the embedding source is named on screen (the live status and the Activity log); the setting itself is unchanged.
 EMBED_SOURCE_LABEL = {"ollama": "model server", "fastembed": "in-process"}.get(EMBED_PROVIDER, EMBED_PROVIDER)

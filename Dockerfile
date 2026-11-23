@@ -7,7 +7,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Download the reranker at build time so the container starts without it. Embeddings come from Ollama by default;
+# Download the reranker at build time so the container starts without it. Embeddings come from the embeddings endpoint by default;
 # with EMBED_PROVIDER=fastembed the embedding model is downloaded on first use instead.
 RUN python -c "from fastembed.rerank.cross_encoder import TextCrossEncoder; TextCrossEncoder('Xenova/ms-marco-MiniLM-L-6-v2')"
 

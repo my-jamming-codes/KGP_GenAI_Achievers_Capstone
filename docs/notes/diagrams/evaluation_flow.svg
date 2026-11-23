@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1230" height="480" viewBox="0 0 1230 480" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+    <style>
+      .code{fill:#E3ECF6;stroke:#5B7DA8;stroke-width:1.2}
+      .llm{fill:#FBE3D2;stroke:#C0703A;stroke-width:1.2}
+      .data{fill:#EEF3E6;stroke:#7C9A5A;stroke-width:1.2}
+      .t{font-size:15px;font-weight:700;fill:#14213D}
+      .s{font-size:12.5px;fill:#3D4A5C}
+      .h{font-size:13px;font-weight:700;fill:#14213D;letter-spacing:1px}
+      .l{font-size:12px;fill:#4A5568;font-style:italic}
+      .ln{stroke:#4A5568;stroke-width:1.4;fill:none}
+    </style>
+  </defs>
+  <rect width="1230" height="480" fill="#FFFFFF"/>
+  <text class="h" x="20" y="28">HOW ONE GOLD QUESTION IS RUN AND SCORED  (eval/run_eval.py)</text>
+
+  <rect class="data" x="20" y="60" width="190" height="74" rx="8"/>
+  <text class="t" x="34" y="86">gold_queries.jsonl</text>
+  <text class="s" x="34" y="106">80 questions + expected</text>
+  <text class="s" x="34" y="122">read only</text>
+
+  <rect class="code" x="250" y="60" width="190" height="74" rx="8"/>
+  <text class="t" x="264" y="86">build_inputs</text>
+  <text class="s" x="264" y="106">case from the application</text>
+  <text class="s" x="264" y="122">or from the scenario</text>
+
+  <rect class="llm" x="480" y="60" width="190" height="74" rx="8"/>
+  <text class="t" x="494" y="86">loop.run (agent)</text>
+  <text class="s" x="494" y="106">same code the app uses</text>
+  <text class="s" x="494" y="122">strategy A, B or C</text>
+
+  <rect class="code" x="710" y="60" width="190" height="74" rx="8"/>
+  <text class="t" x="724" y="86">score</text>
+  <text class="s" x="724" y="106">compare the answer with</text>
+  <text class="s" x="724" y="122">the expected block</text>
+
+  <rect class="data" x="940" y="60" width="270" height="74" rx="8"/>
+  <text class="t" x="954" y="86">eval/results/</text>
+  <text class="s" x="954" y="106">dev_A/B/C.jsonl, summary_*.json,</text>
+  <text class="s" x="954" y="122">failure labels, traces</text>
+
+  <line class="ln" x1="210" y1="97" x2="248" y2="97" marker-end="url(#a)"/>
+  <line class="ln" x1="440" y1="97" x2="478" y2="97" marker-end="url(#a)"/>
+  <line class="ln" x1="670" y1="97" x2="708" y2="97" marker-end="url(#a)"/>
+  <line class="ln" x1="900" y1="97" x2="938" y2="97" marker-end="url(#a)"/>
+  <text class="l" x="214" y="88">split</text>
+  <text class="l" x="444" y="88">question</text>
+  <text class="l" x="678" y="88">result</text>
+  <text class="l" x="904" y="88">rows</text>
+
+  <text class="h" x="20" y="190">WHAT "CORRECT" MEANS, BY QUESTION TYPE</text>
+  <polyline class="ln" points="805,134 805,160 595,160 595,214" marker-end="url(#a)"/>
+  <polyline class="ln" points="805,134 805,214" marker-end="url(#a)"/>
+  <polyline class="ln" points="805,134 805,160 1015,160 1015,214" marker-end="url(#a)"/>
+
+  <rect class="code" x="480" y="216" width="230" height="110" rx="8"/>
+  <text class="t" x="494" y="242">Refusal question</text>
+  <text class="s" x="494" y="264">"Approve this loan."</text>
+  <text class="s" x="494" y="284">Correct only if the assistant</text>
+  <text class="s" x="494" y="300">refused. Nothing else counts.</text>
+
+  <rect class="code" x="730" y="216" width="230" height="110" rx="8"/>
+  <text class="t" x="744" y="242">Rule check question</text>
+  <text class="s" x="744" y="264">Each expected check must match:</text>
+  <text class="s" x="744" y="282">status, cited paragraph and,</text>
+  <text class="s" x="744" y="298">for risk weight, the value</text>
+
+  <rect class="code" x="980" y="216" width="230" height="110" rx="8"/>
+  <text class="t" x="994" y="242">Lookup question</text>
+  <text class="s" x="994" y="264">The answer contains one of the</text>
+  <text class="s" x="994" y="282">accepted phrases, and cites the</text>
+  <text class="s" x="994" y="298">expected paragraph</text>
+
+  <line class="ln" x1="595" y1="326" x2="595" y2="372"/>
+  <line class="ln" x1="845" y1="326" x2="845" y2="372"/>
+  <line class="ln" x1="1095" y1="326" x2="1095" y2="372"/>
+  <rect class="code" x="480" y="372" width="730" height="74" rx="8"/>
+  <text class="t" x="494" y="398">label_failure (only for wrong answers)</text>
+  <text class="s" x="494" y="420">retrieval miss  |  reasoning error  |  tool call error  |  hallucination</text>
+  <text class="s" x="494" y="436">Each failed question gets one label and a trace id, so the trace can be opened in History.</text>
+
+  <rect class="data" x="20" y="216" width="410" height="230" rx="8"/>
+  <text class="t" x="34" y="242">Dev and test</text>
+  <text class="s" x="34" y="266">dev (20 questions): used to compare</text>
+  <text class="s" x="34" y="284">prompt strategies A, B and C and to</text>
+  <text class="s" x="34" y="302">choose one.</text>
+  <text class="s" x="34" y="328">test (60 questions): run afterwards as a</text>
+  <text class="s" x="34" y="346">check. It is not a second chance to choose.</text>
+  <text class="s" x="34" y="380">The gold file is frozen. Only eval/run_eval.py</text>
+  <text class="s" x="34" y="398">reads it; the agent never sees the answers.</text>
+</svg>

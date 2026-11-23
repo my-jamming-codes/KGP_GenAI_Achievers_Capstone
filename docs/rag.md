@@ -6,18 +6,18 @@ How the project meets the Week 2 requirement: *RAG over a real corpus of 500–2
 
 | Requirement | What the project has | Evidence |
 | --- | --- | --- |
-| Real corpus, 500–2,000 documents | 1,076 RBI documents from rbi.org.in, 40,890 paragraph chunks; 118 parsed from the official PDF, the rest from the RBI web page | `data/parsed/corpus_manifest.json` |
+| Real corpus, 500–2,000 documents | 1,080 RBI documents from rbi.org.in, 43,336 paragraph chunks; 987 parsed from the official PDF, 93 from the RBI web page | `data/parsed/corpus_manifest.json` |
 | Chunking experiments | Four schemes defined and measured on recall@1/3/5/10 and MRR, dev and test; **only the production scheme has been run so far** | `eval/chunking_eval.py` → `eval/results/chunking.json` |
-| Hybrid retrieval (BM25 + dense) | BM25 and bge-small-en-v1.5 vectors (served by Ollama as `qllama/bge-small-en-v1.5`) in Qdrant, merged by reciprocal rank fusion | `src/index/hybrid.py` |
+| Hybrid retrieval (BM25 + dense) | BM25 and bge-small-en-v1.5 vectors (served by the course embeddings endpoint as `bge-small-en-v1.5`) in Qdrant, merged by reciprocal rank fusion | `src/index/hybrid.py` |
 | A reranker | Cross-encoder `ms-marco-MiniLM-L-6-v2` over the top 20 fused results | `src/index/hybrid.py` |
 | Citation-grounded answers | Every answer cites RBI paragraph ids; the critic rejects a citation that was not retrieved, is from the wrong lender's rulebook, or does not contain the numbers in the answer | `src/agents/steps.py` `critic_lookup`, `critic_step` |
 | Recall@k measured apart from answer quality | Retrieval-only recall on fixed query sets, plus a diagnostic that splits answer errors into retrieval errors and generator errors | `eval/retrieval_eval.py`, `eval/chunking_eval.py`, `eval/rag_diagnostic.py` |
 
 ## The corpus
 
-- **1,076 documents** from rbi.org.in: Master Directions and notifications.
-- **By lender type:** 8 for housing finance companies, 75 for NBFCs (several apply to HFCs), 130 for banks, and 863 others (foreign exchange, payments, markets). The others are kept on purpose: they make retrieval realistic, because the right paragraph has to be found among unrelated RBI text.
-- **Corpus version** `a64d829a84ef`, a hash of the chunk file. The answer cache and the Qdrant collection are keyed on it, so a re-parse invalidates both.
+- **1,080 documents** from rbi.org.in: Master Directions and notifications.
+- **By lender type:** 8 for housing finance companies, 75 for NBFCs (several apply to HFCs), 130 for banks, and 867 others (foreign exchange, payments, markets). The others are kept on purpose: they make retrieval realistic, because the right paragraph has to be found among unrelated RBI text.
+- **Corpus version** `6074ba19e620`, a hash of the chunk file. The answer cache and the Qdrant collection are keyed on it, so a re-parse invalidates both.
 
 ### PDF ingestion
 
@@ -25,8 +25,8 @@ Every RBI document has an official PDF; most also have a web page with the same 
 
 | Source | Documents | Includes |
 | --- | --- | --- |
-| Official PDF | 118 | All 10 Directions the rules file cites, among them the current bank Credit Facilities and Capital Adequacy Directions, whose current versions exist only as PDF |
-| RBI web page | 958 | Documents whose PDF has not been saved, and 15 whose PDF failed the quality checks below |
+| Official PDF | 987 | All 10 Directions the rules file cites, among them the current bank Credit Facilities and Capital Adequacy Directions, whose current versions exist only as PDF |
+| RBI web page | 93 | Documents whose PDF has not been saved, and the ones whose PDF failed the quality checks below (see `pdf_fallbacks` in `data/parsed/corpus_manifest.json`) |
 
 1. **Finding the PDFs.** `python -m src.ingest.pdf_list` reads the official PDF link inside each downloaded RBI page and writes `data/raw/lists/pdf_download_list.html`, a checklist ordered by priority that ticks off PDFs already saved. RBI serves PDFs from `rbidocs.rbi.org.in`, which blocks scripts with a bot check, so the PDFs are saved by a person in a browser into `data/raw/pdf/`.
 2. **Extracting text** (`src/ingest/pdf_text.py`). poppler's `pdftotext` was compared with pypdf on the paragraphs the rules depend on. pypdf split words ("d irections") and dropped a risk weight cell from the HFC table; pdftotext kept them, so it is used, with pypdf as the fallback.
@@ -67,17 +67,17 @@ Every scheme gets its own BM25 index and its own embeddings, and uses the same f
 | Test | Hybrid | 0.778 | 0.827 | 0.951 | 0.951 | 0.829 |
 | Test | Hybrid + reranker | 0.852 | 0.914 | 0.951 | 0.951 | 0.888 |
 
-To finish the comparison, run `python -m eval.chunking_eval` (each new scheme is embedded once; with Ollama embeddings this takes a few minutes per scheme). The Retrieval lab page shows the table as soon as `eval/results/chunking.json` is written.
+To finish the comparison, run `python -m eval.chunking_eval` (each new scheme is embedded once; on the course embeddings endpoint, which takes 16 texts per call, this takes long, so run it when the endpoint is free). The Retrieval lab page shows the table as soon as `eval/results/chunking.json` is written.
 
 ## Hybrid retrieval and reranking
 
 ```
 query ─┬─► BM25 (rank-bm25) ─────────────┐ top 40
        │                                  ├─► reciprocal rank fusion (k = 60) ─► top 20 ─► cross-encoder reranker ─► top k
-       └─► bge-small (Ollama) ─► Qdrant ┘ top 40
+       └─► bge-small (model server) ─► Qdrant ┘ top 40
 ```
 
-- **Embeddings.** The corpus and every query are embedded with bge-small-en-v1.5, served by Ollama (`EMBED_PROVIDER=ollama`, `EMBED_MODEL=qllama/bge-small-en-v1.5`); `EMBED_PROVIDER=fastembed` runs the same model in-process instead. The two give the same vectors (cosine 1.000 on a sample), and recall did not change. The index records which model built it and refuses to be searched with another.
+- **Embeddings.** The corpus and every query are embedded with bge-small-en-v1.5, served by the course embeddings endpoint (the default mode calls any OpenAI-compatible embeddings endpoint; `EMBED_MODEL=bge-small-en-v1.5`, `EMBED_CA_CERT` for its certificate). The course endpoint takes at most 16 texts per call and reads at most 512 tokens per text, so the index build sends batches of 16 and shortens any text that is too long (`EMBED_BATCH`, `EMBED_MAX_TOKENS`); `EMBED_PROVIDER=fastembed` runs the same model in-process instead. The two give the same vectors (cosine 1.000 on a sample), and recall did not change. The index records which model built it and refuses to be searched with another.
 - **Lender filter.** A search for an HFC case looks only at HFC and NBFC documents; a bank case only at bank documents. This stops the most damaging error in this domain, citing the other lender type's rulebook.
 - **Query side.** A rule check searches with a fixed phrase in RBI wording for that check (`CHECK_QUERY` in `src/agents/steps.py`). A lookup question is searched as asked, with the planner's search phrase added.
 - **Targeted fetch.** On a critic retry, if the paragraph the tool cites was not retrieved, it is fetched by id and put in front of the model.
@@ -120,7 +120,7 @@ Refusals and runs stopped by a limit are left out, because they say nothing abou
 
 ## How to show it to the TA (10 minutes)
 
-1. **The corpus and PDF ingestion (2 min).** Open `data/raw/lists/pdf_download_list.html` to show the official PDFs and which are ingested, then `data/parsed/corpus_manifest.json`: each document records `source_format` (pdf or html), the PDF file, its version line, and the reason when a PDF was not used. 1,076 documents, 40,890 chunks.
+1. **The corpus and PDF ingestion (2 min).** Open `data/raw/lists/pdf_download_list.html` to show the official PDFs and which are ingested, then `data/parsed/corpus_manifest.json`: each document records `source_format` (pdf or html), the PDF file, its version line, and the reason when a PDF was not used. 1,080 documents, 43,336 chunks.
 2. **Live retrieval (3 min).** In the workspace (http://localhost:8501, or 8502 if `APP_PORT` is set), open **Retrieval lab**.
    - Pick the example "stamp duty registration charges cost of the house LTV" with Lender filter HFC and click **Search all four modes**. Show the four columns side by side and the ⭐ marks for paragraphs that also reach the production top k.
    - Switch the filter to Bank and run it again: the results move to the bank Directions, which is the lender filter at work.
