@@ -4,7 +4,7 @@ How the project meets the Week 3 requirement: *a multi-agent or tool-using syste
 
 The flow runs on **LangGraph** (`langgraph` 1.2): a `StateGraph` in `src/agents/graph.py` with one node per agent step and conditional edges for the critic's verdict. The agents, tools, prompts and safety rules are plain Python functions that the nodes call, so the safety rules stay in code where they can be read and tested.
 
-The graph replaced a hand-written loop on 14 November 2026. The nodes call the same step functions in the same order, the 117 tests that existed before passed unchanged, and the dev evaluation was re-run to confirm the results (see "Parity with the hand-written loop" below).
+The graph replaced a hand-written loop; its nodes call the same step functions in the same order.
 
 ## Summary
 
@@ -93,8 +93,6 @@ graph TD;
 **Graph state.** The graph state is a `TypedDict` with two keys: `ctx`, a `RunContext` holding the case, model client, index, budget, trace and output, and `route`, the edge to take next. Nodes update the context and return a route. No LangGraph checkpointer is used: state across turns is kept by `src/agents/memory.py` (below), and LangSmith tracing is not turned on, so nothing leaves the machine; every node writes to the project's own JSONL trace instead.
 
 **Loop guards.** Two independent limits stop a runaway loop: the trace's 10-step cap (`StepCapReached`), and LangGraph's `recursion_limit` of 25 node visits (`GraphRecursionError`). A full check with one retry visits 11 nodes and uses 8 or 9 steps. Both are reported as a step-cap stop.
-
-**Parity with the hand-written loop.** The dev split (20 queries, strategies A, B and C, 60 runs) was re-run on the graph on 14 November 2026 and compared query by query with the run on the hand-written loop the day before. Every one of the 60 runs matched on correctness, first-pass correctness, steps used and critic failures, and the average tokens per query were identical (6,323, 7,863 and 6,757). Accuracy stayed at 0.85, 0.85 and 0.95. Only wall-clock time differed, because the local model's speed varies. The test split was not re-run: its numbers in `docs/results.md` come from the same step functions.
 
 ## Persistent state across turns
 

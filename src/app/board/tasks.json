@@ -387,6 +387,87 @@
    "task": "Rebuild Docker with final results and commit to git",
    "status": "progress",
    "evidence": ""
+  },
+  {
+   "n": 43,
+   "role": "Observability & safety",
+   "assignee": "Ankush",
+   "req": "V",
+   "task": "Ragas judge reads what the drafter read; lookups and checks scored apart",
+   "status": "done",
+   "evidence": "eval/ragas_eval.py"
+  },
+  {
+   "n": 44,
+   "role": "Observability & safety",
+   "assignee": "Ankush",
+   "req": "V",
+   "task": "Ragas tool call F1, tool call accuracy and agent goal accuracy",
+   "status": "done",
+   "evidence": "eval/results/ragas_dev_C.json"
+  },
+  {
+   "n": 45,
+   "role": "Agent orchestration & tools",
+   "assignee": "Jitendra",
+   "req": "IV",
+   "task": "Drafter given the text of the cited paragraphs",
+   "status": "done",
+   "evidence": "src/agents/steps.py"
+  },
+  {
+   "n": 46,
+   "role": "Agent orchestration & tools",
+   "assignee": "Jitendra",
+   "req": "IV",
+   "task": "Model-only hint removed from the officer-facing note",
+   "status": "done",
+   "evidence": "src/tools/checks.py"
+  },
+  {
+   "n": 47,
+   "role": "Observability & safety",
+   "assignee": "Ankush",
+   "req": "V",
+   "task": "Full evaluation re-run after the drafter change (test C 56 of 60)",
+   "status": "done",
+   "evidence": "eval/results/summary_test.json"
+  },
+  {
+   "n": 48,
+   "role": "Front-end & deployment",
+   "assignee": "Chetan",
+   "req": "VI",
+   "task": "Intermediate result files removed; documents report the final run",
+   "status": "done",
+   "evidence": "docs/results.md"
+  },
+  {
+   "n": 49,
+   "role": "Front-end & deployment",
+   "assignee": "Chetan",
+   "req": "VI",
+   "task": "README, report, technical documentation and slides updated",
+   "status": "done",
+   "evidence": "docs/technical_report.pdf"
+  },
+  {
+   "n": 50,
+   "role": "Front-end & deployment",
+   "assignee": "Damandeep",
+   "req": "VI",
+   "task": "Task board moved out of the app to a standalone page",
+   "status": "done",
+   "evidence": "src/app/board/task_board.html"
+  },
+  {
+   "n": 51,
+   "role": "Front-end & deployment",
+   "assignee": "Damandeep",
+   "req": "VI",
+   "task": "Update the online slide deck to the final results",
+   "status": "open",
+   "evidence": ""
   }
  ]
 }

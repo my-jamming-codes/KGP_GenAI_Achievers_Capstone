@@ -11,9 +11,9 @@
    "citation_rate": 0.975,
    "queries_with_critic_failure": 32,
    "critic_kinds": {
-    "wrong_status": 35,
-    "wrong_paragraph": 51,
-    "wrong_number": 2
+    "wrong_status": 34,
+    "wrong_paragraph": 49,
+    "wrong_number": 4
    },
    "failures": {
     "retrieval miss": 2,
@@ -32,48 +32,48 @@
    "failed": [
     {
      "id": "Q004",
-     "trace_id": "bbec30a46d22",
+     "trace_id": "a16b1fd0aa8f",
      "category": "retrieval miss",
      "detail": "no citation of ['HFC-MD/22']"
     },
     {
      "id": "Q013",
-     "trace_id": "c31cadccffee",
+     "trace_id": "d01dd2c33a59",
      "category": "retrieval miss",
      "detail": "no citation of ['NBFC-KYC/23']"
     },
     {
      "id": "Q016",
-     "trace_id": "dd5a71f78a55",
+     "trace_id": "fdfe7edcfd0e",
      "category": "reasoning error",
      "detail": "risk_weight: got needs_information, expected met"
     },
     {
      "id": "Q024",
-     "trace_id": "a61b68ba8ad5",
+     "trace_id": "c67d02b08a56",
      "category": "hallucination",
      "detail": "ltv_cap: got needs_information, expected met"
     },
     {
      "id": "Q041",
-     "trace_id": "e5cbf3bf8f8f",
+     "trace_id": "a18a5cdadfea",
      "category": "reasoning error",
      "detail": "risk_weight: got needs_information, expected met"
     }
    ],
-   "avg_tokens_per_query": 6947,
+   "avg_tokens_per_query": 6919,
    "stopped": {},
-   "model_calls": 305,
+   "model_calls": 304,
    "cache_hits": 0,
    "validation_retries": 0,
-   "seconds": 672
+   "seconds": 876
   },
   "C": {
-   "accuracy": 0.95,
-   "first_pass_accuracy": 0.465,
+   "accuracy": 0.933,
+   "first_pass_accuracy": 0.442,
    "first_pass_queries": 43,
    "citation_rate": 0.975,
-   "queries_with_critic_failure": 30,
+   "queries_with_critic_failure": 29,
    "critic_kinds": {
     "wrong_status": 38,
     "wrong_paragraph": 33,
@@ -81,14 +81,14 @@
    },
    "failures": {
     "retrieval miss": 2,
-    "reasoning error": 0,
+    "reasoning error": 1,
     "tool call error": 0,
     "hallucination": 1
    },
    "wrong_rulebook_notes": 0,
    "by_type": {
     "lookup": "9/11",
-    "scenario": "23/24",
+    "scenario": "22/24",
     "entity_variant": "11/11",
     "amendment": "7/7",
     "refusal": "7/7"
@@ -96,29 +96,35 @@
    "failed": [
     {
      "id": "Q004",
-     "trace_id": "b22caafcaa89",
+     "trace_id": "a1bb4ae00dcc",
      "category": "retrieval miss",
      "detail": "no citation of ['HFC-MD/22']"
     },
     {
      "id": "Q013",
-     "trace_id": "e7cc9cbf9b85",
+     "trace_id": "fafa44e85a4f",
      "category": "retrieval miss",
      "detail": "no citation of ['NBFC-KYC/23']"
     },
     {
+     "id": "Q016",
+     "trace_id": "afccb5b50b18",
+     "category": "reasoning error",
+     "detail": "risk_weight: got needs_information, expected met"
+    },
+    {
      "id": "Q024",
-     "trace_id": "fabf9ca26e2c",
+     "trace_id": "f60d4edd6caf",
      "category": "hallucination",
      "detail": "ltv_cap: got needs_information, expected met"
     }
    ],
-   "avg_tokens_per_query": 7587,
+   "avg_tokens_per_query": 7590,
    "stopped": {},
    "model_calls": 291,
    "cache_hits": 0,
    "validation_retries": 0,
-   "seconds": 1257
+   "seconds": 1439
   }
  }
 }

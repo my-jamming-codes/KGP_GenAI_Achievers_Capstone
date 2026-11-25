@@ -1,12 +1,12 @@
-== retrieval Mon Nov 23 00:26:55 IST 2026
-src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+== retrieval Wed Nov 25 22:42:14 IST 2026
+./src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
   self.client.upload_collection(
 dense          recall@5 = 26/26 = 1.0
 bm25           recall@5 = 24/26 = 0.923
 hybrid         recall@5 = 26/26 = 1.0
 hybrid_rerank  recall@5 = 26/26 = 1.0
-== dev Mon Nov 23 00:27:23 IST 2026
-src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+== dev Wed Nov 25 22:43:20 IST 2026
+./src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
   self.client.upload_collection(
 A Q002 lookup         ok  steps=5 critic=0 
 A Q006 lookup         ok  steps=5 critic=0 
@@ -14,7 +14,7 @@ A Q010 lookup         ok  steps=5 critic=0
 A Q014 lookup         ok  steps=5 critic=0 
 A Q017 scenario       ok  steps=8 critic=5 
 A Q022 scenario       ok  steps=8 critic=7 
-A Q027 scenario       ok  steps=8 critic=5 
+A Q027 scenario       BAD steps=8 critic=5 risk_weight: got needs_information, expected met
 A Q032 scenario       ok  steps=9 critic=4 
 A Q037 scenario       ok  steps=8 critic=1 
 A Q042 scenario       ok  steps=8 critic=1 
@@ -46,7 +46,7 @@ B Q062 amendment      ok  steps=8 critic=1
 B Q066 amendment      ok  steps=8 critic=1 
 B Q070 amendment      ok  steps=7 critic=1 
 B Q072 refusal        ok  steps=1 critic=0 
-B Q076 refusal        ok  steps=8 critic=1 
+B Q076 refusal        ok  steps=5 critic=0 
 B Q080 refusal        ok  steps=1 critic=0 
 C Q002 lookup         ok  steps=5 critic=0 
 C Q006 lookup         ok  steps=5 critic=0 
@@ -70,16 +70,17 @@ C Q076 refusal        ok  steps=5 critic=0
 C Q080 refusal        ok  steps=1 critic=0 
 
 strategy  accuracy  first-pass  citation  retrieval miss  reasoning error  tool call error  hallucination
-A         1.0       0.231       1.0       0               0                0                0            
-          by type: {'lookup': '4/4', 'scenario': '6/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
+A         0.95      0.231       1.0       0               1                0                0            
+          by type: {'lookup': '4/4', 'scenario': '5/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
+          Q027 trace f5bb2cfc0d65 [reasoning error] risk_weight: got needs_information, expected met
 B         0.95      0.154       1.0       0               1                0                0            
           by type: {'lookup': '4/4', 'scenario': '5/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
-          Q027 trace e7cbf6d69e45 [reasoning error] risk_weight: got needs_information, expected met
+          Q027 trace db7c2cc67d03 [reasoning error] risk_weight: got needs_information, expected met
 C         0.95      0.308       1.0       0               0                0                1            
           by type: {'lookup': '4/4', 'scenario': '5/6', 'entity_variant': '4/4', 'amendment': '3/3', 'refusal': '3/3'}
-          Q017 trace cf3b63f06a1e [hallucination] ltv_cap: got needs_information, expected met
-== test Mon Nov 23 00:46:18 IST 2026
-src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+          Q017 trace bafc6bc86be1 [hallucination] ltv_cap: got needs_information, expected met
+== test Wed Nov 25 23:04:00 IST 2026
+./src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
   self.client.upload_collection(
 A Q001 lookup         ok  steps=5 critic=0 
 A Q003 lookup         ok  steps=5 critic=0 
@@ -94,7 +95,7 @@ A Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
 A Q015 lookup         ok  steps=3 critic=0 
 A Q016 scenario       BAD steps=8 critic=5 risk_weight: got needs_information, expected met
 A Q018 scenario       ok  steps=8 critic=4 
-A Q019 scenario       ok  steps=8 critic=5 
+A Q019 scenario       ok  steps=8 critic=4 
 A Q020 scenario       ok  steps=8 critic=5 
 A Q021 scenario       ok  steps=8 critic=4 
 A Q023 scenario       ok  steps=8 critic=7 
@@ -152,7 +153,7 @@ C Q011 lookup         ok  steps=5 critic=0
 C Q012 lookup         ok  steps=5 critic=0 
 C Q013 lookup         BAD steps=5 critic=0 no citation of ['NBFC-KYC/23']
 C Q015 lookup         ok  steps=3 critic=0 
-C Q016 scenario       ok  steps=8 critic=4 
+C Q016 scenario       BAD steps=8 critic=4 risk_weight: got needs_information, expected met
 C Q018 scenario       ok  steps=8 critic=3 
 C Q019 scenario       ok  steps=8 critic=5 
 C Q020 scenario       ok  steps=8 critic=4 
@@ -160,11 +161,11 @@ C Q021 scenario       ok  steps=8 critic=3
 C Q023 scenario       ok  steps=8 critic=6 
 C Q024 scenario       BAD steps=8 critic=6 ltv_cap: got needs_information, expected met
 C Q025 scenario       ok  steps=8 critic=4 
-C Q026 scenario       ok  steps=8 critic=7 
+C Q026 scenario       ok  steps=8 critic=6 
 C Q028 scenario       ok  steps=8 critic=1 
 C Q029 scenario       ok  steps=8 critic=2 
 C Q030 scenario       ok  steps=8 critic=1 
-C Q031 scenario       ok  steps=8 critic=3 
+C Q031 scenario       ok  steps=8 critic=4 
 C Q033 scenario       ok  steps=5 critic=0 
 C Q034 scenario       ok  steps=8 critic=1 
 C Q035 scenario       ok  steps=8 critic=3 
@@ -172,7 +173,7 @@ C Q036 scenario       ok  steps=5 critic=0
 C Q038 scenario       ok  steps=8 critic=2 
 C Q039 scenario       ok  steps=5 critic=0 
 C Q040 scenario       ok  steps=8 critic=1 
-C Q041 scenario       ok  steps=8 critic=1 
+C Q041 scenario       ok  steps=8 critic=2 
 C Q043 scenario       ok  steps=5 critic=0 
 C Q044 scenario       ok  steps=8 critic=1 
 C Q045 scenario       ok  steps=5 critic=0 
@@ -182,7 +183,7 @@ C Q049 entity_variant ok  steps=5 critic=0
 C Q050 entity_variant ok  steps=5 critic=0 
 C Q052 entity_variant ok  steps=8 critic=1 
 C Q053 entity_variant ok  steps=8 critic=1 
-C Q054 entity_variant ok  steps=8 critic=1 
+C Q054 entity_variant ok  steps=5 critic=0 
 C Q056 entity_variant ok  steps=5 critic=0 
 C Q057 entity_variant ok  steps=5 critic=0 
 C Q058 entity_variant ok  steps=5 critic=0 
@@ -205,18 +206,19 @@ C Q079 refusal        ok  steps=1 critic=0
 strategy  accuracy  first-pass  citation  retrieval miss  reasoning error  tool call error  hallucination
 A         0.917     0.395       0.975     2               2                0                1            
           by type: {'lookup': '9/11', 'scenario': '21/24', 'entity_variant': '11/11', 'amendment': '7/7', 'refusal': '7/7'}
-          Q004 trace bbec30a46d22 [retrieval miss] no citation of ['HFC-MD/22']
-          Q013 trace c31cadccffee [retrieval miss] no citation of ['NBFC-KYC/23']
-          Q016 trace dd5a71f78a55 [reasoning error] risk_weight: got needs_information, expected met
-          Q024 trace a61b68ba8ad5 [hallucination] ltv_cap: got needs_information, expected met
-          Q041 trace e5cbf3bf8f8f [reasoning error] risk_weight: got needs_information, expected met
-C         0.95      0.465       0.975     2               0                0                1            
-          by type: {'lookup': '9/11', 'scenario': '23/24', 'entity_variant': '11/11', 'amendment': '7/7', 'refusal': '7/7'}
-          Q004 trace b22caafcaa89 [retrieval miss] no citation of ['HFC-MD/22']
-          Q013 trace e7cc9cbf9b85 [retrieval miss] no citation of ['NBFC-KYC/23']
-          Q024 trace fabf9ca26e2c [hallucination] ltv_cap: got needs_information, expected met
-== safety Mon Nov 23 01:18:30 IST 2026
-src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+          Q004 trace a16b1fd0aa8f [retrieval miss] no citation of ['HFC-MD/22']
+          Q013 trace d01dd2c33a59 [retrieval miss] no citation of ['NBFC-KYC/23']
+          Q016 trace fdfe7edcfd0e [reasoning error] risk_weight: got needs_information, expected met
+          Q024 trace c67d02b08a56 [hallucination] ltv_cap: got needs_information, expected met
+          Q041 trace a18a5cdadfea [reasoning error] risk_weight: got needs_information, expected met
+C         0.933     0.442       0.975     2               1                0                1            
+          by type: {'lookup': '9/11', 'scenario': '22/24', 'entity_variant': '11/11', 'amendment': '7/7', 'refusal': '7/7'}
+          Q004 trace a1bb4ae00dcc [retrieval miss] no citation of ['HFC-MD/22']
+          Q013 trace fafa44e85a4f [retrieval miss] no citation of ['NBFC-KYC/23']
+          Q016 trace afccb5b50b18 [reasoning error] risk_weight: got needs_information, expected met
+          Q024 trace f60d4edd6caf [hallucination] ltv_cap: got needs_information, expected met
+== safety Wed Nov 25 23:42:37 IST 2026
+./src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
   self.client.upload_collection(
 fake_model  injection  15/15 []
 fake_model  pii        15/15 []
@@ -224,11 +226,56 @@ fake_model  refusal    10/10 []
 real_model  injection  15/15 []
 real_model  pii        15/15 []
 real_model  refusal    10/10 []
-== diagnostic Mon Nov 23 01:19:16 IST 2026
+== diagnostic Wed Nov 25 23:43:48 IST 2026
 run      queries  pipeline recall  answer accuracy  accuracy if retrieved  accuracy if missed  generator errors  retrieval errors
-dev_A         17  1.0              1.0              1.0                    None                -                 -
+dev_A         17  1.0              0.941            0.941                  None                Q027              -
 dev_B         17  1.0              0.941            0.941                  None                Q027              -
 dev_C         17  1.0              0.941            0.941                  None                Q017              -
 test_A        51  0.961            0.902            0.939                  0.0                 Q016,Q024,Q041    Q004,Q013
-test_C        51  0.961            0.941            0.98                   0.0                 Q024              Q004,Q013
-== done Mon Nov 23 01:19:16 IST 2026
+test_C        51  0.961            0.922            0.959                  0.0                 Q016,Q024         Q004,Q013
+== ragas Wed Nov 25 23:43:48 IST 2026
+./src/index/hybrid.py:206: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 22000 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self.client.upload_collection(
+Q002 lookup         lookup      contexts=5 answer_chars=229
+Q006 lookup         lookup      contexts=5 answer_chars=295
+Q010 lookup         lookup      contexts=5 answer_chars=99
+Q014 lookup         lookup      contexts=5 answer_chars=93
+Q017 scenario       application contexts=17 answer_chars=380
+Q022 scenario       application contexts=17 answer_chars=625
+Q027 scenario       application contexts=18 answer_chars=584
+Q032 scenario       application contexts=18 answer_chars=200
+Q037 scenario       application contexts=2 answer_chars=265
+Q042 scenario       application contexts=2 answer_chars=316
+Q047 entity_variant application contexts=2 answer_chars=321
+Q051 entity_variant application contexts=1 answer_chars=152
+Q055 entity_variant application contexts=2 answer_chars=259
+Q059 entity_variant application contexts=2 answer_chars=386
+Q062 amendment      application contexts=2 answer_chars=285
+Q066 amendment      application contexts=2 answer_chars=368
+Q070 amendment      lookup      contexts=5 answer_chars=127
+Q076 refusal        application contexts=2 answer_chars=305
+Evaluating:   0%|          | 0/15 [00:00<?, ?it/s]Evaluating:   7%|▋         | 1/15 [00:10<02:21, 10.10s/it]Evaluating:  13%|█▎        | 2/15 [00:18<01:56,  8.95s/it]Evaluating:  20%|██        | 3/15 [00:35<02:33, 12.79s/it]Evaluating:  27%|██▋       | 4/15 [00:52<02:39, 14.51s/it]Evaluating:  33%|███▎      | 5/15 [00:59<01:56, 11.68s/it]Evaluating:  40%|████      | 6/15 [01:15<01:59, 13.33s/it]Evaluating:  47%|████▋     | 7/15 [01:24<01:34, 11.78s/it]Evaluating:  53%|█████▎    | 8/15 [01:33<01:15, 10.80s/it]Evaluating:  60%|██████    | 9/15 [01:50<01:16, 12.78s/it]Evaluating:  67%|██████▋   | 10/15 [01:59<00:58, 11.61s/it]Evaluating:  73%|███████▎  | 11/15 [02:07<00:42, 10.56s/it]Evaluating:  80%|████████  | 12/15 [02:25<00:38, 12.69s/it]Evaluating:  87%|████████▋ | 13/15 [02:34<00:23, 11.65s/it]Evaluating:  93%|█████████▎| 14/15 [02:43<00:10, 10.95s/it]Evaluating: 100%|██████████| 15/15 [03:01<00:00, 13.01s/it]Evaluating: 100%|██████████| 15/15 [03:01<00:00, 12.10s/it]
+Evaluating:   0%|          | 0/26 [00:00<?, ?it/s]Evaluating:   4%|▍         | 1/26 [00:21<08:53, 21.34s/it]Evaluating:   8%|▊         | 2/26 [00:29<05:24, 13.52s/it]Evaluating:  12%|█▏        | 3/26 [00:59<08:01, 20.94s/it]Evaluating:  15%|█▌        | 4/26 [01:07<05:49, 15.90s/it]Evaluating:  19%|█▉        | 5/26 [01:33<06:49, 19.51s/it]Evaluating:  23%|██▎       | 6/26 [01:41<05:16, 15.80s/it]Evaluating:  27%|██▋       | 7/26 [01:54<04:39, 14.70s/it]Evaluating:  31%|███       | 8/26 [02:02<03:45, 12.53s/it]Evaluating:  35%|███▍      | 9/26 [02:18<03:53, 13.74s/it]Evaluating:  38%|███▊      | 10/26 [02:27<03:15, 12.20s/it]Evaluating:  42%|████▏     | 11/26 [02:41<03:09, 12.67s/it]Evaluating:  46%|████▌     | 12/26 [02:49<02:38, 11.35s/it]Evaluating:  50%|█████     | 13/26 [03:04<02:42, 12.52s/it]Evaluating:  54%|█████▍    | 14/26 [03:12<02:13, 11.12s/it]Evaluating:  58%|█████▊    | 15/26 [03:22<01:59, 10.86s/it]Evaluating:  62%|██████▏   | 16/26 [03:29<01:37,  9.73s/it]Evaluating:  65%|██████▌   | 17/26 [03:46<01:47, 11.89s/it]Evaluating:  69%|██████▉   | 18/26 [03:55<01:26, 10.85s/it]Evaluating:  73%|███████▎  | 19/26 [04:15<01:35, 13.68s/it]Evaluating:  77%|███████▋  | 20/26 [04:24<01:14, 12.38s/it]Evaluating:  81%|████████  | 21/26 [04:40<01:06, 13.23s/it]Evaluating:  85%|████████▍ | 22/26 [04:48<00:47, 11.91s/it]Evaluating:  88%|████████▊ | 23/26 [05:03<00:38, 12.86s/it]Evaluating:  92%|█████████▏| 24/26 [05:11<00:22, 11.28s/it]Evaluating:  96%|█████████▌| 25/26 [05:27<00:12, 12.78s/it]Evaluating: 100%|██████████| 26/26 [05:36<00:00, 11.53s/it]Evaluating: 100%|██████████| 26/26 [05:36<00:00, 12.94s/it]
+Evaluating:   0%|          | 0/39 [00:00<?, ?it/s]./.venv/lib/python3.11/site-packages/ragas/metrics/_tool_call_accuracy.py:147: UserWarning: Length mismatch: predicted tool calls (10) vs reference tool calls (6). Only the first 6 tool calls will be compared.
+  warnings.warn(
+Evaluating:   8%|▊         | 3/39 [00:06<01:21,  2.26s/it]./.venv/lib/python3.11/site-packages/ragas/metrics/_tool_call_accuracy.py:147: UserWarning: Length mismatch: predicted tool calls (10) vs reference tool calls (4). Only the first 4 tool calls will be compared.
+  warnings.warn(
+Evaluating:  15%|█▌        | 6/39 [00:13<01:14,  2.25s/it]Evaluating:  23%|██▎       | 9/39 [00:20<01:06,  2.22s/it]./.venv/lib/python3.11/site-packages/ragas/metrics/_tool_call_accuracy.py:147: UserWarning: Length mismatch: predicted tool calls (10) vs reference tool calls (1). Only the first 1 tool calls will be compared.
+  warnings.warn(
+Evaluating:  31%|███       | 12/39 [00:26<00:57,  2.13s/it]Evaluating:  38%|███▊      | 15/39 [00:32<00:51,  2.14s/it]Evaluating:  46%|████▌     | 18/39 [00:38<00:43,  2.05s/it]Evaluating:  54%|█████▍    | 21/39 [00:43<00:35,  1.98s/it]Evaluating:  62%|██████▏   | 24/39 [00:48<00:28,  1.89s/it]Evaluating:  69%|██████▉   | 27/39 [00:55<00:23,  1.96s/it]Evaluating:  77%|███████▋  | 30/39 [01:02<00:18,  2.08s/it]Evaluating:  85%|████████▍ | 33/39 [01:08<00:12,  2.10s/it]Evaluating:  92%|█████████▏| 36/39 [01:14<00:06,  2.10s/it]Evaluating: 100%|██████████| 39/39 [01:21<00:00,  2.10s/it]Evaluating: 100%|██████████| 39/39 [01:21<00:00,  2.08s/it]
+
+Ragas averages (judge: Qwen/Qwen3-8B)
+  lookup (5 queries)
+    faithfulness                               0.9   (no score on 0)
+    answer_relevancy                           0.724   (no score on 0)
+    llm_context_precision_without_reference    0.961   (no score on 0)
+  application (13 queries)
+    faithfulness                               0.769   (no score on 0)
+    answer_relevancy                           0.614   (no score on 0)
+  agent (13 queries)
+    tool_recall                                1.0   (no score on 0)
+    tool_call_f1                               0.852   (no score on 0)
+    tool_call_accuracy                         0.692   (no score on 0)
+    agent_goal_accuracy                        0.769   (no score on 0)
+written ./eval/results/ragas_dev_C.json
+== done Wed Nov 25 23:56:21 IST 2026

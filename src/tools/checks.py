@@ -90,10 +90,10 @@ def check_ltv_cap(case: Case) -> ToolResult:
     values = {**ltv, "cap_pct": band["max_ltv_pct"],
               "loan_band": (f"up to {_lakh(band['loan_up_to'])}" if band["loan_above"] == 0 else
                             f"above {_lakh(band['loan_above'])}" + (f" and up to {_lakh(band['loan_up_to'])}" if band["loan_up_to"] else ""))}
-    note = f"LTV {ltv['ltv_pct']}% against a cap of {band['max_ltv_pct']}% for loans {values['loan_band']}. Report the limit as {band['max_ltv_pct']}."
+    note = f"LTV {ltv['ltv_pct']}% against a cap of {band['max_ltv_pct']}% for loans {values['loan_band']}."
     if ltv["stamp_duty_added"]:
         note += " Stamp duty and registration were added to the value because the house costs ₹10 lakh or less."
-    return ToolResult(check="ltv_cap", status=status, rule_id=rule["rule_id"], paragraph_id=rule["paragraph_id"], values=values, note=note)
+    return ToolResult(check="ltv_cap", status=status, rule_id=rule["rule_id"], paragraph_id=rule["paragraph_id"], values=values, note=note, hint=f"Report the limit as {band['max_ltv_pct']}.")
 
 
 # ------------------------------------------------------------------ risk weight lookup

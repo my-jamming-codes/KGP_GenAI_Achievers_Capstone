@@ -98,7 +98,8 @@ class ToolResult(BaseModel):
     rule_id: Optional[str] = None
     paragraph_id: Optional[str] = None
     values: dict[str, Any] = Field(default_factory=dict)
-    note: str = ""
+    note: str = ""    # shown to the officer as part of the reason
+    hint: str = ""    # for the model only: added to the critic's retry message, never shown
 
 
 class Judgement(BaseModel):

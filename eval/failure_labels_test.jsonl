@@ -1,8 +1,9 @@
-{"id": "Q004", "strategy": "A", "type": "lookup", "trace_id": "bbec30a46d22", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
-{"id": "Q013", "strategy": "A", "type": "lookup", "trace_id": "c31cadccffee", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
-{"id": "Q016", "strategy": "A", "type": "scenario", "trace_id": "dd5a71f78a55", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
-{"id": "Q024", "strategy": "A", "type": "scenario", "trace_id": "a61b68ba8ad5", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
-{"id": "Q041", "strategy": "A", "type": "scenario", "trace_id": "e5cbf3bf8f8f", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
-{"id": "Q004", "strategy": "C", "type": "lookup", "trace_id": "b22caafcaa89", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
-{"id": "Q013", "strategy": "C", "type": "lookup", "trace_id": "e7cc9cbf9b85", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
-{"id": "Q024", "strategy": "C", "type": "scenario", "trace_id": "fabf9ca26e2c", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q004", "strategy": "A", "type": "lookup", "trace_id": "a16b1fd0aa8f", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "A", "type": "lookup", "trace_id": "d01dd2c33a59", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q016", "strategy": "A", "type": "scenario", "trace_id": "fdfe7edcfd0e", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q024", "strategy": "A", "type": "scenario", "trace_id": "c67d02b08a56", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q041", "strategy": "A", "type": "scenario", "trace_id": "a18a5cdadfea", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q004", "strategy": "C", "type": "lookup", "trace_id": "a1bb4ae00dcc", "category": "retrieval miss", "note": "", "detail": "no citation of ['HFC-MD/22']"}
+{"id": "Q013", "strategy": "C", "type": "lookup", "trace_id": "fafa44e85a4f", "category": "retrieval miss", "note": "", "detail": "no citation of ['NBFC-KYC/23']"}
+{"id": "Q016", "strategy": "C", "type": "scenario", "trace_id": "afccb5b50b18", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q024", "strategy": "C", "type": "scenario", "trace_id": "f60d4edd6caf", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}

@@ -135,3 +135,31 @@ def test_same_lookup_for_an_hfc_is_still_answered(index, tmp_path):
 
     out, _, _ = run(None, responder, index, tmp_path, question="What must a guarantor to a housing finance company loan be told?")
     assert out.citations == ["HFC-MD/158"] and "unverified" not in out.answer
+
+
+def test_model_hint_is_never_part_of_the_shown_note():
+    """The "Report the limit as" instruction is for the critic's retry message, not for the officer."""
+    from src.schemas import Case
+    from src.tools import checks
+
+    case = Case(lender_type="hfc", case_date="2026-06-01", sanction_date="2026-06-01", loan_amount=2700000, property_value=3000000)
+    result = checks.run_tool("ltv_cap", case)
+    assert result.hint.startswith("Report the limit as")
+    assert "Report the limit" not in result.note
+
+
+def test_drafter_is_given_the_cited_paragraph_text():
+    from types import SimpleNamespace
+
+    from src.agents import steps
+    from src.schemas import CheckResult, RetrievedParagraph
+
+    class Index:
+        def fetch_paragraph(self, pid):
+            texts = ["General wording about loans. " * 80, "Two valuation reports are needed, one from an independent valuer."]
+            return [RetrievedParagraph(paragraph_id=pid, doc_key="X", lender_type="hfc", score=1.0, text=t) for t in texts]
+
+    results = [CheckResult(check="valuation", status="needs_information", paragraph_id="X/1", reason="Only one valuation report; independent valuer needed.")]
+    block = steps.cited_paragraphs_text(results, SimpleNamespace(injection_detected=False), Index())
+    assert 'source="paragraph X/1"' in block and "independent valuer" in block
+    assert len(block) < steps.DRAFT_PARAGRAPH_CHARS + 200

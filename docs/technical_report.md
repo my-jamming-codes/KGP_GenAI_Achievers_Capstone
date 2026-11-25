@@ -13,12 +13,12 @@ It is built on one small model, Qwen3-8B, behind an OpenAI-compatible endpoint, 
 | Corpus | 1,080 RBI documents (987 read from the official PDF, 93 from web pages), 43,336 paragraph chunks |
 | Retrieval | Hybrid BM25 plus dense search, then a cross-encoder reranker; recall at 5 is 1.0 on the 26 development citations |
 | Agents | LangGraph graph with six roles: guard, planner, executor, judge, critic, drafter; 10 rule tools plus search |
-| Accuracy on 60 held-out queries | Strategy C (plan, judge, self check) 57 of 60 (0.95); strategy A (direct check) 55 of 60 (0.917) |
-| Cost per query | About 7,600 tokens and 4.9 model calls; 21 seconds (strategy C) |
+| Accuracy on 60 test queries | Strategy C (plan, judge, self check) 56 of 60 (0.933); strategy A (direct check) 55 of 60 (0.917). One fix was made after seeing test results (section 11) |
+| Cost per query | About 7,600 tokens and 4.9 model calls; 24 seconds (strategy C), without the written note |
 | Safety sets | 40 of 40 cases passed (15 prompt injection, 15 PII, 10 refusal) |
 | Deployment | Streamlit workspace in Docker Compose with Qdrant; caching, rate limiting and endpoint limit handling |
 
-Two things matter most for reading the numbers. First, the model alone is often wrong: on the first pass it was right on under half of the rule checks. The final accuracy is high because every model judgement is compared in code with a plain tool result and sent back once if it disagrees. Section 6 describes this, since "what did we do to compensate for a small model" is the central design question. Second, each strategy was run once on the final setup (23 November: the course model, the PDF-based corpus), so a difference of one or two queries is within run-to-run variation; section 7 compares the run with the earlier one from 13 November.
+On the first pass the model was right on under half of the rule checks. Every judgement is compared in code with a plain tool result and sent back once if it disagrees (section 6). Each strategy was run once on the final setup (25 November: the course model, the PDF-based corpus), so a difference of one or two queries is within run-to-run variation.
 
 ## 2. Task decomposition and the gold set
 
@@ -36,22 +36,22 @@ Three strategies were compared on the same retrieval and the same 20 development
 
 | Strategy | What it does | Dev accuracy | Tokens per query | Schema retries |
 | --- | --- | --- | --- | --- |
-| A. Direct check | One structured prompt per rule, with few-shot examples | 1.0 | 6,710 | 0 |
-| B. Extract, then judge | First extract the values from the paragraph, then judge | 0.95 | 10,170 | 0 |
-| C. Plan, judge, self check | Plan the checks, judge each, then check its own judgement | 0.95 | 7,440 | 0 |
+| A. Direct check | One structured prompt per rule, with few-shot examples | 0.95 | 6,701 | 0 |
+| B. Extract, then judge | First extract the values from the paragraph, then judge | 0.95 | 10,034 | 0 |
+| C. Plan, judge, self check | Plan the checks, judge each, then check its own judgement | 0.95 | 7,429 | 0 |
 
-The table is the 23 November run. Strategy C was chosen on the development queries in November (where it scored 0.95, against 0.85 for A and B), and then run once on the held-out test queries together with A; the choice was made before this re-run. B used about 37% more tokens than C (and 24% more than A on 13 November, when it also produced the only schema failure), so it did not go forward. Dev accuracy is optimistic because the development queries were used to choose and tune; the test split is the fairer measure.
+The table is the 25 November run. Strategy C was chosen on the development queries before the final run; in this run all three tie on dev, and on test C is one query ahead of A, which is within run-to-run variation. B used about 35% more tokens than C and had the lowest first-pass accuracy.
 
-**How the small model breaks.** The failures were specific and repeatable, and each one shaped the design:
+**How the small model breaks.**
 
-- **It reads the wrong band.** With every LTV band in the paragraph, it gave the limit of the next band: 80% for a ₹25 lakh loan where the paragraph says 90% (Q001 on 13 November), and again on bank applications in the latest run (Q024, Q017: 80 read where the rules file gives 90, repeated after correction). The number appears in the cited text, so a simple grounding check passes it.
-- **It cites a paragraph that does not hold the rule.** On the test split in the latest run, 51 first-pass judgements under A and 33 under C cited the wrong paragraph. All were corrected by the critic.
+- **It reads the wrong band.** With every LTV band in the paragraph, it gives the limit of the next band, for example 80% where the rules file gives 90% for a bank loan of up to ₹30 lakh (Q024, Q017), repeated after correction.
+- **It cites a paragraph that does not hold the rule.** On the test split in the latest run, 49 first-pass judgements under A and 33 under C cited the wrong paragraph. All were corrected by the critic.
 - **It misses the second condition of a rule.** On HL-2048 (₹78 lakh, two valuation reports, one independent) every strategy saw two reports and judged the valuation rule met. Annex V requires both to be independent above ₹75 lakh. The Prompt lab page shows this live.
 - **It ignores instructions in the prompt.** Told a rule is unverified, it answered from an unrelated capital adequacy paragraph (Q015). On a follow-up it kept the lender type from the history instead of the one asked about.
-- **It repeats a mistake after being corrected.** On 13 November strategy A was told the right limit and gave the wrong one again on five test queries; in the latest run both strategies did it on Q024 and on dev query Q017.
+- **It repeats a mistake after being corrected.** Both strategies did this on Q024, and on Q016 and dev query Q017.
 - **Long structured replies are cut off.** Strategy B's extract reply ran out of output tokens in the middle of a string and failed validation three times (Q022, dev).
 
-First-pass accuracy, the share of rule-check queries where the model was right on every expected rule before any feedback, was 0.15 to 0.31 on dev and 0.40 to 0.47 on test. That gap is what the rest of the system exists to close.
+First-pass accuracy, the share of rule-check queries where the model was right on every expected rule before any feedback, was 0.15 to 0.31 on dev and 0.40 to 0.44 on test.
 
 ## 4. Retrieval over a real corpus
 
@@ -65,14 +65,14 @@ First-pass accuracy, the share of rule-check queries where the model was right o
 
 **Recall measured apart from answer quality.** Recall at 5 on the 26 expected citations in the development queries:
 
-| Mode | Earlier index (web pages only) | Current index (with PDFs) |
-| --- | --- | --- |
-| Dense only | 0.962 | 1.0 |
-| BM25 only | 0.923 | 0.923 |
-| Hybrid | 0.962 | 1.0 |
-| Hybrid plus reranker | 1.0 | 1.0 |
+| Mode | Recall at 5 |
+| --- | --- |
+| Dense only | 1.0 |
+| BM25 only | 0.923 |
+| Hybrid | 1.0 |
+| Hybrid plus reranker | 1.0 |
 
-On the current dev queries the reranker no longer changes recall at 5, because dense and hybrid already reach 1.0; its benefit was at rank 1 on the earlier index. On the held-out test queries recall at 5 for the production scheme on the earlier index was 0.852 dense, 0.951 BM25, 0.951 hybrid and 0.951 hybrid plus reranker. A diagnostic (`eval/rag_diagnostic.py`) separates retrieval errors from generator errors. Rule checks search with fixed phrases in RBI wording; free-text lookups are searched as asked, which is where the two retrieval misses on the test split came from (Q004, Q013), in both runs.
+On the dev queries the reranker does not change recall at 5, because dense and hybrid already reach 1.0. On the held-out test queries recall at 5 for the production scheme on the web-page index (the chunking experiment, `eval/results/chunking.json`) was 0.852 dense, 0.951 BM25, 0.951 hybrid and 0.951 hybrid plus reranker. A diagnostic (`eval/rag_diagnostic.py`) separates retrieval errors from generator errors. Rule checks search with fixed phrases in RBI wording; free-text lookups are searched as asked, which is where the two retrieval misses on the test split came from (Q004, Q013), in both runs.
 
 **Citation-grounded answers.** Every answer cites paragraph ids. The critic rejects a citation that was not retrieved, comes from the wrong lender's rulebook, or does not contain the numbers in the answer.
 
@@ -89,7 +89,7 @@ The flow runs on LangGraph (`src/agents/graph.py`): one node per agent step and 
 | Executor | Runs the tool for each planned check and retrieves the paragraphs for it | Code |
 | Judge | Reads the retrieved paragraph and gives a status, the paragraph id and the limit it read | Model (strategy A, B or C) |
 | Critic | Compares each judgement with the tool result and the paragraph: status, number, citation, rulebook, missing checks. Reports every problem at once | Code |
-| Drafter | Writes the cited note for the officer; falls back to a template if the model fails | Model, with a code fallback |
+| Drafter | Writes the cited note from the check results and the cited paragraphs; falls back to a template if the model fails | Model, with a code fallback |
 
 **Tools.** Ten rule check tools (LTV cap, risk weight, prepayment, key facts statement, guarantor disclosure, valuation, KYC, rate reset, related party, most important terms and conditions) plus the hybrid search tool and a `rule_in_force` tool that returns which version of a rule applies on a date. Only registered tools can run: `run_tool` looks the name up in a fixed table and raises for anything else, so a prompt cannot make other code run. All arithmetic and date logic lives in the tools.
 
@@ -111,20 +111,20 @@ The flow runs on LangGraph (`src/agents/graph.py`): one node per agent step and 
 
 ## 6. What we did to compensate for a small model
 
-This is the answer to the track's graded question. The principle is that the model is allowed to read and explain, and everything that can be checked is checked in code.
+The model reads and explains; everything that can be checked is checked in code.
 
 1. **Tools do the arithmetic and the dates.** The model never computes LTV, never compares a number with a limit, and never decides which version of a rule applies on a date. A loan's LTV, the stamp duty adjustment and the risk weight band come from `src/tools/checks.py`.
 2. **Every limit comes from a verified rules file.** The limits in `rules/rules.yaml` were read from the RBI text and recorded with a quote; `rules/check_quotes.py` re-checks every quote against the source text. The model is given the paragraph to read, but the number it is compared against comes from the file.
-3. **A critic written in code compares every judgement.** It does not ask the model whether the model was right. It compares the status, the number, the paragraph, the rulebook and the list of required checks with the tool result, and reports every problem in one reply. On the test split in the latest run it sent back 32 queries under A and 30 under C. The problems found (counts of first-pass problems on the test split):
+3. **A critic written in code compares every judgement.** It does not ask the model whether the model was right. It compares the status, the number, the paragraph, the rulebook and the list of required checks with the tool result, and reports every problem in one reply. On the test split in the latest run it sent back 32 queries under A and 29 under C. The problems found (counts of first-pass problems on the test split):
 
 | Problem | A | C |
 | --- | --- | --- |
-| Status disagrees with the tool computation | 35 | 38 |
-| Cited paragraph is not the one that holds the rule | 51 | 33 |
-| Limit or weight read from the paragraph is wrong | 2 | 3 |
+| Status disagrees with the tool computation | 34 | 38 |
+| Cited paragraph is not the one that holds the rule | 49 | 33 |
+| Limit or weight read from the paragraph is wrong | 4 | 3 |
 | Required check missing from the plan | 0 | 0 |
 
-   On 13 November strategy C had no wrong-number problems and A had 10, which suggested the self check removed that failure. The latest run does not support that: C had 3 and A had 2, and the two queries that ended unconfirmed (Q024 on test, Q017 on dev) are both a repeated wrong band on a bank application. The critic caught every one of them.
+   The self check does not remove misread limits: C had 3 and A had 4, and the queries that ended unconfirmed include repeated wrong limits (Q016, Q024 on test, Q017 on dev), although the critic catches them.
 4. **One retry, then withhold.** A result that cannot be confirmed after one retry is not shown as a guess. It is shown as "needs information" with the tool's numbers.
 5. **Unverified rules are handled in code.** The lookup path checks the rules file before any model call, and returns "unverified" for a rule that is not verified. This replaced a prompt instruction that the model ignored (the Q015 fix, section 7).
 6. **Instruction-like text is removed before the model sees it.** Notes, questions and retrieved paragraphs are scanned; text that tries to give instructions is removed and marked as data.
@@ -136,72 +136,97 @@ The cost of this design is that final scenario accuracy mostly reflects whether 
 
 ## 7. Evaluation
 
-The evaluation script (`eval/run_eval.py`) runs every gold query through the same agent code as the application. A query is correct when every expected rule result matches on status (and on risk weight where one is expected), or, for a lookup, when the answer holds the expected figure and cites an expected paragraph. Model replies are not cached, so tokens and timings are real. The run below was made on 23 November 2026 with Qwen3-8B on the course server, thinking off, temperature 0, corpus version `6074ba19e620` (1,080 documents, 43,336 chunks, 987 from PDFs), with the code that includes the Q015 fix. The earlier run (13 November, a local model, web-page corpus, 42,204 chunks) is kept and compared below.
+**Ragas report (extra, model-judged).** `eval/ragas_eval.py` scores the dev answers with Ragas 0.4, with the course model as judge. The History and evaluation page shows the same figures: dev split, strategy C, written answers, judge Qwen/Qwen3-8B, run on 25 November.
+
+| Metric | Average | Queries with no score |
+| --- | --- | --- |
+| **Rule lookups (against the paragraphs the drafter read) · 5 queries** | | |
+| Faithfulness | 0.900 | 0 |
+| Answer relevancy | 0.724 | 0 |
+| Context precision | 0.961 | 0 |
+| **Application checks (against the check results and cited paragraphs the drafter was given) · 13 queries** | | |
+| Faithfulness | 0.769 | 0 |
+| Answer relevancy | 0.614 | 0 |
+| **Tool calls and goal (reference: the gold answer's rule checks) · 13 queries** | | |
+| Tool recall (own figure) | 1.000 | 0 |
+| Tool call F1 | 0.852 | 0 |
+| Tool call accuracy | 0.692 | 0 |
+| Agent goal accuracy | 0.769 | 0 |
+
+Ragas scores are judged by the same 8B model that writes the answers, and vary between runs. They are indicative only; accuracy is measured in code against the gold answers. Tool recall, tool call F1 and tool call accuracy are compared in code; on a full application check the gold file lists only the rules it grades, so extra tool calls lower F1 and accuracy there.
+
+Scores for each query, lookups:
+
+| Query | Question | Faithfulness | Answer relevancy | Context precision |
+| --- | --- | --- | --- | --- |
+| Q002 | What does the HFC rulebook say about stamp duty in LTV for a ₹9 lakh house? | 1.00 | 0.85 | 1.00 |
+| Q006 | What must a person be told before becoming a guarantor to a housing finance company loan? | 1.00 | 0.82 | 1.00 |
+| Q010 | How many valuation reports must a housing finance company obtain for a housing loan of ₹80 lakh? | 1.00 | 0.96 | 0.81 |
+| Q014 | May a commercial bank grant a loan to one of its own directors? | 1.00 | 0.99 | 1.00 |
+| Q070 | From what date do the new commercial bank risk weight tables for housing loans apply, and what is the risk weight for an LTV of 50% or less on a first housing loan? | 0.50 | 0.00 | 1.00 |
+
+Scores for each query, application checks:
+
+| Query | Question | Faith-fulness | Relevancy | Tool recall | Tool F1 | Tool accuracy | Goal |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Q017 | Run the full RBI rule check on application HL-2042 and list the result for each rule. | 0.40 | 0.00 | 1.00 | 0.75 | 0.00 | 0.00 |
+| Q022 | Run the full RBI rule check on application HL-2047 and list the result for each rule. | 0.90 | 0.00 | 1.00 | 0.57 | 0.00 | 0.00 |
+| Q027 | Run the full RBI rule check on application HL-2052 and list the result for each rule. | 0.82 | 0.70 | 1.00 | 0.57 | 0.00 | 0.00 |
+| Q032 | What is missing before this application can be cleared? | 0.50 | 0.71 | 1.00 | 0.18 | 0.00 | 1.00 |
+| Q037 | Check the LTV cap for this case. | 0.60 | 0.77 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q042 | Is the prepayment charge allowed in this case? | 1.00 | 0.96 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q047 | Is the prepayment charge allowed in this case? | 1.00 | 0.90 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q051 | Check the guarantor disclosure rule for this case. | 0.50 | 0.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q055 | Check the LTV cap for this case. | 1.00 | 0.73 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q059 | Is the prepayment charge allowed in this case? | 0.70 | 0.81 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q062 | What risk weight applies to this housing loan at the case date? | 0.75 | 0.82 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q066 | The loan was sanctioned on the date shown. Is the prepayment charge allowed, and under which paragraph? | 0.83 | 0.90 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Q076 | Check the LTV cap for this case. | 1.00 | 0.67 | 1.00 | 1.00 | 1.00 | 1.00 |
+
+**Method.** The evaluation script (`eval/run_eval.py`) runs every gold query through the same agent code as the application. A query is correct when every expected rule result matches on status (and on risk weight where one is expected), or, for a lookup, when the answer holds the expected figure and cites an expected paragraph. Model replies are not cached, so tokens and timings are real. The run below was made on 25 November 2026 with Qwen3-8B on the course server, thinking off, temperature 0, corpus version `6074ba19e620` (1,080 documents, 43,336 chunks, 987 from PDFs).
 
 | Split | Strategy | Accuracy | Citation rate | First-pass accuracy | Queries sent back by the critic | Tokens per query | Model calls | Run time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Dev (20) | A | 1.0 | 1.0 | 0.231 | 11 | 6,710 | 99 | 3.5 min |
-| Dev (20) | B | 0.95 | 1.0 | 0.154 | 13 | 10,170 | 177 | 8.4 min |
-| Dev (20) | C | 0.95 | 1.0 | 0.308 | 10 | 7,440 | 96 | 6.9 min |
-| Test (60) | A | 0.917 | 0.975 | 0.395 | 32 | 6,947 | 305 | 11.2 min |
-| Test (60) | C | 0.95 | 0.975 | 0.465 | 30 | 7,587 | 291 | 21.0 min |
+| Dev (20) | A | 0.95 | 1.0 | 0.231 | 11 | 6,701 | 99 | 4.4 min |
+| Dev (20) | B | 0.95 | 1.0 | 0.154 | 12 | 10,034 | 175 | 8.9 min |
+| Dev (20) | C | 0.95 | 1.0 | 0.308 | 10 | 7,429 | 96 | 7.3 min |
+| Test (60) | A | 0.917 | 0.975 | 0.395 | 32 | 6,919 | 304 | 14.6 min |
+| Test (60) | C | 0.933 | 0.975 | 0.442 | 29 | 7,590 | 291 | 24.0 min |
 
-**Cost and latency.** Strategy C used about 7,600 tokens and 4.9 model calls per query and took 21 seconds on average; strategy A used about 6,900 tokens and 5.1 calls and took 11 seconds.
+**Cost and latency.** Strategy C used about 7,600 tokens and 4.9 model calls per query and took 24 seconds on average; strategy A used about 6,900 tokens and 5.1 calls and took 15 seconds.
 
 **By query type on the test split.**
 
 | Type | A | C |
 | --- | --- | --- |
 | Rule lookup (11) | 9/11 | 9/11 |
-| Scenario check (24) | 21/24 | 23/24 |
+| Scenario check (24) | 21/24 | 22/24 |
 | Lender variant (11) | 11/11 | 11/11 |
 | Amendment (7) | 7/7 | 7/7 |
 | Refusal and injection (7) | 7/7 | 7/7 |
 
 **Task completion and tool calls.** No run exceeded the 10 step cap, none hit the 240 second time limit, and there were no schema validation retries. A full rule check with one critic retry takes 8 or 9 steps.
 
-**Compared with the 13 November run.**
-
-| | 13 Nov (local model, web-page corpus) | 23 Nov (course model, PDF corpus) |
-| --- | --- | --- |
-| Test accuracy, C | 0.933 (56/60) | 0.95 (57/60) |
-| Test accuracy, A | 0.85 (51/60) | 0.917 (55/60) |
-| Dev accuracy, A, B, C | 0.85, 0.85, 0.95 | 1.0, 0.95, 0.95 |
-| Test first-pass accuracy, A, C | 0.488, 0.465 | 0.395, 0.465 |
-| Test queries wrong, C | Q001, Q004, Q013, Q026 | Q004, Q013, Q024 |
-| Test queries wrong, A | 9 queries | Q004, Q013, Q016, Q024, Q041 |
-
-Q001 (the wrong LTV band) is now right under both strategies, and Q026, which hit the time limit on 13 November, ran normally. Q004 and Q013 are wrong again in the same way, and Q024 is wrong under both strategies. These runs are not a controlled comparison: the model server, the corpus and the embeddings changed between them, and each strategy ran once, so differences of a query or two may be run-to-run variation rather than improvement.
-
-**The Q015 fix.** Q015 asks what a guarantor to a bank home loan must be told. That rule is unverified, so the right answer is "unknown". On 12 November both strategies answered it from an unrelated capital adequacy paragraph; the model had been told in the prompt that the rule was unverified and ignored it. The fix moved the check into code. It was made after seeing test results, so the 12 November test numbers (A 0.833, C 0.933) are the clean held-out result for the earlier code. Q015 is correct under both strategies in both later runs, and every number in the table above comes from code that already had the fix.
+**The Q015 fix.** Q015 asks what a guarantor to a bank home loan must be told. That rule is unverified, so the right answer is "unknown". The model had answered it from an unrelated capital adequacy paragraph, although the prompt told it the rule was unverified, so the check moved into code. The fix was made after seeing test results, so the test figures here are not a clean held-out measurement for rule lookups about unverified rules. The gold set was not changed.
 
 **Failure taxonomy.** Each wrong result carries one label: retrieval miss, reasoning error, tool call error or hallucination, assigned by the rules in the labelling guide. The labels are the script's first pass; the two-person agreement check on 10 results is still to be done.
 
 | Split | Strategy | Wrong | Retrieval miss | Reasoning error | Tool call error | Hallucination |
 | --- | --- | --- | --- | --- | --- | --- |
-| Dev (20) | A | 0 | 0 | 0 | 0 | 0 |
+| Dev (20) | A | 1 | 0 | 1 | 0 | 0 |
 | Dev (20) | B | 1 | 0 | 1 | 0 | 0 |
 | Dev (20) | C | 1 | 0 | 0 | 0 | 1 |
 | Test (60) | A | 5 | 2 | 2 | 0 | 1 |
-| Test (60) | C | 3 | 2 | 0 | 0 | 1 |
+| Test (60) | C | 4 | 2 | 1 | 0 | 1 |
 
 One worked example per label, each with a trace to open (`docs/failure_taxonomy.md` lists them all):
 
-- **Retrieval miss, Q004 (C, trace b22caafcaa89).** The risk weight table (HFC paragraph 22) was not in the top five. The model answered 50%, which is right, from a notification, but the expected paragraph was never retrieved. Q013 is the same kind of miss.
-- **Reasoning error, Q016 (A, trace dd5a71f78a55).** On HL-2041 the model judged the LTV check breached against the tool's "met"; after the critic's correction the risk weight was still judged breached against the tool's "met", so the result was withheld as "needs information". Strategy C got this query right.
-- **Hallucination, Q024 (A and C, trace fabf9ca26e2c for C).** On HL-2049, a ₹20 lakh bank loan at LTV 71.43%, the model read a limit of 80 where the rules file gives 90, and read 80 again after the correction. The result was withheld, so no wrong limit reached the officer, but the query counts as wrong.
-- **Tool call error: none in this run.** On 13 November, Q026 (C) stopped at the time limit when the local model stalled, and dev query Q022 (B) failed validation three times when its reply was cut off.
+- **Retrieval miss, Q004 (C, trace a1bb4ae00dcc).** The risk weight table (HFC paragraph 22) was not in the top five. The model answered 50%, which is right, from a notification, but the expected paragraph was never retrieved. Q013 is the same kind of miss.
+- **Reasoning error, Q016 (C, trace afccb5b50b18).** On HL-2041 the model misread a limit, and after the critic's correction read the risk weight as 50 where the rules file gives 35, so the result was withheld as "needs information".
+- **Hallucination, Q024 (A and C, trace f60d4edd6caf for C).** On HL-2049, a ₹20 lakh bank loan at LTV 71.43%, the model read a limit of 80 where the rules file gives 90, and read 80 again after the correction. The result was withheld, so no wrong limit reached the officer, but the query counts as wrong.
+- **Tool call error: none in this run.**
 
-**Retrieval apart from answer quality.** Section 4 reports recall: dense and hybrid recall at 5 are 1.0 on dev. The diagnostic over the queries with an expected paragraph shows that on the test split, strategy C is right on 98% of queries when the expected paragraph was retrieved (51 queries, pipeline recall 0.961) and never when it was missed; the two retrieval errors are Q004 and Q013 and the one generator error is Q024.
-
-**Ragas report (extra, model-judged).** `eval/ragas_eval.py` scores the dev answers with Ragas 0.4 on three metrics that need no gold answer: faithfulness (is each claim in the answer supported by the retrieved paragraphs), answer relevancy and context precision. The judge is the course model, one request at a time. On the 18 dev queries with an answer to judge, strategy C scored the following:
-
-| Answers judged | Faithfulness | Answer relevancy | Context precision |
-| --- | --- | --- | --- |
-| Built from the check results | 0.124 | 0.402 | 0.758 |
-| Written by the drafter | 0.223 | 0.505 | 0.668 |
-
-These scores are low and noisy, and they disagree with the code-scored accuracy of 0.95 for C on the same queries. Short lookup answers score well on relevancy (0.82 to 0.99), while structured rule-check replies often score 0, which suggests the 8B judge cannot split a long multi-rule reply into claims; a 0 does not mean the answer was wrong. Only context precision is a steady signal, and it shows retrieval returning a useful paragraph for most queries. The report is a trend shown next to the code-scored accuracy, not a replacement for it. Ragas never sees the rules file or the gold answers, so it cannot catch an answer that is faithful to its paragraph but contradicts the rule the tools applied; the code check does.
+**Retrieval apart from answer quality.** Section 4 reports recall: dense and hybrid recall at 5 are 1.0 on dev. The diagnostic over the queries with an expected paragraph shows that on the test split, strategy C is right on 96% of queries when the expected paragraph was retrieved (51 queries, pipeline recall 0.961) and never when it was missed; the retrieval errors are Q004 and Q013 and the generator errors Q016 and Q024.
 
 ## 8. Observability and tracing
 
@@ -221,7 +246,7 @@ The tracing is the application's own. LangSmith, Langfuse and OpenTelemetry are 
 
 **Caching and rate limiting.** Model replies and answers are cached on the question, the case, the strategy and the corpus and rules versions, so a repeated question costs nothing and a changed rule invalidates the answer. Each officer session is limited to six questions a minute.
 
-**Tests.** 165 tests pass, covering the tools, the agent loop and graph, memory, the safety sets, the cache, the rate limit, the endpoint limit handling and the workspace pages.
+**Tests.** 167 tests pass, covering the tools, the agent loop and graph, memory, the safety sets, the cache, the rate limit, the endpoint limit handling and the workspace pages.
 
 ## 10. Responsible AI
 
@@ -235,15 +260,15 @@ The tracing is the application's own. LangSmith, Langfuse and OpenTelemetry are 
 
 ## 11. Limits and next steps
 
-1. **Each strategy ran once on the final setup.** The 23 November run is a single pass on the course model, so a difference of one or two queries (for example A's rise from 0.85 to 0.917) is within run-to-run variation. The development queries were also used to choose and tune strategy C, so dev accuracy is optimistic.
+1. **Each strategy ran once.** A repeat with the same judging prompts has been seen to change one query. The development queries were also used to choose and tune strategy C, so dev accuracy is optimistic.
 2. **Gold labels have not had a second person's review.** The labelling guide and the failure label agreement check are also pending.
 3. **Only one of four chunking schemes has been measured.** The comparison the track asks for is incomplete.
-4. **The Q015 fix was made after seeing test results in November,** so the 12 November test numbers are the clean held-out measurement of the earlier code; the 23 November run uses the fixed code throughout.
+4. **The Q015 fix was made after seeing test results,** so the test figures are not a clean held-out measurement for lookups about unverified rules.
 5. **Final accuracy depends on the critic.** First-pass accuracy is the fairer measure of the model's own reading, and it is low (0.15 to 0.47).
-6. **Rule lookups remain the weak spot.** Two of C's three test failures are lookups whose expected paragraph was never retrieved (Q004, Q013); the third, Q024, is a repeated wrong LTV band on a bank application. Next steps: add fixed search phrases for lookups (for the two retrieval misses), route lookups that name an amount through the tools, and look at why the model repeats the wrong bank LTV band after correction.
+6. **Rule lookups and misread limits remain the weak spots.** Two of C's four test failures are lookups whose expected paragraph was never retrieved (Q004, Q013); the other two are limits misread again after correction (Q016, Q024). Next steps: fixed search phrases for lookups, route amount questions through the tools, and investigate the repeated misreads.
 7. **Bank guarantor disclosure is unknown.** No RBI paragraph was found, so banks get "unknown" by design.
 8. **Tracing is not LangSmith, Langfuse or OpenTelemetry.** The application's own traces cover the content but not the named tools.
-9. **The Ragas scores are noisy.** An 8B judge is unreliable on structured replies, so they are shown as a trend.
+9. **The Ragas scores are noisy.** An 8B judge is unreliable, above all on goal accuracy and status-list answers, so they are shown as a trend.
 10. **The credit scoring layer was not built.** The course provided no dataset or default target, so there is no NPA, AUC or ablation table, and the project makes no claim about default risk.
 11. **Scope.** "Bank" means a commercial bank as the Directions define it. Regional rural banks, small finance banks and co-operative banks are out of scope.
 

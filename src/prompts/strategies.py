@@ -120,8 +120,11 @@ DRAFT_LOOKUP_SYSTEM = (
 
 DRAFT_REPORT_SYSTEM = (
     BASE_SYSTEM + "\nWrite a short note for the officer from the rule check results given. State each result with its paragraph id in brackets. "
-    "Use only the statuses, numbers and paragraph ids given; add nothing. Start with the breached and needs_information items. "
-    "End with: 'Recommendation only; the officer decides.' Keep it under 140 words."
+    "The statuses, numbers and paragraph ids in the results are final: never change them and add no other paragraph id. "
+    "Cited paragraphs are quoted after the results. Explain the breached and needs_information items, or the result asked about, "
+    "using what its own paragraph says, including the conditions that apply to this case. Say nothing that the results and "
+    "paragraphs do not say. Start with the breached and needs_information items. "
+    "End with: 'Recommendation only; the officer decides.' Keep it under 180 words."
 )
 
 

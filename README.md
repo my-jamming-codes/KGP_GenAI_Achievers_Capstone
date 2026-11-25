@@ -4,6 +4,20 @@ A multi-agent copilot that tests a synthetic home loan case, including its guara
 
 The checker recommends with citations. It never approves a loan, never declares an application compliant, and never changes a status: only the compliance officer's click does. All data is synthetic.
 
+## Latest results
+
+Run on 25 November 2026 with Qwen3-8B on the course server, over 1,080 RBI documents in 43,336 chunks.
+
+| Measure | Result |
+| --- | --- |
+| Accuracy on 60 held-out queries, scored in code against the gold file | Strategy C 56 of 60 (0.933); strategy A 55 of 60 (0.917) |
+| Expected paragraphs cited | 0.975 |
+| Retrieval recall at 5, development queries, hybrid with reranker | 1.0 |
+| Safety cases (prompt injection, PII, refusal) | 40 of 40 |
+| Tool calls on 13 development queries | Recall 1.00, F1 0.85 |
+
+Each strategy ran once. Details, including the model-judged Ragas scores, are in `docs/results.md`.
+
 ## Setup from scratch
 
 A fresh clone has the code, the rules file, the synthetic applications and the gold queries. The RBI corpus, the
@@ -56,7 +70,7 @@ The index records which embedding model built it. If you change `EMBED_PROVIDER`
 ### 5. Check the build
 
 ```bash
-.venv/bin/python -m pytest tests -q        # 165 tests, no model needed
+.venv/bin/python -m pytest tests -q        # 167 tests, no model needed
 .venv/bin/python rules/check_quotes.py     # every rule quote against the RBI source text
 .venv/bin/python -m eval.retrieval_eval    # recall at 5 for the four search modes (the Ragas report is in the evaluation list below)
 ```
@@ -125,7 +139,15 @@ JSON-schema output is requested first. If an endpoint rejects it, the client fal
 
 ## Documentation
 
-Start with `docs/technical_documentation.md` (PDF alongside): architecture, data, configuration, deployment, the operations runbook, testing and security in one place. `docs/technical_report.md` is the 12 page report, and `docs/project_structure.md` lists every file.
+Start with `docs/technical_documentation.md` (PDF alongside): architecture, data, configuration, deployment, the operations runbook, testing and security in one place. `docs/technical_report.md` (PDF alongside) is the 12 page report, and `docs/project_structure.md` lists every file.
+
+| Topic | File |
+| --- | --- |
+| Specification | `docs/RBI Home Loan Rule Checker (Loan Guarantor).md` |
+| Results and failure taxonomy | `docs/results.md`, `docs/failure_taxonomy.md` |
+| RAG and agentic layer | `docs/rag.md`, `docs/agentic_layer.md` |
+| Labelling guide | `docs/labelling_guide.md` |
+| Demo | `docs/demo_script.md`, `docs/demo_overview_5min.md`, `docs/images/Loan Guarantor Demo.pptx` |
 
 ## How a rule check runs
 
@@ -139,7 +161,7 @@ The flow is a LangGraph state graph (`src/agents/graph.py`): one node per step, 
 | 4 | Judge (model) | Reads the retrieved paragraphs and the tool's computed facts and returns a status and paragraph id per rule, using prompt strategy A, B or C |
 | 5 | Critic (code) | Fails a wrong rulebook, a missing check, a citation that is not the rule's paragraph, a status or number that disagrees with the tool |
 | 6 | Revise (once) | On a failure, the planner re-plans only if the rulebook or the plan was wrong; the failed checks are then re-run with the critic's reasons, judged again and re-checked |
-| 7 | Drafter (model) | Writes the officer's note from the confirmed results |
+| 7 | Drafter (model) | Writes the officer's note from the confirmed results and the text of the cited paragraphs; a template is used if the model fails |
 
 A general question about the rules takes a shorter path: guard, planner, a check that the rule is verified, search, a cited draft, and a grounding check with one redraft.
 
@@ -161,19 +183,16 @@ While the assistant works, the workspace shows each step, model call and search 
 | `src/tools` | LTV calculator, risk weight lookup, prepayment checker, lender type picker and the disclosure checks, plus an amendment chain walker (built and tested, but not called by the agents, which pick the rule version with `rule_in_force`) |
 | `src/agents`, `src/prompts` | The LangGraph agent flow, shared state, conversation memory, the three prompt strategies, the side-by-side strategy comparison and the JSON schemas |
 | `src/safety`, `src/tracing` | Refusals, injection handling, PII masking, JSON line traces, and the live activity log |
-| `src/app` | Streamlit workspace, answer cache, rate limiter, application store, and the FAQ page (rule answers are the verbatim quotes from `rules/rules.yaml`) |
-| `eval/` | Evaluation, retrieval recall, chunking experiments, the retrieval-versus-answer diagnostic, the extra Ragas report, and the injection, PII and refusal sets |
-| `docs/` | The project specification (`.md` and `.pdf`, with diagrams in `images/`), open questions, labelling guide, results, failure taxonomy, demo script, RAG and agentic layer write-ups, and project structure (a file-by-file guide) |
-
-## Project tracking
-
-The plan's tasks, with what proves each one done and its status, are tracked on a separate dashboard rather than in this repository. It lists 52 tasks in seven parts: the delivery plan, the Week 0 checks, rule verification, each role's deliverables, the definition of done, work added during the build, and the optional credit lane. Tasks that are finished are marked done and the rest show as in progress or not started.
+| `src/app` | Streamlit workspace, answer cache, rate limiter, application store, and the FAQ page (rule answers are the verbatim quotes from `rules/rules.yaml`); `board/` holds the standalone task board page, which is not part of the app |
+| `eval/` | Evaluation, retrieval recall, chunking experiments, the retrieval-versus-answer diagnostic, the extra Ragas report, and the injection, PII and refusal sets; `eval/results/` holds the final run |
+| `tests/` | 167 unit and integration tests, no model needed |
+| `docs/` | The specification, technical documentation, technical report and the write-ups listed under Documentation above |
 
 ## Evaluation
 
 ```bash
 .venv/bin/python -m eval.retrieval_eval                       # recall at 5: dense, BM25, hybrid, hybrid plus reranker
-.venv/bin/python -m eval.ragas_eval --split dev --strategy C   # extra: Ragas faithfulness, relevancy, context precision (about 25 minutes on the course server)
+.venv/bin/python -m eval.ragas_eval --split dev --strategy C   # extra: Ragas answer scores and tool-call metrics (about 15 minutes on the course server)
 .venv/bin/python -m eval.chunking_eval                        # four chunking schemes x four modes, recall@1/3/5/10 and MRR (re-embeds the corpus)
 .venv/bin/python -m eval.run_eval --split dev --strategies A B C
 .venv/bin/python -m eval.run_eval --split test --strategies A C
@@ -182,14 +201,3 @@ The plan's tasks, with what proves each one done and its status, are tracked on 
 ```
 
 Results are in `docs/results.md` and `docs/failure_taxonomy.md`. How the Week 2 (RAG) and Week 3 (agentic layer) requirements are met is in `docs/rag.md` and `docs/agentic_layer.md`.
-
-## Limits
-
-- The bank guarantor disclosure rule was not found in the RBI text read, so that check is unknown for banks.
-- The credit scoring layer in the project specification is not built: the dataset and NPA target were not settled.
-- Gold labels were written from the verified rules and still need the second person review the project specification asks for.
-- "Bank" means a commercial bank as the Directions define it; regional rural banks, small finance banks and co-operative banks are out of scope.
-- The evaluation in `docs/results.md` was re-run on 23 November on the course endpoints and the current index; each strategy ran once, so differences of a query or two are within run-to-run variation, and the development queries were used to choose strategy C, so dev accuracy is optimistic.
-- Of the four chunking schemes, only the production one has been measured.
-- The course endpoints (chat and embeddings) are in use: the index is built on them and the full evaluation was run against them.
-- The Ragas report is judged by the 8B course model, so its scores are noisy and are a trend, not accuracy.

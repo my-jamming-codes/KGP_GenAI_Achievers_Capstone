@@ -2,8 +2,8 @@
  "dev_A": {
   "queries_with_expected_paragraph": 17,
   "pipeline_recall": 1.0,
-  "answer_accuracy": 1.0,
-  "accuracy_when_retrieved": 1.0,
+  "answer_accuracy": 0.941,
+  "accuracy_when_retrieved": 0.941,
   "accuracy_when_missed": null,
   "cells": {
    "retrieved_right": [
@@ -13,7 +13,6 @@
     "Q014",
     "Q017",
     "Q022",
-    "Q027",
     "Q032",
     "Q037",
     "Q042",
@@ -25,7 +24,9 @@
     "Q070",
     "Q076"
    ],
-   "retrieved_wrong": [],
+   "retrieved_wrong": [
+    "Q027"
+   ],
    "missed_right": [],
    "missed_wrong": []
   }
@@ -164,8 +165,8 @@
  "test_C": {
   "queries_with_expected_paragraph": 51,
   "pipeline_recall": 0.961,
-  "answer_accuracy": 0.941,
-  "accuracy_when_retrieved": 0.98,
+  "answer_accuracy": 0.922,
+  "accuracy_when_retrieved": 0.959,
   "accuracy_when_missed": 0.0,
   "cells": {
    "retrieved_right": [
@@ -177,7 +178,6 @@
     "Q009",
     "Q011",
     "Q012",
-    "Q016",
     "Q018",
     "Q019",
     "Q020",
@@ -219,6 +219,7 @@
     "Q077"
    ],
    "retrieved_wrong": [
+    "Q016",
     "Q024"
    ],
    "missed_right": [],

@@ -1,2 +1,3 @@
-{"id": "Q027", "strategy": "B", "type": "scenario", "trace_id": "e7cbf6d69e45", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
-{"id": "Q017", "strategy": "C", "type": "scenario", "trace_id": "cf3b63f06a1e", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
+{"id": "Q027", "strategy": "A", "type": "scenario", "trace_id": "f5bb2cfc0d65", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q027", "strategy": "B", "type": "scenario", "trace_id": "db7c2cc67d03", "category": "reasoning error", "note": "", "detail": "risk_weight: got needs_information, expected met"}
+{"id": "Q017", "strategy": "C", "type": "scenario", "trace_id": "bafc6bc86be1", "category": "hallucination", "note": "", "detail": "ltv_cap: got needs_information, expected met"}
