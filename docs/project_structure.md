@@ -152,14 +152,14 @@ The flow runs on LangGraph; the agents, tools and safety rules it calls are plai
 | File | What it does |
 | --- | --- |
 | `run_eval.py` | Runs every gold question through the agent loop per strategy, scores accuracy and citation rate, and labels each failure (retrieval miss, reasoning error, tool call error, hallucination) |
-| `ragas_eval.py` | Extra report: Ragas faithfulness, answer relevancy and context precision on the dev set, judged by the course model. Does not replace `run_eval.py` |
+| `ragas_eval.py` | Extra report on the dev set: Ragas scores for rule lookups and application checks separately, tool call and agent goal metrics, judged by the course model. Does not replace `run_eval.py` |
 | `retrieval_eval.py` | Measures search recall at 5 for dense, BM25, hybrid and hybrid plus reranker |
 | `chunking_eval.py` | Chunking experiments: four chunking schemes, each with its own BM25 and embeddings, measured with all four retrieval modes on recall@1/3/5/10 and MRR |
 | `rag_diagnostic.py` | Retrieval versus answer quality: for each query, whether the pipeline retrieved the expected paragraph and whether the answer was right, separating retrieval errors from generator errors |
 | `safety_eval.py` | Runs the injection, PII and refusal sets with a fake model built to obey anything it sees, then with the real model |
 | `sets/` | Safety test cases: `injection.jsonl` (15), `pii.jsonl` (15), `refusal.jsonl` (10) |
 | `failure_labels_dev.jsonl`, `failure_labels_test.jsonl` | Each wrong answer with its category and trace id |
-| `results/` | Output of every run: summaries, per-query rows, traces and logs. The latest run (23 November, course endpoints, PDF corpus) is in `summary_dev.json`, `summary_test.json`, `dev_*.jsonl`, `test_*.jsonl`, `traces_*.jsonl`, `safety.json` and `full_rerun.log`. The 13 November run is kept in `before_course_endpoint/`, the 12 November run as `before_q015_fix_*`, plus the Q026 re-check and the Ragas reports (`ragas_dev_C.json`, `ragas_dev_C_nodraft.json`) |
+| `results/` | The final evaluation (25 November, course endpoints, PDF corpus): summaries, per-query rows, traces, safety, retrieval recall, diagnostic, Ragas and the run log; `chunking.json` holds the chunking measurement |
 
 ## `tests/`: automated tests (153)
 

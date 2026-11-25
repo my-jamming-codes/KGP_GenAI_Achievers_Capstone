@@ -216,7 +216,7 @@ def drafter(gs: GraphState) -> GraphState:
     out = c.out
     if c.draft:
         try:
-            out.answer, _ = S.draft_report(c.state, out.results, c.llm, c.budget, c.trace)
+            out.answer, _ = S.draft_report(c.state, out.results, c.llm, c.budget, c.trace, index=c.index)
         except (ToolCallError, BudgetExceeded):
             out.answer = S.template_report(out.results)
         c.trace.step("drafter", output=out.answer)

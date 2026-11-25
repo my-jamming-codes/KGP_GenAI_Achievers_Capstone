@@ -1,6 +1,6 @@
 # RBI Home Loan Rule Checker (Loan Guarantor): technical documentation
 
-Version 1.0, 23 November 2026. This document describes the system as the code stands today. It is the one reference for architecture, data, configuration, operation and testing. The project's other documents go deeper on one subject each and are listed in section 16.
+Version 1.0, 26 November 2026. This document describes the system as the code stands today. It is the one reference for architecture, data, configuration, operation and testing. The project's other documents go deeper on one subject each and are listed in section 16.
 
 | | |
 | --- | --- |
@@ -81,7 +81,7 @@ A lookup question takes a shorter path: guard, a check of the rules file (an unv
 | `data/index/` | The saved index: chunks, embeddings, BM25 and metadata. Built by a command, not tracked as source |
 | `data/store`, `data/cache` | Applications' state and conversation memory; saved model replies and answers. Not tracked |
 | `eval/` | Evaluation scripts and `results/` for every run, `sets/` for safety cases |
-| `tests/` | 165 tests |
+| `tests/` | 167 tests |
 | `docs/` | This document, the report, the specification, per-topic docs, notes, demo script and video |
 | `debug/`, `.vscode/` | A helper that runs one question end to end and launch configurations |
 | `crt/` | CA certificate files for the course endpoints. Not tracked; mounted read only into Docker |
@@ -290,7 +290,7 @@ The container reports healthy through Streamlit's health endpoint (`/_stcore/hea
 
 ## 11. Testing and evaluation
 
-**Unit and integration tests** (`pytest`, 165 tests, no model needed): tools, the agent loop and graph, memory, safety, cache and rate limit, endpoint limit handling, chunking, PDF ingestion, the FAQ, the Prompt lab, text formatting, the activity log and a smoke test of the workspace pages. A fake model that obeys any instruction it sees is used for the safety tests.
+**Unit and integration tests** (`pytest`, 167 tests, no model needed): tools, the agent loop and graph, memory, safety, cache and rate limit, endpoint limit handling, chunking, PDF ingestion, the FAQ, the Prompt lab, text formatting, the activity log and a smoke test of the workspace pages. A fake model that obeys any instruction it sees is used for the safety tests.
 
 **Rule check.** `python rules/check_quotes.py` re-checks every rule quote against the saved RBI text.
 
@@ -303,9 +303,9 @@ The container reports healthy through Streamlit's health endpoint (`/_stcore/hea
 | `python -m eval.safety_eval --real` | 15 injection, 15 PII and 10 refusal cases, with the fake model and the real model |
 | `python -m eval.rag_diagnostic` | Retrieval errors against generator errors, from saved runs |
 | `python -m eval.chunking_eval` | Four chunking schemes (only the production one has been measured) |
-| `python -m eval.ragas_eval --split dev --strategy C` | Extra Ragas report: faithfulness, answer relevancy, context precision; judged by the course model, so noisy; `--no-draft` skips the drafter |
+| `python -m eval.ragas_eval --split dev --strategy C` | Extra Ragas report: lookups and application checks scored apart (faithfulness, relevancy, context precision), tool call F1 and accuracy, agent goal accuracy; judged by the course model, so noisy; `--no-draft` skips the drafter |
 
-**Latest results (23 November 2026, course endpoints, current index).** Test split: strategy C 57 of 60 (0.95), strategy A 55 of 60 (0.917), citation rate 0.975. Dev: A 1.0, B 0.95, C 0.95. Safety: 40 of 40 cases with the real model. Dev recall at 5: 1.0 for hybrid, with and without the reranker. Each strategy ran once, so a difference of one or two queries is within run-to-run variation. The details, the comparison with the 13 November run and the failure taxonomy are in `docs/results.md` and `docs/failure_taxonomy.md`. Results are in `eval/results/`; the previous run is kept in `eval/results/before_course_endpoint/`.
+**Latest results (25 November 2026, course endpoints, current index).** Test split: strategy C 56 of 60 (0.933), strategy A 55 of 60 (0.917), citation rate 0.975. Dev: A, B and C 0.95. Safety: 40 of 40 cases with the real model. Dev recall at 5: 1.0 for hybrid, with and without the reranker. Details are in `docs/results.md`.
 
 ## 12. Security and responsible AI
 
@@ -325,15 +325,15 @@ The container reports healthy through Streamlit's health endpoint (`/_stcore/hea
 
 | Item | Impact | Next step |
 | --- | --- | --- |
-| Each strategy ran once on the final setup | Differences of a query or two are within noise; dev accuracy is optimistic because dev queries were used to choose strategy C | Repeat runs; rely on the test split |
+| Each strategy ran once per run | Differences of a query or two are within noise; dev accuracy is optimistic because dev queries were used to choose strategy C | Repeat runs; rely on the test split |
 | Gold labels have no second-person review | A wrong label would skew results | Review using `gold/build_gold.py`; run the failure-label agreement check on 10 results |
 | Only one of four chunking schemes measured | The chunking comparison is incomplete | Run `eval/chunking_eval.py` when the embeddings endpoint is free |
 | Two lookup retrieval misses (Q004, Q013) | Expected paragraph not in the top five for free-text lookups | Fixed search phrases for lookups; route amount questions through the tools |
-| A wrong bank LTV band repeated after correction (Q024, Q017) | The result is withheld as "needs information", so no wrong limit is shown | Investigate why the model repeats the band after correction |
+| A limit misread again after correction (Q016, Q024, Q017) | The result is withheld as "needs information", so no wrong limit is shown | Investigate why the model repeats it |
 | No recency logic in ranking | An older notification can outrank the current Direction on a free-text lookup | Down-rank superseded documents, or call `amendment_chain` for amendment questions |
 | Bank guarantor disclosure is unverified | Banks get "unknown" by design | Find the RBI paragraph, verify, add to the rules file |
 | Tracing is the application's own | Not exported to LangSmith, Langfuse or OpenTelemetry | Add an exporter |
-| Ragas scores are noisy | The 8B judge is unreliable on structured replies | Treat as a trend, not accuracy |
+| Ragas scores are noisy | The 8B judge is unreliable, above all on goal accuracy and status-list answers | Use as indicative only |
 | Credit scoring layer not built | No default-risk claim, no AUC or NPA table | Needs a dataset and a target |
 | Scope | Only commercial banks as the Directions define them; regional rural, small finance and co-operative banks are out of scope | Extend the rules file |
 | Course endpoint dependence | One request at a time and 60 a minute make full evaluations slow | Schedule long runs; the client queues and retries |
@@ -397,3 +397,5 @@ The container reports healthy through Streamlit's health endpoint (`/_stcore/hea
 | 14 to 18 November 2026 | LangGraph graph, conversation memory, PDF ingestion, activity log, Prompt lab and Retrieval lab |
 | 19 to 22 November 2026 | Course endpoints with private certificates, limit handling, 512-token embedding handling, 43,336-chunk index, Ragas report, standalone task board page |
 | 23 November 2026 | Full evaluation re-run on the course endpoints; documents, report and this document updated; Docker rebuilt |
+| 25 November 2026 | Ragas report corrected and extended with tool-call and goal metrics; model-only hint removed from the officer-facing note; drafter given the cited paragraph text; full evaluation re-run |
+| 26 November 2026 | Intermediate evaluation files removed; documents keep the final run only |

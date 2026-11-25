@@ -37,8 +37,6 @@ Every RBI document has an official PDF; most also have a web page with the same 
 
 **What PDF ingestion found in the web pages.** Comparing the two showed that every RBI notification web page ended with the site's archive menu (months and years, about 480 words), which had been indexed as document text. The parser now removes it from web pages too. Four web pages that held only that menu and a link to a PDF that has not been saved were dropped.
 
-**Effect on retrieval.** Recall at 5 on the dev queries rose from 0.962 to 1.0 for dense and for hybrid search, and stayed at 1.0 with the reranker (table below).
-
 ## Chunking
 
 **Production scheme: paragraph-aware.** `src/ingest/parse.py` splits each document at its numbered RBI paragraphs (`58.`, `13G.`, ...), so a chunk is one paragraph, the unit a compliance officer cites. A paragraph longer than 220 words is split into sub-chunks that keep the same paragraph id. Each chunk carries its paragraph id (`HFC-MD/58`), document, title, lender type and date.
@@ -54,7 +52,7 @@ Every RBI document has an official PDF; most also have a web page with the same 
 
 Every scheme gets its own BM25 index and its own embeddings, and uses the same fusion and reranker as production. A fixed window can span several paragraphs; it counts as a hit when it contains text of the expected paragraph, which favours the fixed schemes slightly. A scheme is to be chosen on the dev queries; the test column is a check.
 
-**Status: one of the four schemes has been measured.** The run on 15 November was stopped after the production scheme, `paragraph_220`, to free the machine; the other three were not reached. The figures below are on the earlier corpus (1,080 documents, web pages only), with 26 dev and 81 test expected citations.
+**Status: one of the four schemes has been measured.** The run on 15 November was stopped after the production scheme, `paragraph_220`, to free the machine; the other three were not reached. The figures below are on the web-page index (1,080 documents, before PDF ingestion), with 26 dev and 81 test expected citations.
 
 | `paragraph_220`, split | Mode | Recall@1 | Recall@3 | Recall@5 | Recall@10 | MRR@10 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -95,12 +93,12 @@ There are three separate measurements, from retrieval alone to the full pipeline
 
 **1. Retrieval only, production index** (`python -m eval.retrieval_eval`). The fixed query for each expected citation in the dev queries, 26 in all:
 
-| Mode | Web pages only (before) | With PDF ingestion |
-| --- | --- | --- |
-| Dense only | 0.962 | 1.0 |
-| BM25 only | 0.923 | 0.923 |
-| Hybrid (rank fusion) | 0.962 | 1.0 |
-| Hybrid + reranker | 1.0 | 1.0 |
+| Mode | Recall at 5 |
+| --- | --- |
+| Dense only | 1.0 |
+| BM25 only | 0.923 |
+| Hybrid (rank fusion) | 1.0 |
+| Hybrid + reranker | 1.0 |
 
 **2. Retrieval only, per chunking scheme** (`python -m eval.chunking_eval`): recall@1, 3, 5 and 10 and MRR@10 on dev and test, above.
 
@@ -108,15 +106,13 @@ There are three separate measurements, from retrieval alone to the full pipeline
 
 | Run | Queries | Pipeline recall | Answer accuracy | Accuracy when the paragraph was retrieved | Generator errors | Retrieval errors |
 | --- | --- | --- | --- | --- | --- | --- |
-| Dev, A | 17 | 1.0 | 0.824 | 0.824 | Q022, Q027, Q070 | none |
-| Dev, B | 16 | 1.0 | 0.875 | 0.875 | Q017, Q070 | none |
-| Dev, C | 17 | 1.0 | 0.941 | 0.941 | Q070 | none |
-| Test, A | 51 | 0.961 | 0.824 | 0.857 | Q001, Q016, Q020, Q024, Q040, Q041, Q061 | Q004, Q013 |
-| Test, C | 50 | 0.96 | 0.94 | 0.979 | Q001 | Q004, Q013 |
+| Dev, A | 17 | 1.0 | 0.941 | 0.941 | Q027 | none |
+| Dev, B | 17 | 1.0 | 0.941 | 0.941 | Q027 | none |
+| Dev, C | 17 | 1.0 | 0.941 | 0.941 | Q017 | none |
+| Test, A | 51 | 0.961 | 0.902 | 0.939 | Q016, Q024, Q041 | Q004, Q013 |
+| Test, C | 51 | 0.961 | 0.922 | 0.959 | Q016, Q024 | Q004, Q013 |
 
 Refusals and runs stopped by a limit are left out, because they say nothing about retrieval.
-
-**What it shows.** Retrieval is not the bottleneck: the pipeline found the expected paragraph 96–100% of the time. Strategy A's extra errors on test are all generator errors (it misread the limit in a paragraph it had), which is why prompt strategy C, not a retrieval change, fixed them. The two test queries no strategy answered, Q004 and Q013, are pure retrieval errors on free-text lookups; no prompt change can fix those, and the fix is in the search (add the fixed rule-check phrase to lookup queries). Without this split, all of these would look like "the model is weak".
 
 ## How to show it to the TA (10 minutes)
 
@@ -127,7 +123,7 @@ Refusals and runs stopped by a limit are left out, because they say nothing abou
    - Try a paraphrase that shares few words with the RBI text, such as "can the lender charge a fee if I repay my home loan early", to show dense search catching what BM25 misses, and the reranker ordering them.
 3. **Chunking experiments (2 min).** On the same page, show the chunking table: four schemes, recall@1/5/10 and MRR, dev and test, and why paragraph-aware chunks were kept.
 4. **Citation grounding (2 min).** On **Application** with sharing on, ask a rule question and point at the "Cited:" paragraph ids. Open the trace on **History and evaluation** and show the critic step that checked the citation.
-5. **Retrieval versus answer quality (2 min).** Show the last table on **Retrieval lab**: pipeline recall next to answer accuracy, with generator errors and retrieval errors named. Make the point above: A's errors are the generator's, Q004 and Q013 are retrieval's, and each needs a different fix.
+5. **Retrieval versus answer quality (2 min).** Show the last table on **Retrieval lab**: pipeline recall next to answer accuracy, with generator errors and retrieval errors named.
 
 All of this works with the model switched off, apart from step 4.
 

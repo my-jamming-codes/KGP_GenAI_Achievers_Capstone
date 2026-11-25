@@ -5,7 +5,7 @@
  "corpus_version": "6074ba19e620",
  "strategies": {
   "A": {
-   "accuracy": 1.0,
+   "accuracy": 0.95,
    "first_pass_accuracy": 0.231,
    "first_pass_queries": 13,
    "citation_rate": 1.0,
@@ -14,40 +14,6 @@
     "wrong_status": 14,
     "wrong_paragraph": 14,
     "missing_check": 1
-   },
-   "failures": {
-    "retrieval miss": 0,
-    "reasoning error": 0,
-    "tool call error": 0,
-    "hallucination": 0
-   },
-   "wrong_rulebook_notes": 0,
-   "by_type": {
-    "lookup": "4/4",
-    "scenario": "6/6",
-    "entity_variant": "4/4",
-    "amendment": "3/3",
-    "refusal": "3/3"
-   },
-   "failed": [],
-   "avg_tokens_per_query": 6710,
-   "stopped": {},
-   "model_calls": 99,
-   "cache_hits": 0,
-   "validation_retries": 0,
-   "seconds": 213
-  },
-  "B": {
-   "accuracy": 0.95,
-   "first_pass_accuracy": 0.154,
-   "first_pass_queries": 13,
-   "citation_rate": 1.0,
-   "queries_with_critic_failure": 13,
-   "critic_kinds": {
-    "wrong_status": 16,
-    "wrong_paragraph": 13,
-    "missing_check": 1,
-    "wrong_number": 1
    },
    "failures": {
     "retrieval miss": 0,
@@ -66,17 +32,57 @@
    "failed": [
     {
      "id": "Q027",
-     "trace_id": "e7cbf6d69e45",
+     "trace_id": "f5bb2cfc0d65",
      "category": "reasoning error",
      "detail": "risk_weight: got needs_information, expected met"
     }
    ],
-   "avg_tokens_per_query": 10170,
+   "avg_tokens_per_query": 6701,
    "stopped": {},
-   "model_calls": 177,
+   "model_calls": 99,
    "cache_hits": 0,
    "validation_retries": 0,
-   "seconds": 504
+   "seconds": 263
+  },
+  "B": {
+   "accuracy": 0.95,
+   "first_pass_accuracy": 0.154,
+   "first_pass_queries": 13,
+   "citation_rate": 1.0,
+   "queries_with_critic_failure": 12,
+   "critic_kinds": {
+    "wrong_status": 16,
+    "wrong_paragraph": 13,
+    "missing_check": 1
+   },
+   "failures": {
+    "retrieval miss": 0,
+    "reasoning error": 1,
+    "tool call error": 0,
+    "hallucination": 0
+   },
+   "wrong_rulebook_notes": 0,
+   "by_type": {
+    "lookup": "4/4",
+    "scenario": "5/6",
+    "entity_variant": "4/4",
+    "amendment": "3/3",
+    "refusal": "3/3"
+   },
+   "failed": [
+    {
+     "id": "Q027",
+     "trace_id": "db7c2cc67d03",
+     "category": "reasoning error",
+     "detail": "risk_weight: got needs_information, expected met"
+    }
+   ],
+   "avg_tokens_per_query": 10034,
+   "stopped": {},
+   "model_calls": 175,
+   "cache_hits": 0,
+   "validation_retries": 0,
+   "seconds": 533
   },
   "C": {
    "accuracy": 0.95,
@@ -107,17 +113,17 @@
    "failed": [
     {
      "id": "Q017",
-     "trace_id": "cf3b63f06a1e",
+     "trace_id": "bafc6bc86be1",
      "category": "hallucination",
      "detail": "ltv_cap: got needs_information, expected met"
     }
    ],
-   "avg_tokens_per_query": 7440,
+   "avg_tokens_per_query": 7429,
    "stopped": {},
    "model_calls": 96,
    "cache_hits": 0,
    "validation_retries": 0,
-   "seconds": 415
+   "seconds": 440
   }
  }
 }

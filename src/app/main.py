@@ -687,16 +687,24 @@ def history_page() -> None:
     ragas_files = sorted(results.glob("ragas_*.json"))
     if not ragas_files:
         st.caption("Not run yet. `python -m eval.ragas_eval --split dev --strategy C` (about 20 minutes on the course server).")
+    names = {"faithfulness": "Faithfulness", "answer_relevancy": "Answer relevancy",
+             "llm_context_precision_without_reference": "Context precision", "tool_recall": "Tool recall (own figure)",
+             "tool_call_f1": "Tool call F1", "tool_call_accuracy": "Tool call accuracy", "agent_goal_accuracy": "Agent goal accuracy"}
+    titles = {"lookup": "Rule lookups (against the paragraphs the drafter read)",
+              "application": "Application checks (against the check results and cited paragraphs the drafter was given)",
+              "agent": "Tool calls and goal (reference: the gold answer's rule checks)"}
     for f in ragas_files:
         r = json.loads(f.read_text())
-        st.caption(f"{r['split']} split · strategy {r['strategy']} · {'written answers' if r.get('drafted', False) else 'answers built from check results'} · {r['queries_judged']} queries judged · judge {r['judge_model']}")
-        names = {"faithfulness": "Faithfulness", "answer_relevancy": "Answer relevancy",
-                 "llm_context_precision_without_reference": "Context precision"}
-        st.dataframe([{"Metric": names.get(k, k), "Average": v, "Queries with no score": r["failed_scores"].get(k, 0)}
-                      for k, v in r["average"].items()], use_container_width=True, hide_index=True)
+        st.caption(f"{r['split']} split · strategy {r['strategy']} · {'written answers' if r.get('drafted') else 'answers built from check results'} · judge {r['judge_model']}")
+        for group, g in r["groups"].items():
+            st.markdown(f"**{titles.get(group, group)}** · {g['queries']} queries")
+            st.dataframe([{"Metric": names.get(k, k), "Average": v, "Queries with no score": g["failed_scores"].get(k, 0)}
+                          for k, v in g["average"].items()], use_container_width=True, hide_index=True)
         with st.expander("Scores for each query"):
-            st.dataframe([{"Query": q["id"], "Type": q["type"], "Question": q.get("question", ""), **{names.get(k, k): q.get(k) for k in r["average"]}, "Trace": q["trace_id"]}
+            st.dataframe([{"Query": q["id"], "Group": q["group"], "Question": q.get("question", ""), **{label: q.get(k) for k, label in names.items()}, "Trace": q["trace_id"]}
                           for q in r["per_query"]], use_container_width=True, hide_index=True)
+    if "agent" in (r.get("groups", {}) if ragas_files else {}):
+        st.caption("On a full application check the gold lists only the rules it grades, so extra tool calls lower F1 and accuracy there.")
     st.caption("The judge is the 8B course model, so these scores are noisy and show a trend. Correctness is scored in code against the gold answers (table above).")
 
 

@@ -274,12 +274,12 @@ def critic_judgement(check: str, state: State) -> Optional[dict[str, str]]:
         kind = "ungrounded_citation" if j.paragraph_id and not any(same_paragraph(j.paragraph_id, h.paragraph_id) for h in hits) else "wrong_paragraph"
         problems.append((kind, f"The rule for this check is in paragraph {tool.paragraph_id}; you cited {j.paragraph_id or 'nothing'}. Cite {tool.paragraph_id}."))
     if j.status != tool.status:
-        problems.append(("wrong_status", f"Status '{j.status}' does not match the tool computation, which gives '{tool.status}': {tool.note}"))
+        problems.append(("wrong_status", f"Status '{j.status}' does not match the tool computation, which gives '{tool.status}': {tool.note} {tool.hint}".rstrip()))
     key = NUMERIC_KEY.get(check)
     if key and key in tool.values:
         read = _number(j.values_used.get("limit_read"))
         if read is not None and abs(read - float(tool.values[key])) > 1e-6:
-            problems.append(("wrong_number", f"You read {read:g} from the paragraph, but the rules file gives {tool.values[key]} for this case: {tool.note}"))
+            problems.append(("wrong_number", f"You read {read:g} from the paragraph, but the rules file gives {tool.values[key]} for this case: {tool.note} {tool.hint}".rstrip()))
     if not problems:
         return None
     # every problem is reported at once, so the single retry can fix all of them
@@ -321,11 +321,49 @@ def template_report(results: list[CheckResult]) -> str:
     return "\n".join(lines) + "\nRecommendation only; the officer decides."
 
 
-def draft_report(state: State, results: list[CheckResult], llm: LLM, budget: Budget, trace) -> tuple[str, list[str]]:
+DRAFT_ORDER = {"breached": 0, "needs_information": 1, "unknown": 2, "met": 3, "not_applicable": 4}
+DRAFT_TOTAL_CHARS = 9000    # all paragraph text for one note; the course model reads 8,192 tokens in total
+DRAFT_PARAGRAPH_CHARS = 4000
+
+
+def cited_paragraphs_text(results: list[CheckResult], state: State, index) -> str:
+    """Text of the paragraphs the results cite, as data blocks. Breaches come first, each paragraph gets an equal share of the
+    room, and for a long paragraph the parts that share most words with the result are kept."""
+    wanted: dict[str, str] = {}
+    for r in sorted(results, key=lambda r: DRAFT_ORDER[r.status]):
+        if r.paragraph_id:
+            wanted[r.paragraph_id] = f"{wanted.get(r.paragraph_id, '')} {CHECK_QUERY.get(r.check, '')} {r.reason}"
+    if not wanted:
+        return ""
+    share = min(DRAFT_PARAGRAPH_CHARS, DRAFT_TOTAL_CHARS // len(wanted))
+    words = lambda text: set(re.findall(r"[a-z0-9]{2,}", text.lower()))
+    blocks = []
+    for pid, about in wanted.items():
+        chunks = index.fetch_paragraph(pid)
+        if not chunks:
+            continue
+        ranked = sorted(range(len(chunks)), key=lambda i: -len(words(chunks[i].text) & words(about)))
+        chosen, used = {}, 0
+        for i in ranked:
+            room = share - used
+            if room < 200:
+                break
+            chosen[i] = chunks[i].text[:room]
+            used += len(chosen[i])
+        text, hit = injection.sanitize("\n".join(chosen[i] for i in sorted(chosen)), strict=True)
+        state.injection_detected |= hit
+        blocks.append(f"<data source=\"paragraph {pid}\">\n{text}\n</data>")
+    return "\n".join(blocks)
+
+
+def draft_report(state: State, results: list[CheckResult], llm: LLM, budget: Budget, trace, index=None) -> tuple[str, list[str]]:
     allowed = [r.paragraph_id for r in results if r.paragraph_id]
     listing = "\n".join(f"- {r.check}: {r.status}; paragraph {r.paragraph_id or 'none'}; {r.reason[:260]}" for r in results)
-    reply = llm.chat_json(P.DRAFT_REPORT_SYSTEM, f"Question: {state.question}\nRule check results:\n{listing}", P.DraftReply,
-                          budget=budget, trace=trace, max_tokens=450)
+    user = f"Question: {state.question}\nRule check results:\n{listing}"
+    paragraphs = cited_paragraphs_text(results, state, index) if index is not None else ""
+    if paragraphs:
+        user += f"\n\nCited paragraphs:\n{paragraphs}"
+    reply = llm.chat_json(P.DRAFT_REPORT_SYSTEM, user, P.DraftReply, budget=budget, trace=trace, max_tokens=600)
     text = soften_output(mask_text(reply.answer))
     cited = set(re.findall(r"[A-Z][A-Z0-9-]+/[A-Za-z0-9-]+", text))
     if any(not any(same_paragraph(c, a) for a in allowed) for c in cited):  # the note cites something not in the results
